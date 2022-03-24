@@ -14,14 +14,16 @@ final _router = Router()
   ..post('/add-user', _addUser)
   ..get('/list-users', _listUsers)
   ..post('/add-invoice', _addInvoice)
-  ..get('/list-invoices', _listInvoices);
+  ..get('/list-invoices', _listInvoices)
+  ..post('/remove-user', _removeUser)
+  ..post('/remove-invoice', _removeInvoice);
 
 Response _rootHandler(Request req) {
   return Response.ok('Hello, World!\n');
 }
 
 Response _echoHandler(Request request) {
-  final message = params(request, 'message');
+  final message = request.params['message'];
   return Response.ok('$message\n');
 }
 
@@ -33,7 +35,13 @@ Future<Response> _addUser(Request request) async {
 
   try {
     await database.query(
-        'INSERT INTO users(id,name,password,email) VALUES (DEFAULT,\'${result[0]['name']}\',\'${result[0]['password']}\', \'${result[0]['email']}\')');
+      'INSERT INTO users(name,password,email) VALUES (@name, @password, @email)',
+      substitutionValues: {
+        'name' : result[0]['name'],
+        'password': result[0]['password'],
+        'email': result[0]['email']
+      }
+    );
   } catch (e) {
     print("funçao _addUser");
     print(e);
@@ -43,13 +51,35 @@ Future<Response> _addUser(Request request) async {
   return Response.ok('Usuário adicionado\n');
 }
 
+Future<Response> _removeUser(Request request) async {
+  var result = await request.readAsString().then((value) => jsonDecode(value));
+
+  var db = DB.instance;
+  var database = await db.database;
+
+  try {
+    await database.query(
+      'DELETE FROM users WHERE email = @email',
+      substitutionValues: {
+        'email': result[0]['email']
+      }
+    );
+  } catch (e) {
+    print("funçao _removeUser");
+    print(e);
+    return Response.ok('Ops!!! Não conseguimos remover o usuário.\n');
+  }
+
+  return Response.ok('Usuário removido\n');
+}
+
 Future<Response> _listUsers(Request request) async {
   var db = DB.instance;
   var database = await db.database;
 
   List<Map<String, Map<String, dynamic>>>? result;
   try {
-    result = await database.mappedResultsQuery("SELECT name, email FROM users");
+    result = await database.mappedResultsQuery("SELECT * FROM users");
   } catch (e) {
     print(e);
   }
@@ -89,6 +119,29 @@ Future<Response> _addInvoice(Request request) async {
   }
 
   return Response.ok('Conta adicionado\n');
+}
+
+Future<Response> _removeInvoice(Request request) async {
+  var result = await request.readAsString().then((value) => jsonDecode(value));
+
+  var db = DB.instance;
+  var database = await db.database;
+
+  try {
+    await database.query(
+      'DELETE FROM invoice WHERE invoiceId = @invoiceId and userId = @userId',
+      substitutionValues: {
+        'userId': result[0]['userId'],
+        'invoiceId': result[0]['invoiceId'],
+      }
+    );
+  } catch (e) {
+    print("funçao _removeInvoice");
+    print(e);
+    return Response.ok('Ops!!! Não conseguimos remover a conta.\n');
+  }
+
+  return Response.ok('Invoice removido\n');
 }
 
 Future<Response> _listInvoices(Request request) async {
