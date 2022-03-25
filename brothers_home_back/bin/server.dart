@@ -15,6 +15,7 @@ final _router = Router()
   ..get('/list-users', _listUsers)
   ..post('/add-invoice', _addInvoice)
   ..get('/list-invoices', _listInvoices)
+  ..get('/list-invoices-date-interval', _listInvoicesDateInterval)
   ..post('/remove-user', _removeUser)
   ..post('/remove-invoice', _removeInvoice);
 
@@ -163,6 +164,35 @@ Future<Response> _listInvoices(Request request) async {
                                         }
   ));
 }
+
+
+Future<Response> _listInvoicesDateInterval(Request request) async {
+  var _result = await request.readAsString().then((value) => jsonDecode(value));
+
+  var db = DB.instance;
+  var database = await db.database;
+
+  List<Map<String, Map<String, dynamic>>>? result;
+  try {
+    result = await database.mappedResultsQuery("SELECT * FROM invoice WHERE date >= @first_date and date <= @last_date",
+      substitutionValues: {
+        'first_date' : _result[0]['first_date'],
+        'last_date' : _result[0]['last_date']
+      }
+    );
+  } catch (e) {
+    print(e);
+  }
+  
+  return Response.ok(jsonEncode(result!, toEncodable: (dynamic item) {
+                                          if(item is DateTime) {
+                                            return item.toIso8601String();
+                                          }
+                                          return item;
+                                        }
+  ));
+}
+
 
 void main(List<String> args) async {
   //connection BD
