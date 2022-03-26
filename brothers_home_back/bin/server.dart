@@ -13,6 +13,7 @@ final _router = Router()
   ..get('/echo/<message>', _echoHandler)
   ..post('/add-user', _addUser)
   ..get('/list-users', _listUsers)
+  ..post('/login', _login)
   ..post('/add-invoice', _addInvoice)
   ..get('/list-invoices', _listInvoices)
   ..get('/list-invoices-date-interval', _listInvoicesDateInterval)
@@ -36,13 +37,12 @@ Future<Response> _addUser(Request request) async {
 
   try {
     await database.query(
-      'INSERT INTO users(name,password,email) VALUES (@name, @password, @email)',
-      substitutionValues: {
-        'name' : result[0]['name'],
-        'password': result[0]['password'],
-        'email': result[0]['email']
-      }
-    );
+        'INSERT INTO users(name,password,email) VALUES (@name, @password, @email)',
+        substitutionValues: {
+          'name': result[0]['name'],
+          'password': result[0]['password'],
+          'email': result[0]['email']
+        });
   } catch (e) {
     print("funçao _addUser");
     print(e);
@@ -59,12 +59,8 @@ Future<Response> _removeUser(Request request) async {
   var database = await db.database;
 
   try {
-    await database.query(
-      'DELETE FROM users WHERE email = @email',
-      substitutionValues: {
-        'email': result[0]['email']
-      }
-    );
+    await database.query('DELETE FROM users WHERE email = @email',
+        substitutionValues: {'email': result[0]['email']});
   } catch (e) {
     print("funçao _removeUser");
     print(e);
@@ -86,6 +82,30 @@ Future<Response> _listUsers(Request request) async {
   }
 
   return Response.ok(jsonEncode(result!));
+}
+
+Future<Response> _login(Request request) async {
+  var result = await request.readAsString().then((value) => jsonDecode(value));
+
+  var db = DB.instance;
+  var database = await db.database;
+
+  List<Map<String, Map<String, dynamic>>>? result_bd;
+  try {
+    result_bd = await database.mappedResultsQuery(
+        "SELECT userId FROM users WHERE email = @email and password = @password",
+        substitutionValues: {
+          "email" : result[0]['email'],
+          "password" : result[0]['password'],
+        });
+    print(result_bd);
+  } catch (e) {
+    print("Funçao _login");
+    print(e);
+    return Response.ok('Ops!!! Não conseguimos fazer login.\n');
+  }
+
+  return Response.ok(jsonEncode(result_bd));
 }
 
 Future<Response> _addInvoice(Request request) async {
@@ -112,7 +132,6 @@ Future<Response> _addInvoice(Request request) async {
           'image': image,
           'userId': userId
         });
-
   } catch (e) {
     print("Erro: funçao _addInvoice");
     print(e);
@@ -130,12 +149,11 @@ Future<Response> _removeInvoice(Request request) async {
 
   try {
     await database.query(
-      'DELETE FROM invoice WHERE invoiceId = @invoiceId and userId = @userId',
-      substitutionValues: {
-        'userId': result[0]['userId'],
-        'invoiceId': result[0]['invoiceId'],
-      }
-    );
+        'DELETE FROM invoice WHERE invoiceId = @invoiceId and userId = @userId',
+        substitutionValues: {
+          'userId': result[0]['userId'],
+          'invoiceId': result[0]['invoiceId'],
+        });
   } catch (e) {
     print("funçao _removeInvoice");
     print(e);
@@ -157,14 +175,12 @@ Future<Response> _listInvoices(Request request) async {
   }
 
   return Response.ok(jsonEncode(result!, toEncodable: (dynamic item) {
-                                          if(item is DateTime) {
-                                            return item.toIso8601String();
-                                          }
-                                          return item;
-                                        }
-  ));
+    if (item is DateTime) {
+      return item.toIso8601String();
+    }
+    return item;
+  }));
 }
-
 
 Future<Response> _listInvoicesDateInterval(Request request) async {
   var _result = await request.readAsString().then((value) => jsonDecode(value));
@@ -174,25 +190,23 @@ Future<Response> _listInvoicesDateInterval(Request request) async {
 
   List<Map<String, Map<String, dynamic>>>? result;
   try {
-    result = await database.mappedResultsQuery("SELECT * FROM invoice WHERE date >= @first_date and date <= @last_date",
-      substitutionValues: {
-        'first_date' : _result[0]['first_date'],
-        'last_date' : _result[0]['last_date']
-      }
-    );
+    result = await database.mappedResultsQuery(
+        "SELECT * FROM invoice WHERE date >= @first_date and date <= @last_date",
+        substitutionValues: {
+          'first_date': _result[0]['first_date'],
+          'last_date': _result[0]['last_date']
+        });
   } catch (e) {
     print(e);
   }
-  
-  return Response.ok(jsonEncode(result!, toEncodable: (dynamic item) {
-                                          if(item is DateTime) {
-                                            return item.toIso8601String();
-                                          }
-                                          return item;
-                                        }
-  ));
-}
 
+  return Response.ok(jsonEncode(result!, toEncodable: (dynamic item) {
+    if (item is DateTime) {
+      return item.toIso8601String();
+    }
+    return item;
+  }));
+}
 
 void main(List<String> args) async {
   //connection BD

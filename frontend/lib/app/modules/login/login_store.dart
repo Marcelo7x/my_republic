@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:dio/dio.dart';
+import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_store.g.dart';
 
@@ -27,12 +31,33 @@ abstract class _LoginStoreBase with Store {
     if (email_controller.text.length > 0 &&
         password_controller.text.length > 0) {
       try {
-        var response = await Dio().get('http://192.168.1.9:8080/list-users');
+        var response = await Dio().post('http://192.168.1.9:8080/login',
+            data: jsonEncode([
+              {
+                "email": email_controller.text,
+                "password": password_controller.text
+              }
+            ]));
+
         print(response);
-      } catch (e) {
+
+        var id= jsonDecode(response.data)[0]['users']['userid'];
+
+        if (response.data.length > 0) {
+          final prefs = await SharedPreferences.getInstance();
+
+          await prefs.setInt('id', id);
+          await prefs.setBool('is_logged', true);
+
+          Modular.to.navigate('home/',
+              arguments: jsonDecode(response.data)[0]['users']['userid']);
+        } else loggin_error = true;
+      } 
+      catch (e) {
         print(e);
       }
-    } else {
+    }
+    else {
       loggin_error = true;
       print("Nao acessou");
     }

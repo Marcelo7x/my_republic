@@ -35,7 +35,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
             Container(
               //input de email
               width: _width * .8,
-              height: 50,
+              height: 70,
               child: TextField(
                 controller: controller.email_controller,
                 decoration: const InputDecoration(
@@ -48,7 +48,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
             Container(
               //input senha
               width: _width * .8,
-              height: 50,
+              height: 70,
               margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
               child: TextField(
                 controller: controller.password_controller,
