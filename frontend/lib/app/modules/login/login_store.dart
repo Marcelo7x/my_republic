@@ -49,8 +49,7 @@ abstract class _LoginStoreBase with Store {
           await prefs.setInt('id', id);
           await prefs.setBool('is_logged', true);
 
-          Modular.to.navigate('home/',
-              arguments: jsonDecode(response.data)[0]['users']['userid']);
+          Modular.to.navigate('/home/', arguments: id);
         } else loggin_error = true;
       } 
       catch (e) {
