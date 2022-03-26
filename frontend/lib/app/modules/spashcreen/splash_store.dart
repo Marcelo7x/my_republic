@@ -19,9 +19,9 @@ abstract class _SplashStoreBase with Store {
     await Future.delayed(Duration(seconds: 3));
 
     if (logged != null && logged) {
-      Modular.to.navigate('/home');
+      Modular.to.navigate('home/');
     } else {
-      Modular.to.navigate('/login');
+      Modular.to.navigate('login/');
     }
   }
 }
