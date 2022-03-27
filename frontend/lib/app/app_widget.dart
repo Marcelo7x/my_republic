@@ -6,7 +6,10 @@ class AppWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Brothers Home',
-      theme: ThemeData.dark(),
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        backgroundColor: Colors.black,
+      ),
     ).modular();
   }
 }

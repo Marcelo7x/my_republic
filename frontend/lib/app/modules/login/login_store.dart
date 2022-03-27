@@ -26,7 +26,7 @@ abstract class _LoginStoreBase with Store {
   loggin() async {
     loading = true;
 
-    await Future.delayed(Duration(seconds: 2));
+    //await Future.delayed(Duration(seconds: 2));
 
     if (email_controller.text.length > 0 &&
         password_controller.text.length > 0) {
@@ -39,24 +39,21 @@ abstract class _LoginStoreBase with Store {
               }
             ]));
 
-        print(response);
-
-        var id= jsonDecode(response.data)[0]['users']['userid'];
-
-        if (response.data.length > 0) {
+        if (jsonDecode(response.data).length > 0) {
+          var id = jsonDecode(response.data)[0]['users']['userid'];
           final prefs = await SharedPreferences.getInstance();
 
           await prefs.setInt('id', id);
           await prefs.setBool('is_logged', true);
 
           Modular.to.navigate('/home/', arguments: id);
-        } else loggin_error = true;
-      } 
-      catch (e) {
+        } else {
+          loggin_error = true;
+        }
+      } catch (e) {
         print(e);
       }
-    }
-    else {
+    } else {
       loggin_error = true;
       print("Nao acessou");
     }

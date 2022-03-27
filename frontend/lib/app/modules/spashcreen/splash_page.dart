@@ -19,6 +19,8 @@ class _SplashPageState extends ModularState<SplashPage, SplashStore> {
 
     initState();
 
+    var logo = AssetImage("images/logo.png");
+
     return Container(
       color: Theme.of(context).backgroundColor,
       child: Column(
@@ -26,14 +28,14 @@ class _SplashPageState extends ModularState<SplashPage, SplashStore> {
         children: [
           Center(
             child: Container(
-              width: 100,
-              height: 100,
-              decoration: const BoxDecoration(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: NetworkImage(
-                          "https://sonhoastral.com/uploads/article/image/1993/card_C%C3%B3pia_de_casa_caindo.jpg"))),
+                    fit: BoxFit.fill,
+                    image: logo
+                  )),
             ),
           ),
           CircularProgressIndicator(),

@@ -14,8 +14,8 @@ abstract class _SplashStoreBase with Store {
   verify_login() async {
     final prefs = await SharedPreferences.getInstance();
     bool? logged = prefs.getBool('is_logged');
-    logged = false;
-    //await Future.delayed(Duration(seconds: 3));
+
+    await Future.delayed(Duration(seconds: 2));
 
     if (logged != null && logged) {
       int? id = await prefs.getInt('id');
