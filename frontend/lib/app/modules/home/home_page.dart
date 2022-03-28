@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -20,25 +21,80 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
     var id = Modular.args.data;
     var logo = AssetImage("images/logo.png");
 
+    void _selectRageDate() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // retorna um objeto do tipo Dialog
+          return AlertDialog(
+            title: const Text("Selecione o intevalo"),
+            content: SfDateRangePicker(
+              view: DateRangePickerView.year,
+              initialSelectedRange: controller.dateRange,
+              selectionMode: DateRangePickerSelectionMode.range,
+              onSelectionChanged: (DateRangePickerSelectionChangedArgs date) =>
+                  controller.set_dateRange(date.value),
+            ),
+            actions: <Widget>[
+              // define os botões na base do dialogo
+              TextButton(
+                child: Text("Fechar"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     List<Widget> _listWidget = <Widget>[
       Container(
         child: SafeArea(
           child: Column(
             children: [
               Container(
-                height: _height * 0.07,
+                height: _height * 0.1,
                 width: _width * 0.9,
                 decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.money_off),
-                    Text(
-                      "Contas do mês",
-                      style: TextStyle(fontSize: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.money_off),
+                        Text(
+                          "Contas do mês",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          child: Observer(builder: (_) {
+                            return Text(
+                                "Intervalo: ${controller.dateRange.startDate?.day}/${controller.dateRange.startDate?.month}/${controller.dateRange.startDate?.year} a ${controller.dateRange.endDate?.day}/${controller.dateRange.endDate?.month}/${controller.dateRange.endDate?.year}");
+                          }),
+                          onTap: () => _selectRageDate(),
+                        ),
+                        GestureDetector(
+                          onTap: () => _selectRageDate(),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Icon(
+                              Icons.calendar_month,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -47,7 +103,6 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
           ),
         ),
       ),
-
       SafeArea(child: Text("Balanço")),
       SafeArea(child: Text("Opções")),
     ];

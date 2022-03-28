@@ -24,6 +24,21 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  final _$dateRangeAtom = Atom(name: 'HomeStoreBase.dateRange');
+
+  @override
+  PickerDateRange get dateRange {
+    _$dateRangeAtom.reportRead();
+    return super.dateRange;
+  }
+
+  @override
+  set dateRange(PickerDateRange value) {
+    _$dateRangeAtom.reportWrite(value, super.dateRange, () {
+      super.dateRange = value;
+    });
+  }
+
   final _$HomeStoreBaseActionController =
       ActionController(name: 'HomeStoreBase');
 
@@ -39,9 +54,21 @@ mixin _$HomeStore on HomeStoreBase, Store {
   }
 
   @override
+  dynamic set_dateRange(PickerDateRange dt) {
+    final _$actionInfo = _$HomeStoreBaseActionController.startAction(
+        name: 'HomeStoreBase.set_dateRange');
+    try {
+      return super.set_dateRange(dt);
+    } finally {
+      _$HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-selectedIndex: ${selectedIndex}
+selectedIndex: ${selectedIndex},
+dateRange: ${dateRange}
     ''';
   }
 }
