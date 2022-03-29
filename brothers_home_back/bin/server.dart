@@ -16,7 +16,7 @@ final _router = Router()
   ..post('/login', _login)
   ..post('/add-invoice', _addInvoice)
   ..get('/list-invoices', _listInvoices)
-  ..get('/list-invoices-date-interval', _listInvoicesDateInterval)
+  ..post('/list-invoices-date-interval', _listInvoicesDateInterval)
   ..post('/remove-user', _removeUser)
   ..post('/remove-invoice', _removeInvoice);
 

@@ -21,6 +21,8 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
     var id = Modular.args.data;
     var logo = AssetImage("images/logo.png");
 
+    controller.get_invoices();
+
     void _selectRageDate() {
       showDialog(
         context: context,
@@ -55,6 +57,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
           child: Column(
             children: [
               Container(
+                //header
                 height: _height * 0.1,
                 width: _width * 0.9,
                 decoration: BoxDecoration(
@@ -99,6 +102,25 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                   ],
                 ),
               ),
+              Observer(builder: (_) {
+                return Container(
+                  height: 500, width: 100,
+                  child: controller.invoices != null &&
+                          !controller.invoices!.isEmpty
+                      ? ListView(
+                          children: controller.invoices!
+                              .map((e) => Container(
+                                child: Column(
+                                  children: [
+                                    Text(e['invoice']['category'].toString()??"a"),
+                                  ],
+                                )
+                              ))
+                              .toList(),
+                        )
+                      : const CircularProgressIndicator(),
+                );
+              })
             ],
           ),
         ),

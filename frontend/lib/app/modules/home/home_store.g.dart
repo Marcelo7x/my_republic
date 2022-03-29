@@ -39,6 +39,28 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  final _$invoicesAtom = Atom(name: 'HomeStoreBase.invoices');
+
+  @override
+  List<dynamic>? get invoices {
+    _$invoicesAtom.reportRead();
+    return super.invoices;
+  }
+
+  @override
+  set invoices(List<dynamic>? value) {
+    _$invoicesAtom.reportWrite(value, super.invoices, () {
+      super.invoices = value;
+    });
+  }
+
+  final _$get_invoicesAsyncAction = AsyncAction('HomeStoreBase.get_invoices');
+
+  @override
+  Future get_invoices() {
+    return _$get_invoicesAsyncAction.run(() => super.get_invoices());
+  }
+
   final _$HomeStoreBaseActionController =
       ActionController(name: 'HomeStoreBase');
 
@@ -68,7 +90,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
   String toString() {
     return '''
 selectedIndex: ${selectedIndex},
-dateRange: ${dateRange}
+dateRange: ${dateRange},
+invoices: ${invoices}
     ''';
   }
 }
