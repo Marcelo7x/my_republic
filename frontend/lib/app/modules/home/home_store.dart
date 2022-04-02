@@ -34,13 +34,20 @@ abstract class HomeStoreBase with Store {
   get_invoices() async {
     var result = await Dio().post(
       'http://192.168.1.9:8080/list-invoices-date-interval',
-      data: jsonEncode([{
-        'first_date':dateRange.startDate!.toIso8601String().toString(),
-        'last_date':dateRange.endDate!.toIso8601String().toString(),
-      }]),
+      data: jsonEncode([
+        {
+          'first_date': dateRange.startDate!.toIso8601String().toString(),
+          'last_date': dateRange.endDate!.toIso8601String().toString(),
+        }
+      ]),
     );
 
     invoices = jsonDecode(result.data);
+
+    for (var e in invoices!) {
+      e['invoice']['date'] = DateTime.parse(e['invoice']['date']);
+    }
+
     print(invoices);
   }
 }

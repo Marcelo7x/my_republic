@@ -95,8 +95,8 @@ Future<Response> _login(Request request) async {
     result_bd = await database.mappedResultsQuery(
         "SELECT userId FROM users WHERE email = @email and password = @password",
         substitutionValues: {
-          "email" : result[0]['email'],
-          "password" : result[0]['password'],
+          "email": result[0]['email'],
+          "password": result[0]['password'],
         });
     print(result_bd);
   } catch (e) {
@@ -191,7 +191,7 @@ Future<Response> _listInvoicesDateInterval(Request request) async {
   List<Map<String, Map<String, dynamic>>>? result;
   try {
     result = await database.mappedResultsQuery(
-        "SELECT * FROM invoice WHERE date >= @first_date and date <= @last_date",
+        "SELECT i.description, i.category, i.price, i.date, i.image, u.name FROM invoice i INNER JOIN users u ON i.userid = u.userid WHERE date >= @first_date and date <= @last_date",
         substitutionValues: {
           'first_date': _result[0]['first_date'],
           'last_date': _result[0]['last_date']

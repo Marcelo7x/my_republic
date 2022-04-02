@@ -104,15 +104,25 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
               ),
               Observer(builder: (_) {
                 return Container(
-                  height: 500, width: 100,
+                  height: _height * .7, width: _width * .95,
                   child: controller.invoices != null &&
                           !controller.invoices!.isEmpty
                       ? ListView(
                           children: controller.invoices!
                               .map((e) => Container(
-                                child: Column(
+                                child: Row(
                                   children: [
-                                    Text(e['invoice']['category'].toString()??"a"),
+                                    SizedBox(
+                                      height: 100,
+                                      child: Column(
+                                        children: [
+                                          Text(e['invoice']['category'].toString()),
+                                          Text("${e['invoice']['date'].day}/${e['invoice']['date'].month}"),
+                                          Text(e['users']['name'].toString()),
+                                        ],
+                                      ),
+                                    ),
+                                    Text("${(int.parse(e['invoice']['price'])/100)}"),
                                   ],
                                 )
                               ))
