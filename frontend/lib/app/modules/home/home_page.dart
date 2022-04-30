@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,6 +18,9 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
   Widget build(BuildContext context) {
     final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
+
+    Intl.defaultLocale = 'pt_BR';
+    var numberFormat = NumberFormat('##0.00');
 
     var id = Modular.args.data;
     var logo = AssetImage("images/logo.png");
@@ -104,28 +108,113 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
               ),
               Observer(builder: (_) {
                 return Container(
-                  height: _height * .7, width: _width * .95,
+                  height: _height * .75,
+                  width: _width * .95,
+                  margin: const EdgeInsets.only(top: 20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   child: controller.invoices != null &&
-                          !controller.invoices!.isEmpty
+                          controller.invoices!.isNotEmpty
                       ? ListView(
                           children: controller.invoices!
-                              .map((e) => Container(
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      height: 100,
-                                      child: Column(
+                              .map(
+                                (e) => Container(
+                                  height: 65,
+                                  //margin: EdgeInsets.only(top: 5),
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(e['invoice']['category'].toString()),
-                                          Text("${e['invoice']['date'].day}/${e['invoice']['date'].month}"),
-                                          Text(e['users']['name'].toString()),
+                                          SizedBox(
+                                            height: 50,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      e['invoice']['category']
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    const Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 5)),
+                                                    Text(
+                                                      "${e['invoice']['date'].day}/${e['invoice']['date'].month}",
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Text(
+                                                  e['users']['name'].toString(),
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    right: 5, top: 7),
+                                                child: Text(
+                                                  "R\$",
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
+                                                ),
+                                              ),
+                                              Text(
+                                                "${(numberFormat.format(int.parse(e['invoice']['price']) / 100))}",
+                                                style: const TextStyle(
+                                                  fontSize: 28,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ],
                                       ),
-                                    ),
-                                    Text("${(int.parse(e['invoice']['price'])/100)}"),
-                                  ],
-                                )
-                              ))
+                                      Padding(
+                                        padding: const EdgeInsets.only(top:5),
+                                        child: Divider(
+                                          height: 5,
+                                          thickness: 1,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
                               .toList(),
                         )
                       : const CircularProgressIndicator(),
