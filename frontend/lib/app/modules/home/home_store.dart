@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:mobx/mobx.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -49,5 +51,22 @@ abstract class HomeStoreBase with Store {
     }
 
     print(invoices);
+  }
+
+  @observable
+  TextEditingController? category;
+
+  @observable
+  TextEditingController? description;
+
+  @observable
+  MoneyMaskedTextController? price = MoneyMaskedTextController(leftSymbol: "R\$ " ,decimalSeparator: ',', thousandSeparator: '.');
+
+  @observable
+  DateTime date = DateTime.now();
+
+  @action
+  set_date(DateTime dt) {
+    date = dt;
   }
 }

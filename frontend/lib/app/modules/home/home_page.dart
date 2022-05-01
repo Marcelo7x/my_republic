@@ -27,6 +27,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
 
     controller.get_invoices();
 
+    //Calendario para selecionar range de datas
     void _selectRageDate() {
       showDialog(
         context: context,
@@ -55,6 +56,117 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
       );
     }
 
+    void _selectDate() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // retorna um objeto do tipo Dialog
+          return AlertDialog(
+            title: const Text("Selecione o dia"),
+            content: SfDateRangePicker(
+              view: DateRangePickerView.month,
+              selectionMode: DateRangePickerSelectionMode.single,
+              onSelectionChanged: (DateRangePickerSelectionChangedArgs date) =>
+                  controller.set_date(date.value),
+            ),
+            actions: <Widget>[
+              // define os botões na base do dialogo
+              TextButton(
+                child: Text("Fechar"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    //adicionar conta
+    void _addInvoicePopup() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // retorna um objeto do tipo Dialog
+          return AlertDialog(
+            title: const Text("Adicionar Gasto"),
+            content: SingleChildScrollView(
+              child: Container(
+                height: _height * .4,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                  TextField(
+                      controller: controller.category,
+                      decoration: const InputDecoration(
+                        label: Text("Adicione uma categoria"),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                      )),
+                  TextField(
+                      controller: controller.description,
+                      decoration: const InputDecoration(
+                        label: Text("Adicione uma descrição"),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                      )),
+                  Row(
+                    children: [
+                      const Text(
+                        "Selecione o dia: "
+                      ),
+                      GestureDetector(
+                        child: Row(
+                          children: [
+                            Text(
+                              controller.date == null? "" : "${controller.date.day}/${controller.date.month}/${controller.date.year}",
+                              style: const TextStyle(
+                                color: Colors.blueAccent
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 3),
+                              child: Icon(Icons.calendar_month, color: Colors.blueAccent),
+                            )
+                          ],
+                        ),
+                        onTap: () => _selectDate(),
+                      ),
+                    ],
+                  ),
+                  TextField(
+                      controller: controller.price,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        label: Text("Digite o valor"),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                      )),
+                ]),
+              ),
+            ),
+            actions: <Widget>[
+              // define os botões na base do dialogo
+              TextButton(
+                child: Text("Adicionar"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text("Cancelar"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    // Lista de contas
     List<Widget> _listWidget = <Widget>[
       Container(
         child: SafeArea(
@@ -125,8 +237,8 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                                   //margin: EdgeInsets.only(top: 5),
                                   padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                                   child: Column(
                                     children: [
                                       Row(
@@ -202,7 +314,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                                         ],
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(top:5),
+                                        padding: const EdgeInsets.only(top: 5),
                                         child: Divider(
                                           height: 5,
                                           thickness: 1,
@@ -275,7 +387,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => _addInvoicePopup(),
         child: Icon(Icons.add),
       ),
     );
