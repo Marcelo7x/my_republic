@@ -91,6 +91,9 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
           // retorna um objeto do tipo Dialog
           return AlertDialog(
             title: const Text("Adicionar Gasto"),
+            contentPadding: const EdgeInsets.all(10),
+            actionsPadding: EdgeInsets.only(bottom: 5, left: 5, right: 5),
+            actionsAlignment: MainAxisAlignment.spaceBetween,
             content: SingleChildScrollView(
               child: Container(
                 height: _height * .4,
@@ -148,14 +151,16 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
             ),
             actions: <Widget>[
               // define os botões na base do dialogo
-              TextButton(
+              ElevatedButton(
                 child: Text("Adicionar"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               TextButton(
-                child: Text("Cancelar"),
+                child: Text("Cancelar", style: TextStyle(
+                  color: Theme.of(context).colorScheme.error,
+                ),),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
