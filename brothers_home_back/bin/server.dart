@@ -121,6 +121,10 @@ Future<Response> _addInvoice(Request request) async {
   var image = result[0]['image'] ?? '-';
   var userId = result[0]['userId'] ?? '-';
 
+  if (price.toString().contains('.') || price.toString().contains(',')) {
+    return Response.ok('Ops!!! Não conseguimos adicionar a conta.\n');
+  }
+
   try {
     await database.query(
         'INSERT INTO invoice(invoiceId,description,category,price,date,image,userId) VALUES (DEFAULT, @description, @category, @price, @date, @image, @userId)',

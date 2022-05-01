@@ -98,55 +98,58 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
               child: Container(
                 height: _height * .4,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                  TextField(
-                      controller: controller.category,
-                      decoration: const InputDecoration(
-                        label: Text("Adicione uma categoria"),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
-                      )),
-                  TextField(
-                      controller: controller.description,
-                      decoration: const InputDecoration(
-                        label: Text("Adicione uma descrição"),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
-                      )),
-                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      const Text(
-                        "Selecione o dia: "
-                      ),
-                      GestureDetector(
-                        child: Row(
-                          children: [
-                            Text(
-                              controller.date == null? "" : "${controller.date.day}/${controller.date.month}/${controller.date.year}",
-                              style: const TextStyle(
-                                color: Colors.blueAccent
-                              ),
+                      TextField(
+                          controller: controller.category,
+                          decoration: const InputDecoration(
+                            label: Text("Adicione uma categoria"),
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          )),
+                      TextField(
+                          controller: controller.description,
+                          decoration: const InputDecoration(
+                            label: Text("Adicione uma descrição"),
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          )),
+                      Row(
+                        children: [
+                          const Text("Selecione o dia: "),
+                          GestureDetector(
+                            child: Row(
+                              children: [
+                                Observer(builder: (_) {
+                                  return Text(
+                                    "${controller.date.day}/${controller.date.month}/${controller.date.year}",
+                                    style: const TextStyle(
+                                        color: Colors.blueAccent),
+                                  );
+                                }),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 3),
+                                  child: Icon(Icons.calendar_month,
+                                      color: Colors.blueAccent),
+                                )
+                              ],
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(left: 3),
-                              child: Icon(Icons.calendar_month, color: Colors.blueAccent),
-                            )
-                          ],
-                        ),
-                        onTap: () => _selectDate(),
+                            onTap: () => _selectDate(),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  TextField(
-                      controller: controller.price,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        label: Text("Digite o valor"),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
-                      )),
-                ]),
+                      TextField(
+                          controller: controller.price,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            label: Text("Digite o valor"),
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          )),
+                    ]),
               ),
             ),
             actions: <Widget>[
@@ -154,13 +157,17 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
               ElevatedButton(
                 child: Text("Adicionar"),
                 onPressed: () {
+                  controller.add_invoice();
                   Navigator.of(context).pop();
                 },
               ),
               TextButton(
-                child: Text("Cancelar", style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
-                ),),
+                child: Text(
+                  "Cancelar",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                ),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
