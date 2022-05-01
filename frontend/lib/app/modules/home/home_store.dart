@@ -15,16 +15,22 @@ class HomeStore = HomeStoreBase with _$HomeStore;
 abstract class HomeStoreBase with Store {
   @observable
   int selectedIndex = 0;
-  
+
   @observable
   var page_controller = PageController();
 
   @action
-  setIndex(int index) {
+  setPageAndIndex(int index) {
     selectedIndex = index;
-    page_controller.animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.bounceOut);
+    print(index);
+    page_controller.animateToPage(index,
+        duration: Duration(milliseconds: 200), curve: Curves.easeOut);
   }
 
+  @action
+  setIndex(int index) {
+    selectedIndex = index;
+  }
 
   @observable
   PickerDateRange dateRange = PickerDateRange(

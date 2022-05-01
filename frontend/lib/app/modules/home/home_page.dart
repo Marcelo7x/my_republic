@@ -494,7 +494,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     elevation: 0,
                     currentIndex: controller.selectedIndex,
-                    onTap: (index) => controller.setIndex(index),
+                    onTap: (index) => controller.setPageAndIndex(index),
                     items: const [
                       BottomNavigationBarItem(
                         icon: Icon(Icons.money_off),
