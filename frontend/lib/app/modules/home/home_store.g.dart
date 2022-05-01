@@ -129,6 +129,28 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  final _$total_invoiceAtom = Atom(name: 'HomeStoreBase.total_invoice');
+
+  @override
+  int get total_invoice {
+    _$total_invoiceAtom.reportRead();
+    return super.total_invoice;
+  }
+
+  @override
+  set total_invoice(int value) {
+    _$total_invoiceAtom.reportWrite(value, super.total_invoice, () {
+      super.total_invoice = value;
+    });
+  }
+
+  final _$set_dateRangeAsyncAction = AsyncAction('HomeStoreBase.set_dateRange');
+
+  @override
+  Future set_dateRange(PickerDateRange dt) {
+    return _$set_dateRangeAsyncAction.run(() => super.set_dateRange(dt));
+  }
+
   final _$get_invoicesAsyncAction = AsyncAction('HomeStoreBase.get_invoices');
 
   @override
@@ -141,6 +163,13 @@ mixin _$HomeStore on HomeStoreBase, Store {
   @override
   Future add_invoice() {
     return _$add_invoiceAsyncAction.run(() => super.add_invoice());
+  }
+
+  final _$logoutAsyncAction = AsyncAction('HomeStoreBase.logout');
+
+  @override
+  Future logout() {
+    return _$logoutAsyncAction.run(() => super.logout());
   }
 
   final _$HomeStoreBaseActionController =
@@ -158,22 +187,22 @@ mixin _$HomeStore on HomeStoreBase, Store {
   }
 
   @override
-  dynamic set_dateRange(PickerDateRange dt) {
+  dynamic set_date(DateTime dt) {
     final _$actionInfo = _$HomeStoreBaseActionController.startAction(
-        name: 'HomeStoreBase.set_dateRange');
+        name: 'HomeStoreBase.set_date');
     try {
-      return super.set_dateRange(dt);
+      return super.set_date(dt);
     } finally {
       _$HomeStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  dynamic set_date(DateTime dt) {
+  dynamic calc_total() {
     final _$actionInfo = _$HomeStoreBaseActionController.startAction(
-        name: 'HomeStoreBase.set_date');
+        name: 'HomeStoreBase.calc_total');
     try {
-      return super.set_date(dt);
+      return super.calc_total();
     } finally {
       _$HomeStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -189,7 +218,8 @@ category: ${category},
 description: ${description},
 price: ${price},
 date: ${date},
-loading: ${loading}
+loading: ${loading},
+total_invoice: ${total_invoice}
     ''';
   }
 }

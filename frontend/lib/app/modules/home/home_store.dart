@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -26,7 +27,7 @@ abstract class HomeStoreBase with Store {
       DateTime.utc(DateTime.now().year, DateTime.now().month, 20));
 
   @action
-  set_dateRange(PickerDateRange dt) {
+  set_dateRange(PickerDateRange dt) async {
     dateRange = dt;
   }
 
@@ -35,6 +36,10 @@ abstract class HomeStoreBase with Store {
 
   @action
   get_invoices() async {
+    if (dateRange.startDate == null || dateRange.endDate == null) {
+      return;
+    }
+
     var result = await Dio().post(
       'http://192.168.1.9:8080/list-invoices-date-interval',
       data: jsonEncode([
@@ -50,6 +55,8 @@ abstract class HomeStoreBase with Store {
     for (var e in invoices!) {
       e['invoice']['date'] = DateTime.parse(e['invoice']['date']);
     }
+
+    calc_total();
 
     print(invoices);
   }
@@ -106,5 +113,37 @@ abstract class HomeStoreBase with Store {
     }
 
     loading = false;
+  }
+
+  @observable
+  int total_invoice = 0;
+  int total_invoice_person = 0;
+
+  @action
+  calc_total() {
+    total_invoice = 0;
+
+    invoices?.forEach((element) {
+      total_invoice += int.parse(element['invoice']['price']);
+    });
+
+    if (total_invoice % 3.0 == 0) {
+      total_invoice_person = total_invoice ~/ 3;
+    } else {
+      total_invoice_person = (total_invoice / 3 + 1).toInt();
+    }
+  }
+
+  @action
+  logout() async {
+    loading = true;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('id', -1);
+    await prefs.setBool('is_logged', false);
+
+    loading = false;
+
+    Modular.to.navigate('/login/');
   }
 }

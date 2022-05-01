@@ -28,7 +28,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
     controller.get_invoices();
 
     //Calendario para selecionar range de datas
-    void _selectRageDate() {
+    void _selectRageDate() async {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -44,9 +44,10 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
             ),
             actions: <Widget>[
               // define os botões na base do dialogo
-              TextButton(
-                child: Text("Fechar"),
+              ElevatedButton(
+                child: Text("Confirmar"),
                 onPressed: () {
+                  controller.get_invoices();
                   Navigator.of(context).pop();
                 },
               ),
@@ -348,8 +349,121 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
           ),
         ),
       ),
-      SafeArea(child: Text("Balanço")),
-      SafeArea(child: Text("Opções")),
+      SafeArea(
+        child: Column(
+          children: [
+            Container(
+              //header
+              height: _height * 0.1,
+              width: _width * 0.9,
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.graphic_eq),
+                      Text(
+                        "Balanço",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        child: Observer(builder: (_) {
+                          return Text(
+                              "Intervalo: ${controller.dateRange.startDate?.day}/${controller.dateRange.startDate?.month}/${controller.dateRange.startDate?.year} a ${controller.dateRange.endDate?.day}/${controller.dateRange.endDate?.month}/${controller.dateRange.endDate?.year}");
+                        }),
+                        onTap: () => _selectRageDate(),
+                      ),
+                      GestureDetector(
+                        onTap: () => _selectRageDate(),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Icon(
+                            Icons.calendar_month,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Observer(builder: (_) {
+              return Container(
+                height: _height * .75,
+                width: _width * .95,
+                margin: const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(top: 5),
+                          child: Text("Total do período: R\$ "),
+                        ),
+                        Text(
+                          "${numberFormat.format(controller.total_invoice / 100)}",
+                          style: const TextStyle(
+                            fontSize: 28,
+                            //fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(top: 5),
+                          child: Text("Valor por morador: R\$ "),
+                        ),
+                        Text(
+                          "${numberFormat.format(controller.total_invoice_person / 100)}",
+                          style: const TextStyle(
+                            fontSize: 28,
+                            //fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+      SafeArea(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 30,
+              width: 100,
+              child: ElevatedButton(
+                  child: Text("Sair"),
+                  onPressed: () {
+                    controller.logout();
+                  }),
+            ),
+          ],
+        ),
+      ),
     ];
 
     return Scaffold(
