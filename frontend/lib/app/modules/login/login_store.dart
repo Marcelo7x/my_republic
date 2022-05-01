@@ -30,11 +30,12 @@ abstract class _LoginStoreBase with Store {
 
     if (email_controller.text.length > 0 &&
         password_controller.text.length > 0) {
+      
       try {
         var response = await Dio().post('http://192.168.1.9:8080/login',
             data: jsonEncode([
               {
-                "email": email_controller.text,
+                "email": email_controller.text.replaceAll(RegExp(r' '), ''),
                 "password": password_controller.text
               }
             ]));

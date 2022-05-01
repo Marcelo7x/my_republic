@@ -21,6 +21,31 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
 
     //var logo = AssetImage("logo.png");
 
+    // void _loading() {
+    //   showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       // retorna um objeto do tipo Dialog
+    //       return AlertDialog(
+    //         content: Container(
+    //           height: 100,
+    //           width: 100,
+    //           child: CircularProgressIndicator(),
+    //         ),
+    //         actions: <Widget>[
+    //           // define os botões na base do dialogo
+    //           TextButton(
+    //             child: Text("Fechar"),
+    //             onPressed: () {
+    //               Navigator.of(context).pop();
+    //             },
+    //           ),
+    //         ],
+    //       );
+    //     },
+    //   );
+    // }
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
@@ -37,6 +62,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
               height: 70,
               child: TextField(
                 controller: controller.email_controller,
+                keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
                   label: Text("Email"),
                   prefixIcon: Icon(Icons.email),

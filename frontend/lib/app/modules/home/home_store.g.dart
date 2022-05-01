@@ -24,6 +24,21 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  final _$page_controllerAtom = Atom(name: 'HomeStoreBase.page_controller');
+
+  @override
+  PageController get page_controller {
+    _$page_controllerAtom.reportRead();
+    return super.page_controller;
+  }
+
+  @override
+  set page_controller(PageController value) {
+    _$page_controllerAtom.reportWrite(value, super.page_controller, () {
+      super.page_controller = value;
+    });
+  }
+
   final _$dateRangeAtom = Atom(name: 'HomeStoreBase.dateRange');
 
   @override
@@ -212,6 +227,7 @@ mixin _$HomeStore on HomeStoreBase, Store {
   String toString() {
     return '''
 selectedIndex: ${selectedIndex},
+page_controller: ${page_controller},
 dateRange: ${dateRange},
 invoices: ${invoices},
 category: ${category},

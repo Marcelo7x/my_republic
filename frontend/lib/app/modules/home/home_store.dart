@@ -15,11 +15,16 @@ class HomeStore = HomeStoreBase with _$HomeStore;
 abstract class HomeStoreBase with Store {
   @observable
   int selectedIndex = 0;
+  
+  @observable
+  var page_controller = PageController();
 
   @action
   setIndex(int index) {
     selectedIndex = index;
+    page_controller.animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.bounceOut);
   }
+
 
   @observable
   PickerDateRange dateRange = PickerDateRange(
@@ -29,6 +34,12 @@ abstract class HomeStoreBase with Store {
   @action
   set_dateRange(PickerDateRange dt) async {
     dateRange = dt;
+
+    // if (dt.startDate != null && dt.endDate != null) {
+    //   final prefs = await SharedPreferences.getInstance();
+    //   await prefs.setStringList('dateRange',
+    //       [dt.startDate!.toIso8601String(), dt.endDate!.toIso8601String()]);
+    // }
   }
 
   @observable
@@ -39,6 +50,8 @@ abstract class HomeStoreBase with Store {
     if (dateRange.startDate == null || dateRange.endDate == null) {
       return;
     }
+
+    loading = true;
 
     var result = await Dio().post(
       'http://192.168.1.9:8080/list-invoices-date-interval',
@@ -59,6 +72,8 @@ abstract class HomeStoreBase with Store {
     calc_total();
 
     print(invoices);
+
+    loading = false;
   }
 
   @observable

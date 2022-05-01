@@ -241,7 +241,8 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: controller.invoices != null &&
-                          controller.invoices!.isNotEmpty
+                          controller.invoices!.isNotEmpty &&
+                          !controller.loading
                       ? ListView(
                           children: controller.invoices!
                               .map(
@@ -472,7 +473,11 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
         return Container(
           width: _width,
           height: _height,
-          child: _listWidget.elementAt(controller.selectedIndex),
+          child: PageView(
+            controller: controller.page_controller,
+            children: _listWidget,
+            onPageChanged: (index) => controller.setIndex(index),
+          ),
         );
       }),
       bottomNavigationBar: BottomAppBar(
