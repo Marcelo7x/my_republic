@@ -12,7 +12,9 @@ final _router = Router()
   ..get('/', _rootHandler)
   ..get('/echo/<message>', _echoHandler)
   ..post('/add-user', _addUser)
+  ..post('/add-home', _addHome)
   ..get('/list-users', _listUsers)
+  ..get('/list-home', _listHome)
   ..post('/login', _login)
   ..post('/add-invoice', _addInvoice)
   ..get('/list-invoices', _listInvoices)
@@ -52,6 +54,34 @@ Future<Response> _addUser(Request request) async {
   return Response.ok('Usuário adicionado\n');
 }
 
+Future<Response> _addHome(Request request) async {
+  var result = await request.readAsString().then((value) => jsonDecode(value));
+
+  var db = DB.instance;
+  var database = await db.database;
+
+  try {
+    await database.query(
+        'INSERT INTO home(name,street,district,city,state,country,number,cep) VALUES (@name, @street, @district, @city, @state, @country, @number, @cep)',
+        substitutionValues: {
+          'name': result[0]['name'],
+          'street': result[0]['street'],
+          'district': result[0]['district'],
+          'city': result[0]['city'],
+          'state': result[0]['state'],
+          'country': result[0]['country'],
+          'number': result[0]['number'],
+          'cep': result[0]['cep']
+        });
+  } catch (e) {
+    print("funçao _addHome");
+    print(e);
+    return Response.ok('Ops!!! Não conseguimos adicionar home.\n');
+  }
+
+  return Response.ok('Home adicionado\n');
+}
+
 Future<Response> _removeUser(Request request) async {
   var result = await request.readAsString().then((value) => jsonDecode(value));
 
@@ -83,6 +113,21 @@ Future<Response> _listUsers(Request request) async {
 
   return Response.ok(jsonEncode(result!));
 }
+
+Future<Response> _listHome(Request request) async {
+  var db = DB.instance;
+  var database = await db.database;
+
+  List<Map<String, Map<String, dynamic>>>? result;
+  try {
+    result = await database.mappedResultsQuery("SELECT * FROM home");
+  } catch (e) {
+    print(e);
+  }
+
+  return Response.ok(jsonEncode(result!));
+}
+
 
 Future<Response> _login(Request request) async {
   var result = await request.readAsString().then((value) => jsonDecode(value));
@@ -195,8 +240,9 @@ Future<Response> _listInvoicesDateInterval(Request request) async {
   List<Map<String, Map<String, dynamic>>>? result;
   try {
     result = await database.mappedResultsQuery(
-        "SELECT i.description, i.category, i.price, i.date, i.image, u.name FROM invoice i INNER JOIN users u ON i.userid = u.userid WHERE date >= @first_date and date <= @last_date",
+        "SELECT i.description, i.category, i.price, i.date, i.image, u.name FROM invoice i INNER JOIN users u ON i.homeid = u.homeid and @homeid = u.homeid WHERE date >= @first_date and date <= @last_date",
         substitutionValues: {
+          'homeid': _result[0]['homeid'],
           'first_date': _result[0]['first_date'],
           'last_date': _result[0]['last_date']
         });
