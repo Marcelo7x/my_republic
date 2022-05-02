@@ -138,7 +138,7 @@ Future<Response> _login(Request request) async {
   List<Map<String, Map<String, dynamic>>>? result_bd;
   try {
     result_bd = await database.mappedResultsQuery(
-        "SELECT userId FROM users WHERE email = @email and password = @password",
+        "SELECT userId, homeid FROM users WHERE email = @email and password = @password",
         substitutionValues: {
           "email": result[0]['email'],
           "password": result[0]['password'],
@@ -165,6 +165,7 @@ Future<Response> _addInvoice(Request request) async {
   var date = result[0]['date'] ?? '-';
   var image = result[0]['image'] ?? '-';
   var userId = result[0]['userId'] ?? '-';
+  var homeId = result[0]['homeId'] ?? '-';
 
   if (price.toString().contains('.') || price.toString().contains(',')) {
     return Response.ok('Ops!!! Não conseguimos adicionar a conta.\n');
@@ -172,14 +173,15 @@ Future<Response> _addInvoice(Request request) async {
 
   try {
     await database.query(
-        'INSERT INTO invoice(invoiceId,description,category,price,date,image,userId) VALUES (DEFAULT, @description, @category, @price, @date, @image, @userId)',
+        'INSERT INTO invoice(invoiceId,description,category,price,date,image,userId,homeId) VALUES (DEFAULT, @description, @category, @price, @date, @image, @userId, @homeId)',
         substitutionValues: {
           'description': description,
           'category': category,
           'price': price,
           'date': date,
           'image': image,
-          'userId': userId
+          'userId': userId,
+          'homeId': homeId
         });
   } catch (e) {
     print("Erro: funçao _addInvoice");
@@ -240,7 +242,7 @@ Future<Response> _listInvoicesDateInterval(Request request) async {
   List<Map<String, Map<String, dynamic>>>? result;
   try {
     result = await database.mappedResultsQuery(
-        "SELECT i.description, i.category, i.price, i.date, i.image, u.name FROM invoice i INNER JOIN users u ON i.homeid = u.homeid and @homeid = u.homeid WHERE date >= @first_date and date <= @last_date",
+        "SELECT i.description, i.category, i.price, i.date, i.image, u.name FROM invoice i INNER JOIN users u ON i.homeid = u.homeid and @homeid = u.homeid and i.userid = u.userid WHERE date >= @first_date and date <= @last_date",
         substitutionValues: {
           'homeid': _result[0]['homeid'],
           'first_date': _result[0]['first_date'],

@@ -42,9 +42,11 @@ abstract class _LoginStoreBase with Store {
 
         if (jsonDecode(response.data).length > 0) {
           var id = jsonDecode(response.data)[0]['users']['userid'];
+          var homeid = jsonDecode(response.data)[0]['users']['homeid'];
           final prefs = await SharedPreferences.getInstance();
 
           await prefs.setInt('id', id);
+          await prefs.setInt('home_id', homeid);
           await prefs.setBool('is_logged', true);
 
           Modular.to.navigate('/home/', arguments: id);

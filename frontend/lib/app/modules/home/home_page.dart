@@ -240,9 +240,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                     color: Theme.of(context).scaffoldBackgroundColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: controller.invoices != null &&
-                          controller.invoices!.isNotEmpty &&
-                          !controller.loading
+                  child: controller.invoices != null && !controller.loading && controller.invoices!.isNotEmpty
                       ? ListView(
                           children: controller.invoices!
                               .map(
@@ -343,7 +341,9 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                               )
                               .toList(),
                         )
-                      : const CircularProgressIndicator(),
+                      : controller.invoices != null && controller.invoices!.isEmpty
+                          ? const Center(child: Text("Ainda não há contas"))
+                          : const CircularProgressIndicator(),
                 );
               })
             ],

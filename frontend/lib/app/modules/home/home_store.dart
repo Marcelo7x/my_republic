@@ -59,12 +59,16 @@ abstract class HomeStoreBase with Store {
 
     loading = true;
 
+    final prefs = await SharedPreferences.getInstance();
+    int? home_id = prefs.getInt('home_id');
+
     var result = await Dio().post(
       'http://192.168.1.9:8080/list-invoices-date-interval',
       data: jsonEncode([
         {
           'first_date': dateRange.startDate!.toIso8601String().toString(),
           'last_date': dateRange.endDate!.toIso8601String().toString(),
+          'homeid': home_id,
         }
       ]),
     );
@@ -111,8 +115,11 @@ abstract class HomeStoreBase with Store {
     bool? logged = prefs.getBool('is_logged');
 
     int? id;
+    int? home_id;
     if (logged != null && logged) {
       id = prefs.getInt('id');
+      home_id = prefs.getInt('home_id');
+      print(home_id);
     }
 
     try {
@@ -125,6 +132,7 @@ abstract class HomeStoreBase with Store {
             "price": (price!.numberValue * 100).toInt().toString(),
             "date": date.toIso8601String().toString(),
             "userId": id.toString(),
+            "homeId": home_id.toString(),
           }
         ]),
       );
