@@ -144,6 +144,42 @@ abstract class HomeStoreBase with Store {
     loading = false;
   }
 
+  @action
+  remove_invoice({required user_id, required invoice_id}) async {
+    loading = true;
+
+    final prefs = await SharedPreferences.getInstance();
+    bool? logged = prefs.getBool('is_logged');
+
+    int? id;
+    int? home_id;
+    if (logged != null && logged) {
+      id = prefs.getInt('id');
+      if (id != user_id) {
+        loading = false;
+        return;
+      }
+    }
+        print("$id $invoice_id");
+
+    try {
+      var result = await Dio().post(
+        'http://192.168.1.9:8080/remove-invoice',
+        data: jsonEncode([
+          {
+            "userId": id.toString(),
+            "invoiceId": invoice_id.toString(),
+          }
+        ]),
+      );
+    } on Exception catch (e) {
+      print('remove_invoice:  nao conseguiu remover invoice');
+      print(e);
+    }
+
+    loading = false;
+  }
+
   @observable
   int total_invoice = 0;
   int total_invoice_person = 0;

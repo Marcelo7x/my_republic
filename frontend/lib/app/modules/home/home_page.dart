@@ -84,6 +84,181 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
       );
     }
 
+    void _show_information(var e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // retorna um objeto do tipo Dialog
+          return AlertDialog(
+            content: SizedBox(
+              height: _height * .4,
+              child: Column(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(right: 3, top: 7),
+                            child: Text(
+                              "R\$",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "${(numberFormat.format(int.parse(e['invoice']['price']) / 100))}",
+                            style: const TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Padding(
+                          padding: EdgeInsets.only(
+                        left: 5,
+                      )),
+                      Text(
+                        "${e['invoice']['date'].day}/${e['invoice']['date'].month}/${e['invoice']['date'].year}",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Categoria",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                              Text(
+                                e['invoice']['category'].toString(),
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ]),
+                        Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Usuário",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                              Text(
+                                e['users']['name'].toString(),
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ]),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      const Text(
+                        "Descrição",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      Text(
+                        e['invoice']['description'].toString(),
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () {},
+                child: Row(
+                  children: const [
+                    Icon(Icons.edit_road),
+                    Text("Editar"),
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        // retorna um objeto do tipo Dialog
+                        return AlertDialog(
+                          title: const Text(
+                              "Tem certeza que deseja excluir essa conta?"),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () async {
+                                await controller.remove_invoice(
+                                    user_id: e['invoice']['userid'],
+                                    invoice_id: e['invoice']['invoiceid']);
+
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+
+                                await controller.get_invoices();
+                              },
+                              child: const Text("Sim"),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("Cancelar"),
+                            ),
+                          ],
+                        );
+                      });
+                },
+                child: Row(
+                  children: const [
+                    Icon(Icons.delete),
+                    Text("Excluir"),
+                  ],
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Fechar"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     //adicionar conta
     void _addInvoicePopup() {
       showDialog(
@@ -157,8 +332,8 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
               // define os botões na base do dialogo
               ElevatedButton(
                 child: Text("Adicionar"),
-                onPressed: () {
-                  controller.add_invoice();
+                onPressed: () async {
+                  await controller.add_invoice();
                   Navigator.of(context).pop();
                 },
               ),
@@ -244,106 +419,114 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                           !controller.loading &&
                           controller.invoices!.isNotEmpty
                       ? RefreshIndicator(
-                          onRefresh: () => controller.get_invoices(),
+                          onRefresh: () async => await controller.get_invoices(),
                           child: ListView(
                             children: controller.invoices!
                                 .map(
-                                  (e) => Container(
-                                    height: 65,
-                                    //margin: EdgeInsets.only(top: 5),
-                                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            SizedBox(
-                                              height: 50,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        e['invoice']['category']
-                                                            .toString(),
-                                                        style: const TextStyle(
-                                                            fontSize: 16,
+                                  (e) => GestureDetector(
+                                    onTap: () => _show_information(e),
+                                    child: Container(
+                                      height: 65,
+                                      //margin: EdgeInsets.only(top: 5),
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              SizedBox(
+                                                height: 50,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          e['invoice']
+                                                                  ['category']
+                                                              .toString(),
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        const Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 5)),
+                                                        Text(
+                                                          "${e['invoice']['date'].day}/${e['invoice']['date'].month}",
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 14,
                                                             fontWeight:
                                                                 FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      const Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  left: 5)),
-                                                      Text(
-                                                        "${e['invoice']['date'].day}/${e['invoice']['date'].month}",
-                                                        style: const TextStyle(
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.normal,
+                                                                    .normal,
+                                                          ),
                                                         ),
+                                                      ],
+                                                    ),
+                                                    Text(
+                                                      e['users']['name']
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.normal,
                                                       ),
-                                                    ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: 5, top: 7),
+                                                    child: Text(
+                                                      "R\$",
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                      ),
+                                                    ),
                                                   ),
                                                   Text(
-                                                    e['users']['name']
-                                                        .toString(),
+                                                    "${(numberFormat.format(int.parse(e['invoice']['price']) / 100))}",
                                                     style: const TextStyle(
-                                                      fontSize: 14,
+                                                      fontSize: 28,
                                                       fontWeight:
-                                                          FontWeight.normal,
+                                                          FontWeight.bold,
                                                     ),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                            Row(
-                                              children: [
-                                                const Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 5, top: 7),
-                                                  child: Text(
-                                                    "R\$",
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "${(numberFormat.format(int.parse(e['invoice']['price']) / 100))}",
-                                                  style: const TextStyle(
-                                                    fontSize: 28,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 5),
-                                          child: Divider(
-                                            height: 5,
-                                            thickness: 1,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary,
+                                            ],
                                           ),
-                                        ),
-                                      ],
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 5),
+                                            child: Divider(
+                                              height: 5,
+                                              thickness: 1,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 )
@@ -353,7 +536,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                       : controller.invoices != null &&
                               controller.invoices!.isEmpty
                           ? RefreshIndicator(
-                              onRefresh: () => controller.get_invoices(),
+                              onRefresh: () async => await controller.get_invoices(),
                               child: const Center(
                                   child: Text("Ainda não há contas")))
                           : const CircularProgressIndicator(),
