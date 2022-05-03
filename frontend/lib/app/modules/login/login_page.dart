@@ -77,6 +77,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
               margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
               child: TextField(
                 controller: controller.password_controller,
+                obscureText: true,
                 decoration: const InputDecoration(
                   label: Text("Senha"),
                   prefixIcon: Icon(Icons.password),
