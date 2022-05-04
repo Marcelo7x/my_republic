@@ -20,7 +20,9 @@ final _router = Router()
   ..get('/list-invoices', _listInvoices)
   ..post('/list-invoices-date-interval', _listInvoicesDateInterval)
   ..post('/remove-user', _removeUser)
-  ..post('/remove-invoice', _removeInvoice);
+  ..post('/remove-invoice', _removeInvoice)
+  ..post('/number-users', _number_of_users_for_home)
+  ;
 
 Response _rootHandler(Request req) {
   return Response.ok('Hello, World!\n');
@@ -148,6 +150,29 @@ Future<Response> _login(Request request) async {
     print("Funçao _login");
     print(e);
     return Response.ok('Ops!!! Não conseguimos fazer login.\n');
+  }
+
+  return Response.ok(jsonEncode(result_bd));
+}
+
+Future<Response> _number_of_users_for_home(Request request) async {
+  var result = await request.readAsString().then((value) => jsonDecode(value));
+
+  var db = DB.instance;
+  var database = await db.database;
+
+  List<Map<String, Map<String, dynamic>>>? result_bd;
+  try {
+    result_bd = await database.mappedResultsQuery(
+        "SELECT COUNT(userId) FROM users u INNER JOIN home h ON u.homeId = h.homeId WHERE h.homeId = @homeId ",
+        substitutionValues: {
+          "homeId": result[0]['homeId'],
+        });
+    print(result_bd);
+  } catch (e) {
+    print("Funçao _number_of_users_for_home");
+    print(e);
+    return Response.ok('Ops!!! Não conseguimos recuperar o numero de users.\n');
   }
 
   return Response.ok(jsonEncode(result_bd));

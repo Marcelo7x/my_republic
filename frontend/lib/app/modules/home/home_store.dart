@@ -160,7 +160,7 @@ abstract class HomeStoreBase with Store {
         return;
       }
     }
-        print("$id $invoice_id");
+    print("$id $invoice_id");
 
     try {
       var result = await Dio().post(
@@ -185,17 +185,44 @@ abstract class HomeStoreBase with Store {
   int total_invoice_person = 0;
 
   @action
-  calc_total() {
+  calc_total() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool? logged = prefs.getBool('is_logged');
+
+    int? home_id;
+    if (logged != null && logged) {
+      home_id = prefs.getInt('home_id');
+    }
+
+    int? num_users;
+    try {
+      var result = await Dio().post(
+        'http://192.168.1.9:8080/number-users',
+        data: jsonEncode([
+          {
+            "homeId": home_id.toString(),
+          }
+        ]),
+      );
+
+      List<dynamic> data = jsonDecode(result.data);
+
+      num_users = data[0][""]?["count"];
+    } on Exception catch (e) {
+      print('calc_total:  nao conseguiu obter o numero de users');
+      print(e);
+    }
+
     total_invoice = 0;
 
     invoices?.forEach((element) {
       total_invoice += int.parse(element['invoice']['price']);
     });
 
-    if (total_invoice % 3.0 == 0) {
-      total_invoice_person = total_invoice ~/ 3;
+    if (total_invoice % num_users! == 0) {
+      total_invoice_person = total_invoice ~/ num_users;
     } else {
-      total_invoice_person = (total_invoice / 3 + 1).toInt();
+      total_invoice_person = (total_invoice / num_users + 1).toInt();
     }
   }
 
