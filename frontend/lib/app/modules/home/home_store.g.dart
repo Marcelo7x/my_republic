@@ -190,6 +190,13 @@ mixin _$HomeStore on HomeStoreBase, Store {
         () => super.remove_invoice(user_id: user_id, invoice_id: invoice_id));
   }
 
+  final _$calc_totalAsyncAction = AsyncAction('HomeStoreBase.calc_total');
+
+  @override
+  Future calc_total() {
+    return _$calc_totalAsyncAction.run(() => super.calc_total());
+  }
+
   final _$logoutAsyncAction = AsyncAction('HomeStoreBase.logout');
 
   @override
@@ -228,17 +235,6 @@ mixin _$HomeStore on HomeStoreBase, Store {
         name: 'HomeStoreBase.set_date');
     try {
       return super.set_date(dt);
-    } finally {
-      _$HomeStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic calc_total() {
-    final _$actionInfo = _$HomeStoreBaseActionController.startAction(
-        name: 'HomeStoreBase.calc_total');
-    try {
-      return super.calc_total();
     } finally {
       _$HomeStoreBaseActionController.endAction(_$actionInfo);
     }

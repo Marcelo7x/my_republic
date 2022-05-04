@@ -123,7 +123,8 @@ abstract class HomeStoreBase with Store {
     }
 
     try {
-      var result = await Dio().post(
+      var result = await Dio()
+          .post(
         'http://192.168.1.9:8080/add-invoice',
         data: jsonEncode([
           {
@@ -135,7 +136,13 @@ abstract class HomeStoreBase with Store {
             "homeId": home_id.toString(),
           }
         ]),
-      );
+      )
+          .then((value) {
+        description.text = "";
+        category.text = "";
+        price!.updateValue(0.00);
+        date = DateTime.now();
+      });
     } on Exception catch (e) {
       print('add_invoice:  nao conseguiu adicionar invoice');
       print(e);
