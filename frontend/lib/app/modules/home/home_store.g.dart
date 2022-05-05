@@ -189,6 +189,21 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  final _$usersAtom = Atom(name: 'HomeStoreBase.users');
+
+  @override
+  List<Map<dynamic, dynamic>> get users {
+    _$usersAtom.reportRead();
+    return super.users;
+  }
+
+  @override
+  set users(List<Map<dynamic, dynamic>> value) {
+    _$usersAtom.reportWrite(value, super.users, () {
+      super.users = value;
+    });
+  }
+
   final _$set_dateRangeAsyncAction = AsyncAction('HomeStoreBase.set_dateRange');
 
   @override
@@ -292,7 +307,8 @@ price: ${price},
 date: ${date},
 loading: ${loading},
 invoice_id: ${invoice_id},
-total_invoice: ${total_invoice}
+total_invoice: ${total_invoice},
+users: ${users}
     ''';
   }
 }

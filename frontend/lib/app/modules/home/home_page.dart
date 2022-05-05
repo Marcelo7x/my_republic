@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -656,6 +658,65 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                           ),
                         ),
                       ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Gasto por Morador",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+
+                    Wrap(
+                        //mainAxisAlignment: MainAxisAlignment.center,
+                        children: controller.users.map((e) {
+                          return Container(
+                            height: 30,
+                            margin: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Color.fromARGB(
+                                  255,
+                                  e['r'],
+                                  e['g'],
+                                  e['b'],
+                                ),
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            width: 120,
+                            child: Text(e['name'].toString().toUpperCase() +
+                                " ${(e.values.first * 100).round().toString()}%",
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                ),
+                            ),
+                          );
+                        }).toList()),
+                    Container(
+                      width: _width * .8,
+                      height: 25,
+                      margin: EdgeInsets.only(top: 5),
+                      child: Row(
+                        children: controller.users
+                            .map(
+                              (e) => Container(
+                                height: 25,
+                                decoration: BoxDecoration(
+                                  color: Color.fromARGB(
+                                    255,
+                                    e['r'],
+                                    e['g'],
+                                    e['b'],
+                                  ),
+                                ),
+                                width: _width * .8 * (e.values.first),
+                              ),
+                            )
+                            .toList(),
+                      ),
                     ),
                   ],
                 ),

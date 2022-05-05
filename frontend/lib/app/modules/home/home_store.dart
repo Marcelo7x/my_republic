@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -247,6 +248,9 @@ abstract class HomeStoreBase with Store {
   int total_invoice = 0;
   int total_invoice_person = 0;
 
+  @observable
+  List<Map<dynamic, dynamic>> users = [{}];
+
   @action
   calc_total() async {
     final prefs = await SharedPreferences.getInstance();
@@ -277,9 +281,22 @@ abstract class HomeStoreBase with Store {
     }
 
     total_invoice = 0;
+    users = [{}];
+    var aux = [{}];
 
     invoices?.forEach((element) {
       total_invoice += int.parse(element['invoice']['price']);
+      aux[0][element['invoice']['userid']] =
+          aux[0][element['invoice']['userid']] == null
+              ? {
+                  'value': int.parse(element['invoice']['price']),
+                  'name': element['users']['name']
+                }
+              : {
+                  'value': aux[0][element['invoice']['userid']]['value']! +
+                      int.parse(element['invoice']['price']),
+                  'name': element['users']['name']
+                };
     });
 
     if (total_invoice % num_users! == 0) {
@@ -287,6 +304,19 @@ abstract class HomeStoreBase with Store {
     } else {
       total_invoice_person = (total_invoice / num_users + 1).toInt();
     }
+
+    aux[0].forEach((id, value) {
+      users.add({
+        id: ((((value['value'] * 100) / total_invoice)) / 100),
+        'r': Random().nextInt(255),
+        'g': Random().nextInt(255),
+        'b': Random().nextInt(255),
+        'name': value['name']
+      });
+    });
+    users.removeAt(0);
+
+    print("User: ${users}");
   }
 
   @action
