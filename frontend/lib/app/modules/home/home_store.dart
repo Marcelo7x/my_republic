@@ -51,6 +51,9 @@ abstract class HomeStoreBase with Store {
   @observable
   List<dynamic>? invoices;
 
+  @observable
+  int? id = Modular.args.data;
+
   @action
   get_invoices() async {
     if (dateRange.startDate == null || dateRange.endDate == null) {
@@ -164,7 +167,6 @@ abstract class HomeStoreBase with Store {
 
   @action
   modify_invoice() async {
-    print("MOdify.........");
     loading = true;
 
     final prefs = await SharedPreferences.getInstance();

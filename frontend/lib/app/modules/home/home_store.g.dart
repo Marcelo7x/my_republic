@@ -69,6 +69,21 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  final _$idAtom = Atom(name: 'HomeStoreBase.id');
+
+  @override
+  int? get id {
+    _$idAtom.reportRead();
+    return super.id;
+  }
+
+  @override
+  set id(int? value) {
+    _$idAtom.reportWrite(value, super.id, () {
+      super.id = value;
+    });
+  }
+
   final _$categoryAtom = Atom(name: 'HomeStoreBase.category');
 
   @override
@@ -270,6 +285,7 @@ selectedIndex: ${selectedIndex},
 page_controller: ${page_controller},
 dateRange: ${dateRange},
 invoices: ${invoices},
+id: ${id},
 category: ${category},
 description: ${description},
 price: ${price},

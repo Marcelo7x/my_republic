@@ -190,175 +190,182 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
         context: context,
         builder: (BuildContext context) {
           // retorna um objeto do tipo Dialog
-          return AlertDialog(
-            content: SizedBox(
-              height: _height * .4,
-              child: Column(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(right: 3, top: 7),
-                            child: Text(
-                              "R\$",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "${(numberFormat.format(int.parse(e['invoice']['price']) / 100))}",
-                            style: const TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Padding(
-                          padding: EdgeInsets.only(
-                        left: 5,
-                      )),
-                      Text(
-                        "${e['invoice']['date'].day}/${e['invoice']['date'].month}/${e['invoice']['date'].year}",
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+          return Observer(builder: (_) {
+            return AlertDialog(
+              content: SizedBox(
+                height: _height * .4,
+                child: Column(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "Categoria",
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(right: 3, top: 7),
+                              child: Text(
+                                "R\$",
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.normal,
                                 ),
                               ),
-                              Text(
-                                e['invoice']['category'].toString(),
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ]),
-                        Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "Usuário",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                              Text(
-                                e['users']['name'].toString(),
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ]),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      const Text(
-                        "Descrição",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                      Text(
-                        e['invoice']['description'].toString(),
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              ElevatedButton(
-                onPressed: () async {
-                  controller.modify(e);
-                  _addInvoicePopup(modify: true);
-                },
-                child: Row(
-                  children: const [
-                    Icon(Icons.edit_road),
-                    Text("Editar"),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        // retorna um objeto do tipo Dialog
-                        return AlertDialog(
-                          title: const Text(
-                              "Tem certeza que deseja excluir essa conta?"),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () async {
-                                await controller.remove_invoice(
-                                    user_id: e['invoice']['userid'],
-                                    invoice_id: e['invoice']['invoiceid']);
-
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pop();
-
-                                await controller.get_invoices();
-                              },
-                              child: const Text("Sim"),
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text("Cancelar"),
+                            Text(
+                              "${(numberFormat.format(int.parse(e['invoice']['price']) / 100))}",
+                              style: const TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
-                        );
-                      });
-                },
-                child: Row(
-                  children: const [
-                    Icon(Icons.delete),
-                    Text("Excluir"),
+                        ),
+                        const Padding(
+                            padding: EdgeInsets.only(
+                          left: 5,
+                        )),
+                        Text(
+                          "${e['invoice']['date'].day}/${e['invoice']['date'].month}/${e['invoice']['date'].year}",
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Categoria",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                                Text(
+                                  e['invoice']['category'].toString(),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ]),
+                          Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Usuário",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                                Text(
+                                  e['users']['name'].toString(),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ]),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      children: [
+                        const Text(
+                          "Descrição",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                        Text(
+                          e['invoice']['description'].toString(),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Fechar"),
-              ),
-            ],
-          );
+              actions: <Widget>[
+                e['invoice']['userid'] == controller.id
+                    ? ElevatedButton(
+                        onPressed: () async {
+                          controller.modify(e);
+                          _addInvoicePopup(modify: true);
+                        },
+                        child: Row(
+                          children: const [
+                            Icon(Icons.edit_road),
+                            Text("Editar"),
+                          ],
+                        ),
+                      )
+                    : Container(),
+                e['invoice']['userid'] == controller.id
+                    ? ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                // retorna um objeto do tipo Dialog
+                                return AlertDialog(
+                                  title: const Text(
+                                      "Tem certeza que deseja excluir essa conta?"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () async {
+                                        await controller.remove_invoice(
+                                            user_id: e['invoice']['userid'],
+                                            invoice_id: e['invoice']
+                                                ['invoiceid']);
+
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+
+                                        await controller.get_invoices();
+                                      },
+                                      child: const Text("Sim"),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text("Cancelar"),
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
+                        child: Row(
+                          children: const [
+                            Icon(Icons.delete),
+                            Text("Excluir"),
+                          ],
+                        ),
+                      )
+                    : Container(),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Fechar"),
+                ),
+              ],
+            );
+          });
         },
       );
     }
