@@ -32,13 +32,24 @@ class _SplashPageState extends ModularState<SplashPage, SplashStore> {
               height: 200,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: logo
-                  )),
+                  image: DecorationImage(fit: BoxFit.fill, image: logo)),
             ),
           ),
-          CircularProgressIndicator(),
+          Observer(builder: (_) {
+            return controller.error
+                ? SizedBox(
+                  width: MediaQuery.of(context).size.width * .8,
+                  child: Text(
+                      controller.erro_menssage,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                          color: Theme.of(context).colorScheme.error,
+                          decoration: TextDecoration.none),
+                    ),
+                )
+                : CircularProgressIndicator();
+          }),
         ],
       ),
     );

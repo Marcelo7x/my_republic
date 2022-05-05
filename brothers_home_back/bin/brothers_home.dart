@@ -21,11 +21,15 @@ final _router = Router()
   ..post('/list-invoices-date-interval', _listInvoicesDateInterval)
   ..post('/remove-user', _removeUser)
   ..post('/remove-invoice', _removeInvoice)
-  ..post('/number-users', _number_of_users_for_home)
-  ;
+  ..post('/number-users', _number_of_users_for_home);
 
 Response _rootHandler(Request req) {
-  return Response.ok('Hello, World!\n');
+  Map<String, dynamic> data = {
+    "current_version" : "0.0.1",
+    "force_update" : "0.0.1",
+  };
+
+  return Response.ok(jsonEncode(data));
 }
 
 Response _echoHandler(Request request) {
@@ -129,7 +133,6 @@ Future<Response> _listHome(Request request) async {
 
   return Response.ok(jsonEncode(result!));
 }
-
 
 Future<Response> _login(Request request) async {
   var result = await request.readAsString().then((value) => jsonDecode(value));
