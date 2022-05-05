@@ -144,6 +144,21 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  final _$invoice_idAtom = Atom(name: 'HomeStoreBase.invoice_id');
+
+  @override
+  int? get invoice_id {
+    _$invoice_idAtom.reportRead();
+    return super.invoice_id;
+  }
+
+  @override
+  set invoice_id(int? value) {
+    _$invoice_idAtom.reportWrite(value, super.invoice_id, () {
+      super.invoice_id = value;
+    });
+  }
+
   final _$total_invoiceAtom = Atom(name: 'HomeStoreBase.total_invoice');
 
   @override
@@ -178,6 +193,14 @@ mixin _$HomeStore on HomeStoreBase, Store {
   @override
   Future add_invoice() {
     return _$add_invoiceAsyncAction.run(() => super.add_invoice());
+  }
+
+  final _$modify_invoiceAsyncAction =
+      AsyncAction('HomeStoreBase.modify_invoice');
+
+  @override
+  Future modify_invoice() {
+    return _$modify_invoiceAsyncAction.run(() => super.modify_invoice());
   }
 
   final _$remove_invoiceAsyncAction =
@@ -252,6 +275,7 @@ description: ${description},
 price: ${price},
 date: ${date},
 loading: ${loading},
+invoice_id: ${invoice_id},
 total_invoice: ${total_invoice}
     ''';
   }

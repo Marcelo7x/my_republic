@@ -107,6 +107,17 @@ abstract class HomeStoreBase with Store {
   @observable
   bool loading = false;
 
+  @observable
+  int? invoice_id;
+
+  modify(e) {
+    category.text = e['invoice']['category'];
+    description.text = e['invoice']['description'];
+    price!.updateValue(int.parse(e['invoice']['price']) / 100);
+    date = e['invoice']['date'];
+    invoice_id = e['invoice']['invoiceid'];
+  }
+
   @action
   add_invoice() async {
     loading = true;
@@ -145,6 +156,49 @@ abstract class HomeStoreBase with Store {
       });
     } on Exception catch (e) {
       print('add_invoice:  nao conseguiu adicionar invoice');
+      print(e);
+    }
+
+    loading = false;
+  }
+
+  @action
+  modify_invoice() async {
+    print("MOdify.........");
+    loading = true;
+
+    final prefs = await SharedPreferences.getInstance();
+    bool? logged = prefs.getBool('is_logged');
+
+    int? id;
+    int? home_id;
+    if (logged != null && logged) {
+      id = prefs.getInt('id');
+    }
+
+    try {
+      var result = await Dio()
+          .post(
+        'http://192.168.1.9:8080/modify-invoice',
+        data: jsonEncode([
+          {
+            "description": description.text,
+            "category": category.text,
+            "price": (price!.numberValue * 100).toInt().toString(),
+            "date": date.toIso8601String().toString(),
+            "userId": id.toString(),
+            "invoiceId": invoice_id.toString(),
+          }
+        ]),
+      )
+          .then((value) {
+        description.text = "";
+        category.text = "";
+        price!.updateValue(0.00);
+        date = DateTime.now();
+      });
+    } on Exception catch (e) {
+      print('modify_invoice:  nao conseguiu modificar invoice');
       print(e);
     }
 

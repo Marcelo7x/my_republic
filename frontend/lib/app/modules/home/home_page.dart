@@ -84,6 +84,107 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
       );
     }
 
+    //adicionar conta
+    void _addInvoicePopup({modify = false}) async {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // retorna um objeto do tipo Dialog
+          return AlertDialog(
+            title: !modify
+                ? const Text("Adicionar Gasto")
+                : const Text("Modificar Gasto"),
+            contentPadding: const EdgeInsets.all(10),
+            actionsPadding: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
+            actionsAlignment: MainAxisAlignment.spaceBetween,
+            content: SingleChildScrollView(
+              child: Container(
+                height: _height * .4,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextField(
+                          controller: controller.category,
+                          decoration: const InputDecoration(
+                            label: Text("Adicione uma categoria"),
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          )),
+                      TextField(
+                          controller: controller.description,
+                          decoration: const InputDecoration(
+                            label: Text("Adicione uma descrição"),
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          )),
+                      Row(
+                        children: [
+                          const Text("Selecione o dia: "),
+                          GestureDetector(
+                            child: Row(
+                              children: [
+                                Observer(builder: (_) {
+                                  return Text(
+                                    "${controller.date.day}/${controller.date.month}/${controller.date.year}",
+                                    style: const TextStyle(
+                                        color: Colors.blueAccent),
+                                  );
+                                }),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 3),
+                                  child: Icon(Icons.calendar_month,
+                                      color: Colors.blueAccent),
+                                )
+                              ],
+                            ),
+                            onTap: () => _selectDate(),
+                          ),
+                        ],
+                      ),
+                      TextField(
+                          controller: controller.price,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            label: Text("Digite o valor"),
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          )),
+                    ]),
+              ),
+            ),
+            actions: <Widget>[
+              // define os botões na base do dialogo
+              ElevatedButton(
+                child: Text("Adicionar"),
+                onPressed: () async {
+                  !modify
+                      ? await controller.add_invoice()
+                      : await controller.modify_invoice();
+
+                  Navigator.of(context).pop();
+                  Modular.to.navigate('/home/');
+                },
+              ),
+              TextButton(
+                child: Text(
+                  "Cancelar",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     void _show_information(var e) {
       showDialog(
         context: context,
@@ -199,7 +300,10 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
             ),
             actions: <Widget>[
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  controller.modify(e);
+                  _addInvoicePopup(modify: true);
+                },
                 child: Row(
                   children: const [
                     Icon(Icons.edit_road),
@@ -252,101 +356,6 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                   Navigator.of(context).pop();
                 },
                 child: const Text("Fechar"),
-              ),
-            ],
-          );
-        },
-      );
-    }
-
-    //adicionar conta
-    void _addInvoicePopup() {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          // retorna um objeto do tipo Dialog
-          return AlertDialog(
-            title: const Text("Adicionar Gasto"),
-            contentPadding: const EdgeInsets.all(10),
-            actionsPadding: EdgeInsets.only(bottom: 5, left: 5, right: 5),
-            actionsAlignment: MainAxisAlignment.spaceBetween,
-            content: SingleChildScrollView(
-              child: Container(
-                height: _height * .4,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextField(
-                          controller: controller.category,
-                          decoration: const InputDecoration(
-                            label: Text("Adicione uma categoria"),
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                          )),
-                      TextField(
-                          controller: controller.description,
-                          decoration: const InputDecoration(
-                            label: Text("Adicione uma descrição"),
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                          )),
-                      Row(
-                        children: [
-                          const Text("Selecione o dia: "),
-                          GestureDetector(
-                            child: Row(
-                              children: [
-                                Observer(builder: (_) {
-                                  return Text(
-                                    "${controller.date.day}/${controller.date.month}/${controller.date.year}",
-                                    style: const TextStyle(
-                                        color: Colors.blueAccent),
-                                  );
-                                }),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 3),
-                                  child: Icon(Icons.calendar_month,
-                                      color: Colors.blueAccent),
-                                )
-                              ],
-                            ),
-                            onTap: () => _selectDate(),
-                          ),
-                        ],
-                      ),
-                      TextField(
-                          controller: controller.price,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            label: Text("Digite o valor"),
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                          )),
-                    ]),
-              ),
-            ),
-            actions: <Widget>[
-              // define os botões na base do dialogo
-              ElevatedButton(
-                child: Text("Adicionar"),
-                onPressed: () async {
-                  await controller.add_invoice();
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text(
-                  "Cancelar",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
               ),
             ],
           );
@@ -419,7 +428,8 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                           !controller.loading &&
                           controller.invoices!.isNotEmpty
                       ? RefreshIndicator(
-                          onRefresh: () async => await controller.get_invoices(),
+                          onRefresh: () async =>
+                              await controller.get_invoices(),
                           child: ListView(
                             children: controller.invoices!
                                 .map(
@@ -536,7 +546,8 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                       : controller.invoices != null &&
                               controller.invoices!.isEmpty
                           ? RefreshIndicator(
-                              onRefresh: () async => await controller.get_invoices(),
+                              onRefresh: () async =>
+                                  await controller.get_invoices(),
                               child: const Center(
                                   child: Text("Ainda não há contas")))
                           : const CircularProgressIndicator(),

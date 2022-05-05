@@ -17,6 +17,7 @@ final _router = Router()
   ..get('/list-home', _listHome)
   ..post('/login', _login)
   ..post('/add-invoice', _addInvoice)
+  ..post('/modify-invoice', _modifyInvoice)
   ..get('/list-invoices', _listInvoices)
   ..post('/list-invoices-date-interval', _listInvoicesDateInterval)
   ..post('/remove-user', _removeUser)
@@ -218,6 +219,45 @@ Future<Response> _addInvoice(Request request) async {
   }
 
   return Response.ok('Conta adicionado\n');
+}
+
+Future<Response> _modifyInvoice(Request request) async {
+  var result = await request.readAsString().then((value) => jsonDecode(value));
+
+  var db = DB.instance;
+  var database = await db.database;
+
+  var description = result[0]['description'] ?? '-';
+  var category = result[0]['category'] ?? '-';
+  var price = result[0]['price'] ?? '-';
+  var date = result[0]['date'] ?? '-';
+  var image = result[0]['image'] ?? '-';
+  var userId = result[0]['userId'] ?? '-';
+  var invoiceId = result[0]['invoiceId'] ?? '-';
+
+  if (price.toString().contains('.') || price.toString().contains(',')) {
+    return Response.ok('Ops!!! Não conseguimos adicionar a conta.\n');
+  }
+
+  try {
+    await database.query(
+        'UPDATE invoice SET description = @description, category = @category, price = @price, date = @date, image = @image WHERE invoiceId = @invoiceId and userId = @userId',
+        substitutionValues: {
+          'description': description,
+          'category': category,
+          'price': price,
+          'date': date,
+          'image': image,
+          'userId': userId,
+          'invoiceId': invoiceId
+        });
+  } catch (e) {
+    print("Erro: funçao _modifyInvoice");
+    print(e);
+    return Response.ok('Ops!!! Não conseguimos modificar a conta.\n');
+  }
+
+  return Response.ok('Conta modificada\n');
 }
 
 Future<Response> _removeInvoice(Request request) async {
