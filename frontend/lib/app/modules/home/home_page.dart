@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
+import 'package:frontend/app/modules/home/widget/addInvoicePopup.dart';
+import 'package:frontend/app/modules/home/widget/selectDate.dart';
+import 'package:frontend/app/modules/home/widget/selectRageDate.dart';
+import 'package:frontend/app/modules/home/widget/showInformationPopup.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -30,347 +34,353 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
     controller.get_invoices();
 
     //Calendario para selecionar range de datas
-    void _selectRageDate() async {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          // retorna um objeto do tipo Dialog
-          return AlertDialog(
-            title: const Text("Selecione o intevalo"),
-            content: SfDateRangePicker(
-              view: DateRangePickerView.year,
-              initialSelectedRange: controller.dateRange,
-              selectionMode: DateRangePickerSelectionMode.range,
-              onSelectionChanged: (DateRangePickerSelectionChangedArgs date) =>
-                  controller.set_dateRange(date.value),
-            ),
-            actions: <Widget>[
-              // define os botões na base do dialogo
-              ElevatedButton(
-                child: Text("Confirmar"),
-                onPressed: () {
-                  controller.get_invoices();
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+    // void _selectRageDate() async {
+    //   showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       // retorna um objeto do tipo Dialog
+    //       return AlertDialog(
+    //         title: const Text("Selecione o intevalo"),
+    //         content: SfDateRangePicker(
+    //           view: DateRangePickerView.year,
+    //           initialSelectedRange: controller.dateRange,
+    //           selectionMode: DateRangePickerSelectionMode.range,
+    //           onSelectionChanged: (DateRangePickerSelectionChangedArgs date) =>
+    //               controller.set_dateRange(date.value),
+    //         ),
+    //         actions: <Widget>[
+    //           // define os botões na base do dialogo
+    //           ElevatedButton(
+    //             child: Text("Confirmar"),
+    //             onPressed: () {
+    //               controller.get_invoices();
+    //               Navigator.of(context).pop();
+    //             },
+    //           ),
+    //         ],
+    //       );
+    //     },
+    //   );
+    // }
 
-    void _selectDate() {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          // retorna um objeto do tipo Dialog
-          return AlertDialog(
-            title: const Text("Selecione o dia"),
-            content: SfDateRangePicker(
-              view: DateRangePickerView.month,
-              selectionMode: DateRangePickerSelectionMode.single,
-              onSelectionChanged: (DateRangePickerSelectionChangedArgs date) =>
-                  controller.set_date(date.value),
-            ),
-            actions: <Widget>[
-              // define os botões na base do dialogo
-              TextButton(
-                child: Text("Fechar"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+    // void _selectDate() {
+    //   showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       // retorna um objeto do tipo Dialog
+    //       return AlertDialog(
+    //         title: const Text("Selecione o dia"),
+    //         content: SfDateRangePicker(
+    //           view: DateRangePickerView.month,
+    //           selectionMode: DateRangePickerSelectionMode.single,
+    //           onSelectionChanged: (DateRangePickerSelectionChangedArgs date) =>
+    //               controller.set_date(date.value),
+    //         ),
+    //         actions: <Widget>[
+    //           // define os botões na base do dialogo
+    //           TextButton(
+    //             child: Text("Fechar"),
+    //             onPressed: () {
+    //               Navigator.of(context).pop();
+    //             },
+    //           ),
+    //         ],
+    //       );
+    //     },
+    //   );
+    // }
 
     //adicionar conta
-    void _addInvoicePopup({modify = false}) async {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          // retorna um objeto do tipo Dialog
-          return AlertDialog(
-            title: !modify
-                ? const Text("Adicionar Gasto")
-                : const Text("Modificar Gasto"),
-            contentPadding: const EdgeInsets.all(10),
-            actionsPadding: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
-            actionsAlignment: MainAxisAlignment.spaceBetween,
-            content: SingleChildScrollView(
-              child: Container(
-                height: _height * .4,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextField(
-                          controller: controller.category,
-                          decoration: const InputDecoration(
-                            label: Text("Adicione uma categoria"),
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                          )),
-                      TextField(
-                          controller: controller.description,
-                          decoration: const InputDecoration(
-                            label: Text("Adicione uma descrição"),
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                          )),
-                      Row(
-                        children: [
-                          const Text("Selecione o dia: "),
-                          GestureDetector(
-                            child: Row(
-                              children: [
-                                Observer(builder: (_) {
-                                  return Text(
-                                    "${controller.date.day}/${controller.date.month}/${controller.date.year}",
-                                    style: const TextStyle(
-                                        color: Colors.blueAccent),
-                                  );
-                                }),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 3),
-                                  child: Icon(Icons.calendar_month,
-                                      color: Colors.blueAccent),
-                                )
-                              ],
-                            ),
-                            onTap: () => _selectDate(),
-                          ),
-                        ],
-                      ),
-                      TextField(
-                          controller: controller.price,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            label: Text("Digite o valor"),
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                          )),
-                    ]),
-              ),
-            ),
-            actions: <Widget>[
-              // define os botões na base do dialogo
-              ElevatedButton(
-                child: Text("Adicionar"),
-                onPressed: () async {
-                  !modify
-                      ? await controller.add_invoice()
-                      : await controller.modify_invoice();
+    // void _addInvoicePopup({modify = false}) async {
+    //   showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    // retorna um objeto do tipo Dialog
+    // return AlertDialog(
+    //   title: !modify
+    //       ? const Text("Adicionar Gasto")
+    //       : const Text("Modificar Gasto"),
+    //   contentPadding: const EdgeInsets.all(10),
+    //   actionsPadding: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
+    //   actionsAlignment: MainAxisAlignment.spaceBetween,
+    //   content: SingleChildScrollView(
+    //     child: Container(
+    //       height: _height * .4,
+    //       child: Column(
+    //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //           children: [
+    //             TextField(
+    //                 controller: controller.category,
+    //                 decoration: const InputDecoration(
+    //                   label: Text("Adicione uma categoria"),
+    //                   border: OutlineInputBorder(
+    //                       borderRadius:
+    //                           BorderRadius.all(Radius.circular(20))),
+    //                 )),
+    //             TextField(
+    //                 controller: controller.description,
+    //                 decoration: const InputDecoration(
+    //                   label: Text("Adicione uma descrição"),
+    //                   border: OutlineInputBorder(
+    //                       borderRadius:
+    //                           BorderRadius.all(Radius.circular(20))),
+    //                 )),
+    //             Row(
+    //               children: [
+    //                 const Text("Selecione o dia: "),
+    //                 GestureDetector(
+    //                   child: Row(
+    //                     children: [
+    //                       Observer(builder: (_) {
+    //                         return Text(
+    //                           "${controller.date.day}/${controller.date.month}/${controller.date.year}",
+    //                           style: const TextStyle(
+    //                               color: Colors.blueAccent),
+    //                         );
+    //                       }),
+    //                       const Padding(
+    //                         padding: EdgeInsets.only(left: 3),
+    //                         child: Icon(Icons.calendar_month,
+    //                             color: Colors.blueAccent),
+    //                       )
+    //                     ],
+    //                   ),
+    //                   onTap: () => showDialog(
+    //                     context: context,
+    //                     builder: (BuildContext context) {
+    //                       return SelectData();
+    //                     },
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //             TextField(
+    //                 controller: controller.price,
+    //                 keyboardType: TextInputType.number,
+    //                 decoration: const InputDecoration(
+    //                   label: Text("Digite o valor"),
+    //                   border: OutlineInputBorder(
+    //                       borderRadius:
+    //                           BorderRadius.all(Radius.circular(20))),
+    //                 )),
+    //           ]),
+    //     ),
+    //   ),
+    //   actions: <Widget>[
+    //     // define os botões na base do dialogo
+    //     ElevatedButton(
+    //       child: Text("Adicionar"),
+    //       onPressed: () async {
+    //         !modify
+    //             ? await controller.add_invoice()
+    //             : await controller.modify_invoice();
 
-                  Navigator.of(context).pop();
-                  Modular.to.navigate('/home/');
-                },
-              ),
-              TextButton(
-                child: Text(
-                  "Cancelar",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+    //         Navigator.of(context).pop();
+    //         Modular.to.navigate('/home/');
+    //       },
+    //     ),
+    //     TextButton(
+    //       child: Text(
+    //         "Cancelar",
+    //         style: TextStyle(
+    //           color: Theme.of(context).colorScheme.error,
+    //         ),
+    //       ),
+    //       onPressed: () {
+    //         Navigator.of(context).pop();
+    //       },
+    //     ),
+    //   ],
+    // );
+    //     },
+    //   );
+    // }
 
-    void _show_information(var e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          // retorna um objeto do tipo Dialog
-          return Observer(builder: (_) {
-            return AlertDialog(
-              content: SizedBox(
-                height: _height * .4,
-                child: Column(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(right: 3, top: 7),
-                              child: Text(
-                                "R\$",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              "${(numberFormat.format(int.parse(e['invoice']['price']) / 100))}",
-                              style: const TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Padding(
-                            padding: EdgeInsets.only(
-                          left: 5,
-                        )),
-                        Text(
-                          "${e['invoice']['date'].day}/${e['invoice']['date'].month}/${e['invoice']['date'].year}",
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  "Categoria",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                                Text(
-                                  e['invoice']['category'].toString(),
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ]),
-                          Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  "Usuário",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                                Text(
-                                  e['users']['name'].toString(),
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ]),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        const Text(
-                          "Descrição",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                        Text(
-                          e['invoice']['description'].toString(),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                e['invoice']['userid'] == controller.id
-                    ? ElevatedButton(
-                        onPressed: () async {
-                          controller.modify(e);
-                          _addInvoicePopup(modify: true);
-                        },
-                        child: Row(
-                          children: const [
-                            Icon(Icons.edit_road),
-                            Text("Editar"),
-                          ],
-                        ),
-                      )
-                    : Container(),
-                e['invoice']['userid'] == controller.id
-                    ? ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                // retorna um objeto do tipo Dialog
-                                return AlertDialog(
-                                  title: const Text(
-                                      "Tem certeza que deseja excluir essa conta?"),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () async {
-                                        await controller.remove_invoice(
-                                            user_id: e['invoice']['userid'],
-                                            invoice_id: e['invoice']
-                                                ['invoiceid']);
+    // void _show_information(var e) {
+    //   showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       // retorna um objeto do tipo Dialog
+    //       return Observer(builder: (_) {
+    //         return AlertDialog(
+    //           content: SizedBox(
+    //             height: _height * .4,
+    //             child: Column(
+    //               children: [
+    //                 Column(
+    //                   crossAxisAlignment: CrossAxisAlignment.center,
+    //                   children: [
+    //                     Row(
+    //                       mainAxisAlignment: MainAxisAlignment.center,
+    //                       children: [
+    //                         const Padding(
+    //                           padding: EdgeInsets.only(right: 3, top: 7),
+    //                           child: Text(
+    //                             "R\$",
+    //                             style: TextStyle(
+    //                               fontSize: 14,
+    //                               fontWeight: FontWeight.normal,
+    //                             ),
+    //                           ),
+    //                         ),
+    //                         Text(
+    //                           "${(numberFormat.format(int.parse(e['invoice']['price']) / 100))}",
+    //                           style: const TextStyle(
+    //                             fontSize: 32,
+    //                             fontWeight: FontWeight.bold,
+    //                           ),
+    //                         ),
+    //                       ],
+    //                     ),
+    //                     const Padding(
+    //                         padding: EdgeInsets.only(
+    //                       left: 5,
+    //                     )),
+    //                     Text(
+    //                       "${e['invoice']['date'].day}/${e['invoice']['date'].month}/${e['invoice']['date'].year}",
+    //                       style: const TextStyle(
+    //                         fontSize: 14,
+    //                         fontWeight: FontWeight.normal,
+    //                       ),
+    //                     ),
+    //                   ],
+    //                 ),
+    //                 Padding(
+    //                   padding: const EdgeInsets.all(20),
+    //                   child: Row(
+    //                     mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //                     children: [
+    //                       Column(
+    //                           mainAxisAlignment: MainAxisAlignment.center,
+    //                           children: [
+    //                             const Text(
+    //                               "Categoria",
+    //                               style: TextStyle(
+    //                                 fontSize: 14,
+    //                                 fontWeight: FontWeight.normal,
+    //                               ),
+    //                             ),
+    //                             Text(
+    //                               e['invoice']['category'].toString(),
+    //                               style: const TextStyle(
+    //                                 fontSize: 20,
+    //                                 fontWeight: FontWeight.bold,
+    //                               ),
+    //                             ),
+    //                           ]),
+    //                       Column(
+    //                           mainAxisAlignment: MainAxisAlignment.center,
+    //                           children: [
+    //                             const Text(
+    //                               "Usuário",
+    //                               style: TextStyle(
+    //                                 fontSize: 14,
+    //                                 fontWeight: FontWeight.normal,
+    //                               ),
+    //                             ),
+    //                             Text(
+    //                               e['users']['name'].toString(),
+    //                               style: const TextStyle(
+    //                                 fontSize: 20,
+    //                                 fontWeight: FontWeight.bold,
+    //                               ),
+    //                             ),
+    //                           ]),
+    //                     ],
+    //                   ),
+    //                 ),
+    //                 Column(
+    //                   children: [
+    //                     const Text(
+    //                       "Descrição",
+    //                       style: TextStyle(
+    //                         fontSize: 14,
+    //                         fontWeight: FontWeight.normal,
+    //                       ),
+    //                     ),
+    //                     Text(
+    //                       e['invoice']['description'].toString(),
+    //                       style: const TextStyle(
+    //                         fontSize: 20,
+    //                         fontWeight: FontWeight.bold,
+    //                       ),
+    //                     ),
+    //                   ],
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //           actions: <Widget>[
+    //             e['invoice']['userid'] == controller.id
+    //                 ? ElevatedButton(
+    //                     onPressed: () async {
+    //                       controller.modify(e);
+    //                       _addInvoicePopup(modify: true);
+    //                       controller.is_modify = false;
+    //                     },
+    //                     child: Row(
+    //                       children: const [
+    //                         Icon(Icons.edit_road),
+    //                         Text("Editar"),
+    //                       ],
+    //                     ),
+    //                   )
+    //                 : Container(),
+    //             e['invoice']['userid'] == controller.id
+    //                 ? ElevatedButton(
+    //                     onPressed: () {
+    //                       showDialog(
+    //                           context: context,
+    //                           builder: (BuildContext context) {
+    //                             // retorna um objeto do tipo Dialog
+    //                             return AlertDialog(
+    //                               title: const Text(
+    //                                   "Tem certeza que deseja excluir essa conta?"),
+    //                               actions: <Widget>[
+    //                                 TextButton(
+    //                                   onPressed: () async {
+    //                                     await controller.remove_invoice(
+    //                                         user_id: e['invoice']['userid'],
+    //                                         invoice_id: e['invoice']
+    //                                             ['invoiceid']);
 
-                                        Navigator.of(context).pop();
-                                        Navigator.of(context).pop();
+    //                                     Navigator.of(context).pop();
+    //                                     Navigator.of(context).pop();
 
-                                        await controller.get_invoices();
-                                      },
-                                      child: const Text("Sim"),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text("Cancelar"),
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                        child: Row(
-                          children: const [
-                            Icon(Icons.delete),
-                            Text("Excluir"),
-                          ],
-                        ),
-                      )
-                    : Container(),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("Fechar"),
-                ),
-              ],
-            );
-          });
-        },
-      );
-    }
+    //                                     await controller.get_invoices();
+    //                                   },
+    //                                   child: const Text("Sim"),
+    //                                 ),
+    //                                 ElevatedButton(
+    //                                   onPressed: () {
+    //                                     Navigator.of(context).pop();
+    //                                   },
+    //                                   child: Text("Cancelar"),
+    //                                 ),
+    //                               ],
+    //                             );
+    //                           });
+    //                     },
+    //                     child: Row(
+    //                       children: const [
+    //                         Icon(Icons.delete),
+    //                         Text("Excluir"),
+    //                       ],
+    //                     ),
+    //                   )
+    //                 : Container(),
+    //             TextButton(
+    //               onPressed: () {
+    //                 Navigator.of(context).pop();
+    //               },
+    //               child: const Text("Fechar"),
+    //             ),
+    //           ],
+    //         );
+    //       });
+    //     },
+    //   );
+    // }
 
     // Lista de contas
     List<Widget> _listWidget = <Widget>[
@@ -407,10 +417,20 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                             return Text(
                                 "Intervalo: ${controller.dateRange.startDate?.day}/${controller.dateRange.startDate?.month}/${controller.dateRange.startDate?.year} a ${controller.dateRange.endDate?.day}/${controller.dateRange.endDate?.month}/${controller.dateRange.endDate?.year}");
                           }),
-                          onTap: () => _selectRageDate(),
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return SelectRageData();
+                            },
+                          ),
                         ),
                         GestureDetector(
-                          onTap: () => _selectRageDate(),
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return SelectRageData();
+                            },
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0),
                             child: Icon(
@@ -443,7 +463,15 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                             children: controller.invoices!
                                 .map(
                                   (e) => GestureDetector(
-                                    onTap: () => _show_information(e),
+                                    onTap: () async {
+                                      await controller.set_select_invoice(e);
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return ShowInformationPopup();
+                                        },
+                                      );
+                                    },
                                     child: Container(
                                       height: 65,
                                       //margin: EdgeInsets.only(top: 5),
@@ -598,10 +626,20 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                           return Text(
                               "Intervalo: ${controller.dateRange.startDate?.day}/${controller.dateRange.startDate?.month}/${controller.dateRange.startDate?.year} a ${controller.dateRange.endDate?.day}/${controller.dateRange.endDate?.month}/${controller.dateRange.endDate?.year}");
                         }),
-                        onTap: () => _selectRageDate(),
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return SelectRageData();
+                          },
+                        ),
                       ),
                       GestureDetector(
-                        onTap: () => _selectRageDate(),
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return SelectRageData();
+                          },
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Icon(
@@ -667,34 +705,34 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
-
                     Wrap(
                         //mainAxisAlignment: MainAxisAlignment.center,
                         children: controller.users.map((e) {
-                          return Container(
-                            height: 30,
-                            margin: EdgeInsets.fromLTRB(10, 20, 10, 10),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Color.fromARGB(
-                                  255,
-                                  e['r'],
-                                  e['g'],
-                                  e['b'],
-                                ),
-                              ),
-                              borderRadius: BorderRadius.circular(10),
+                      return Container(
+                        height: 30,
+                        margin: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Color.fromARGB(
+                              255,
+                              e['r'],
+                              e['g'],
+                              e['b'],
                             ),
-                            width: 120,
-                            child: Text(e['name'].toString().toUpperCase() +
-                                " ${(e.values.first * 100).round().toString()}%",
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                ),
-                            ),
-                          );
-                        }).toList()),
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        width: 120,
+                        child: Text(
+                          e['name'].toString().toUpperCase() +
+                              " ${(e.values.first * 100).round().toString()}%",
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      );
+                    }).toList()),
                     Container(
                       width: _width * .8,
                       height: 25,
@@ -793,7 +831,12 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _addInvoicePopup(),
+        onPressed: () => showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AddInvoicePopup();
+          },
+        ),
         child: Icon(Icons.add),
       ),
     );

@@ -39,6 +39,21 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  final _$is_modifyAtom = Atom(name: 'HomeStoreBase.is_modify');
+
+  @override
+  bool get is_modify {
+    _$is_modifyAtom.reportRead();
+    return super.is_modify;
+  }
+
+  @override
+  set is_modify(bool value) {
+    _$is_modifyAtom.reportWrite(value, super.is_modify, () {
+      super.is_modify = value;
+    });
+  }
+
   final _$dateRangeAtom = Atom(name: 'HomeStoreBase.dateRange');
 
   @override
@@ -174,6 +189,21 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  final _$select_invoiceAtom = Atom(name: 'HomeStoreBase.select_invoice');
+
+  @override
+  Map<dynamic, dynamic> get select_invoice {
+    _$select_invoiceAtom.reportRead();
+    return super.select_invoice;
+  }
+
+  @override
+  set select_invoice(Map<dynamic, dynamic> value) {
+    _$select_invoiceAtom.reportWrite(value, super.select_invoice, () {
+      super.select_invoice = value;
+    });
+  }
+
   final _$total_invoiceAtom = Atom(name: 'HomeStoreBase.total_invoice');
 
   @override
@@ -294,10 +324,22 @@ mixin _$HomeStore on HomeStoreBase, Store {
   }
 
   @override
+  dynamic set_select_invoice(dynamic I) {
+    final _$actionInfo = _$HomeStoreBaseActionController.startAction(
+        name: 'HomeStoreBase.set_select_invoice');
+    try {
+      return super.set_select_invoice(I);
+    } finally {
+      _$HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 selectedIndex: ${selectedIndex},
 page_controller: ${page_controller},
+is_modify: ${is_modify},
 dateRange: ${dateRange},
 invoices: ${invoices},
 id: ${id},
@@ -307,6 +349,7 @@ price: ${price},
 date: ${date},
 loading: ${loading},
 invoice_id: ${invoice_id},
+select_invoice: ${select_invoice},
 total_invoice: ${total_invoice},
 users: ${users}
     ''';

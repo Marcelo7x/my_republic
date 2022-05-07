@@ -20,6 +20,9 @@ abstract class HomeStoreBase with Store {
   @observable
   var page_controller = PageController();
 
+  @observable
+  bool is_modify = false;
+
   @action
   setPageAndIndex(int index) {
     selectedIndex = index;
@@ -114,7 +117,16 @@ abstract class HomeStoreBase with Store {
   @observable
   int? invoice_id;
 
+  @observable
+  Map select_invoice = {};
+
+  @action
+  set_select_invoice(I) {
+    select_invoice = I;
+  }
+
   modify(e) {
+    is_modify = true;
     category.text = e['invoice']['category'];
     description.text = e['invoice']['description'];
     price!.updateValue(int.parse(e['invoice']['price']) / 100);
