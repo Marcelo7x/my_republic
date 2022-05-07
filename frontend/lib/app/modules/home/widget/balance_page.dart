@@ -115,7 +115,7 @@ Widget BalancePage({required BuildContext context, required HomeStore controller
                 const Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Text(
-                    "Gasto por Morador",
+                    "Lançamento por Morador",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),

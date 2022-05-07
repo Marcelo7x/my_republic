@@ -125,7 +125,7 @@ Widget InvoicesPage(
                                                 Row(
                                                   children: [
                                                     Text(
-                                                      e['invoice']['category']
+                                                      e['category']['name']
                                                           .toString(),
                                                       style: const TextStyle(
                                                           fontSize: 16,

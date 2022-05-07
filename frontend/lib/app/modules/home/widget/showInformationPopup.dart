@@ -71,7 +71,7 @@ Widget ShowInformationPopup(
                           ),
                         ),
                         Text(
-                          e['invoice']['category'].toString(),
+                          e['category']['name'].toString(),
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

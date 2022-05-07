@@ -19,6 +19,7 @@ final _router = Router()
   ..post('/add-invoice', _addInvoice)
   ..post('/modify-invoice', _modifyInvoice)
   ..get('/list-invoices', _listInvoices)
+  ..get('/list-categories', _listCategory)
   ..post('/list-invoices-date-interval', _listInvoicesDateInterval)
   ..post('/remove-user', _removeUser)
   ..post('/remove-invoice', _removeInvoice)
@@ -310,7 +311,7 @@ Future<Response> _listInvoicesDateInterval(Request request) async {
   List<Map<String, Map<String, dynamic>>>? result;
   try {
     result = await database.mappedResultsQuery(
-        "SELECT i.invoiceid, i.userid, i.homeid, i.description, i.category, i.price, i.date, i.image, i.fixed, u.name FROM invoice i INNER JOIN users u ON i.homeid = u.homeid and @homeid = u.homeid and i.userid = u.userid WHERE date >= @first_date and date <= @last_date",
+        "SELECT i.invoiceid, i.userid, i.homeid, i.description, i.category, i.price, i.date, i.image, i.fixed, u.name, c.name FROM category c INNER JOIN invoice i ON c.\"categoryId\" = i.\"categoryId\" INNER JOIN users u ON i.homeid = u.homeid and @homeid = u.homeid and i.userid = u.userid  WHERE date >= @first_date and date <= @last_date",
         substitutionValues: {
           'homeid': _result[0]['homeid'],
           'first_date': _result[0]['first_date'],
@@ -326,6 +327,20 @@ Future<Response> _listInvoicesDateInterval(Request request) async {
     }
     return item;
   }));
+}
+
+Future<Response> _listCategory(Request request) async {
+  var db = DB.instance;
+  var database = await db.database;
+
+  List<Map<String, Map<String, dynamic>>>? result;
+  try {
+    result = await database.mappedResultsQuery("SELECT * FROM category");
+  } catch (e) {
+    print(e);
+  }
+
+  return Response.ok(jsonEncode(result!));
 }
 
 void main(List<String> args) async {
