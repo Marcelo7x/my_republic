@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-class SelectData extends StatefulWidget {
-  const SelectData({Key? key}) : super(key: key);
 
-  @override
-  State<SelectData> createState() => _SelectDataState();
-}
-
-class _SelectDataState extends ModularState<SelectData, HomeStore> {
-  @override
-  Widget build(BuildContext context) {
+Widget SelectDatePopup({required BuildContext context, required HomeStore controller}) {
     return AlertDialog(
       title: const Text("Selecione o dia"),
       content: SfDateRangePicker(
@@ -24,7 +15,7 @@ class _SelectDataState extends ModularState<SelectData, HomeStore> {
       actions: <Widget>[
         // define os botões na base do dialogo
         TextButton(
-          child: Text("Fechar"),
+          child: const Text("Selecionar"),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -32,4 +23,3 @@ class _SelectDataState extends ModularState<SelectData, HomeStore> {
       ],
     );
   }
-}

@@ -48,7 +48,7 @@ abstract class _SplashStoreBase with Store {
     try {
       result = await Dio()
           .get(
-        'http://192.168.1.9:8080',
+        'http://192.168.1.9:8081',
       )
           .timeout(Duration(seconds: 10), onTimeout: () {
         error = true;

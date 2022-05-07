@@ -70,7 +70,7 @@ abstract class HomeStoreBase with Store {
     int? home_id = prefs.getInt('home_id');
 
     var result = await Dio().post(
-      'http://192.168.1.9:8080/list-invoices-date-interval',
+      'http://192.168.1.9:8081/list-invoices-date-interval',
       data: jsonEncode([
         {
           'first_date': dateRange.startDate!.toIso8601String().toString(),
@@ -135,6 +135,15 @@ abstract class HomeStoreBase with Store {
   }
 
   @action
+  clear_input() {
+    description.text = "";
+    category.text = "";
+    price!.updateValue(0.00);
+    date = DateTime.now();
+    is_modify = false;
+  }
+
+  @action
   add_invoice() async {
     loading = true;
 
@@ -152,7 +161,7 @@ abstract class HomeStoreBase with Store {
     try {
       var result = await Dio()
           .post(
-        'http://192.168.1.9:8080/add-invoice',
+        'http://192.168.1.9:8081/add-invoice',
         data: jsonEncode([
           {
             "description": description.text,
@@ -165,10 +174,7 @@ abstract class HomeStoreBase with Store {
         ]),
       )
           .then((value) {
-        description.text = "";
-        category.text = "";
-        price!.updateValue(0.00);
-        date = DateTime.now();
+        clear_input();
       });
     } on Exception catch (e) {
       print('add_invoice:  nao conseguiu adicionar invoice');
@@ -194,7 +200,7 @@ abstract class HomeStoreBase with Store {
     try {
       var result = await Dio()
           .post(
-        'http://192.168.1.9:8080/modify-invoice',
+        'http://192.168.1.9:8081/modify-invoice',
         data: jsonEncode([
           {
             "description": description.text,
@@ -217,6 +223,7 @@ abstract class HomeStoreBase with Store {
       print(e);
     }
 
+    is_modify = false;
     loading = false;
   }
 
@@ -240,7 +247,7 @@ abstract class HomeStoreBase with Store {
 
     try {
       var result = await Dio().post(
-        'http://192.168.1.9:8080/remove-invoice',
+        'http://192.168.1.9:8081/remove-invoice',
         data: jsonEncode([
           {
             "userId": id.toString(),
@@ -276,7 +283,7 @@ abstract class HomeStoreBase with Store {
     int? num_users;
     try {
       var result = await Dio().post(
-        'http://192.168.1.9:8080/number-users',
+        'http://192.168.1.9:8081/number-users',
         data: jsonEncode([
           {
             "homeId": home_id.toString(),
