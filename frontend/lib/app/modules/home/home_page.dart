@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -8,10 +6,7 @@ import 'package:frontend/app/modules/home/widget/addInvoicePopup.dart';
 import 'package:frontend/app/modules/home/widget/balance_page.dart';
 import 'package:frontend/app/modules/home/widget/invoices_page.dart';
 import 'package:frontend/app/modules/home/widget/options_page.dart';
-import 'package:frontend/app/modules/home/widget/selectRageDate_popup.dart';
-import 'package:frontend/app/modules/home/widget/showInformationPopup.dart';
 import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class HomePage extends StatefulWidget {
   final String title;

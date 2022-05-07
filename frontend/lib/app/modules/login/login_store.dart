@@ -26,13 +26,13 @@ abstract class _LoginStoreBase with Store {
   loggin() async {
     loading = true;
 
-    //await Future.delayed(Duration(seconds: 2));
+    String url = await SharedPreferences.getInstance().then((value) => value.getString('url')!);
 
     if (email_controller.text.length > 0 &&
         password_controller.text.length > 0) {
       
       try {
-        var response = await Dio().post('http://192.168.1.9:8081/login',
+        var response = await Dio().post(url+'login',
             data: jsonEncode([
               {
                 "email": email_controller.text.replaceAll(RegExp(r' '), ''),

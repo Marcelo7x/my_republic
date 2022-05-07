@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:math';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
@@ -21,25 +20,62 @@ abstract class HomeStoreBase with Store {
   var page_controller = PageController();
 
   @observable
+  int? id = Modular.args.data;
+
+  @observable
+  List<dynamic>? invoices;
+
+  @observable
+  int? invoice_id;
+
+  @observable
+  Map select_invoice = {};
+
+  @observable
   bool is_modify = false;
+
+  @observable
+  List<Map<dynamic, dynamic>> users = [{}];
+
+  @observable
+  int total_invoice = 0;
+
+  @observable
+  int total_invoice_person = 0;
+
+  @observable
+  PickerDateRange dateRange = PickerDateRange(
+      DateTime.utc(DateTime.now().year, DateTime.now().month - 1, 20),
+      DateTime.utc(DateTime.now().year, DateTime.now().month, 20));
+
+  @observable
+  TextEditingController category = TextEditingController();
+
+  @observable
+  TextEditingController description = TextEditingController();
+
+  @observable
+  MoneyMaskedTextController? price = MoneyMaskedTextController(
+      leftSymbol: "R\$ ", decimalSeparator: ',', thousandSeparator: '.');
+
+  @observable
+  DateTime date = DateTime.now();
+
+  @observable
+  bool loading = false;
 
   @action
   setPageAndIndex(int index) {
     selectedIndex = index;
-    print(index);
+
     page_controller.animateToPage(index,
-        duration: Duration(milliseconds: 200), curve: Curves.easeOut);
+        duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
   }
 
   @action
   setIndex(int index) {
     selectedIndex = index;
   }
-
-  @observable
-  PickerDateRange dateRange = PickerDateRange(
-      DateTime.utc(DateTime.now().year, DateTime.now().month - 1, 20),
-      DateTime.utc(DateTime.now().year, DateTime.now().month, 20));
 
   @action
   set_dateRange(PickerDateRange dt) async {
@@ -52,12 +88,6 @@ abstract class HomeStoreBase with Store {
     // }
   }
 
-  @observable
-  List<dynamic>? invoices;
-
-  @observable
-  int? id = Modular.args.data;
-
   @action
   get_invoices() async {
     if (dateRange.startDate == null || dateRange.endDate == null) {
@@ -68,9 +98,12 @@ abstract class HomeStoreBase with Store {
 
     final prefs = await SharedPreferences.getInstance();
     int? home_id = prefs.getInt('home_id');
+    
+    String url = await SharedPreferences.getInstance().then((value) => value.getString('url')!);
+
 
     var result = await Dio().post(
-      'http://192.168.1.9:8081/list-invoices-date-interval',
+      url + 'list-invoices-date-interval',
       data: jsonEncode([
         {
           'first_date': dateRange.startDate!.toIso8601String().toString(),
@@ -93,32 +126,10 @@ abstract class HomeStoreBase with Store {
     loading = false;
   }
 
-  @observable
-  TextEditingController category = TextEditingController();
-
-  @observable
-  TextEditingController description = TextEditingController();
-
-  @observable
-  MoneyMaskedTextController? price = MoneyMaskedTextController(
-      leftSymbol: "R\$ ", decimalSeparator: ',', thousandSeparator: '.');
-
-  @observable
-  DateTime date = DateTime.now();
-
   @action
   set_date(DateTime dt) {
     date = dt;
   }
-
-  @observable
-  bool loading = false;
-
-  @observable
-  int? invoice_id;
-
-  @observable
-  Map select_invoice = {};
 
   @action
   set_select_invoice(I) {
@@ -149,6 +160,8 @@ abstract class HomeStoreBase with Store {
 
     final prefs = await SharedPreferences.getInstance();
     bool? logged = prefs.getBool('is_logged');
+    String url = await SharedPreferences.getInstance().then((value) => value.getString('url')!);
+
 
     int? id;
     int? home_id;
@@ -161,7 +174,7 @@ abstract class HomeStoreBase with Store {
     try {
       var result = await Dio()
           .post(
-        'http://192.168.1.9:8081/add-invoice',
+        url + 'add-invoice',
         data: jsonEncode([
           {
             "description": description.text,
@@ -190,6 +203,8 @@ abstract class HomeStoreBase with Store {
 
     final prefs = await SharedPreferences.getInstance();
     bool? logged = prefs.getBool('is_logged');
+    String url = await SharedPreferences.getInstance().then((value) => value.getString('url')!);
+
 
     int? id;
     int? home_id;
@@ -200,7 +215,7 @@ abstract class HomeStoreBase with Store {
     try {
       var result = await Dio()
           .post(
-        'http://192.168.1.9:8081/modify-invoice',
+        url + 'modify-invoice',
         data: jsonEncode([
           {
             "description": description.text,
@@ -233,6 +248,8 @@ abstract class HomeStoreBase with Store {
 
     final prefs = await SharedPreferences.getInstance();
     bool? logged = prefs.getBool('is_logged');
+    String url = await SharedPreferences.getInstance().then((value) => value.getString('url')!);
+
 
     int? id;
     int? home_id;
@@ -247,7 +264,7 @@ abstract class HomeStoreBase with Store {
 
     try {
       var result = await Dio().post(
-        'http://192.168.1.9:8081/remove-invoice',
+        url + 'remove-invoice',
         data: jsonEncode([
           {
             "userId": id.toString(),
@@ -263,17 +280,12 @@ abstract class HomeStoreBase with Store {
     loading = false;
   }
 
-  @observable
-  int total_invoice = 0;
-  int total_invoice_person = 0;
-
-  @observable
-  List<Map<dynamic, dynamic>> users = [{}];
-
   @action
   calc_total() async {
     final prefs = await SharedPreferences.getInstance();
     bool? logged = prefs.getBool('is_logged');
+    String url = await SharedPreferences.getInstance().then((value) => value.getString('url')!);
+
 
     int? home_id;
     if (logged != null && logged) {
@@ -283,7 +295,7 @@ abstract class HomeStoreBase with Store {
     int? num_users;
     try {
       var result = await Dio().post(
-        'http://192.168.1.9:8081/number-users',
+        url + 'number-users',
         data: jsonEncode([
           {
             "homeId": home_id.toString(),
