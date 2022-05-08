@@ -9,7 +9,8 @@ part of 'splash_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$SplashStore on _SplashStoreBase, Store {
-  final _$errorAtom = Atom(name: '_SplashStoreBase.error');
+  late final _$errorAtom =
+      Atom(name: '_SplashStoreBase.error', context: context);
 
   @override
   bool get error {
@@ -24,7 +25,8 @@ mixin _$SplashStore on _SplashStoreBase, Store {
     });
   }
 
-  final _$erro_menssageAtom = Atom(name: '_SplashStoreBase.erro_menssage');
+  late final _$erro_menssageAtom =
+      Atom(name: '_SplashStoreBase.erro_menssage', context: context);
 
   @override
   String get erro_menssage {
@@ -39,8 +41,8 @@ mixin _$SplashStore on _SplashStoreBase, Store {
     });
   }
 
-  final _$verify_loginAsyncAction =
-      AsyncAction('_SplashStoreBase.verify_login');
+  late final _$verify_loginAsyncAction =
+      AsyncAction('_SplashStoreBase.verify_login', context: context);
 
   @override
   Future verify_login() {

@@ -9,7 +9,8 @@ part of 'home_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$HomeStore on HomeStoreBase, Store {
-  final _$selectedIndexAtom = Atom(name: 'HomeStoreBase.selectedIndex');
+  late final _$selectedIndexAtom =
+      Atom(name: 'HomeStoreBase.selectedIndex', context: context);
 
   @override
   int get selectedIndex {
@@ -24,7 +25,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$page_controllerAtom = Atom(name: 'HomeStoreBase.page_controller');
+  late final _$page_controllerAtom =
+      Atom(name: 'HomeStoreBase.page_controller', context: context);
 
   @override
   PageController get page_controller {
@@ -39,7 +41,7 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$idAtom = Atom(name: 'HomeStoreBase.id');
+  late final _$idAtom = Atom(name: 'HomeStoreBase.id', context: context);
 
   @override
   int? get id {
@@ -54,7 +56,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$invoicesAtom = Atom(name: 'HomeStoreBase.invoices');
+  late final _$invoicesAtom =
+      Atom(name: 'HomeStoreBase.invoices', context: context);
 
   @override
   List<dynamic>? get invoices {
@@ -69,7 +72,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$categoriesAtom = Atom(name: 'HomeStoreBase.categories');
+  late final _$categoriesAtom =
+      Atom(name: 'HomeStoreBase.categories', context: context);
 
   @override
   List<dynamic> get categories {
@@ -84,7 +88,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$invoice_idAtom = Atom(name: 'HomeStoreBase.invoice_id');
+  late final _$invoice_idAtom =
+      Atom(name: 'HomeStoreBase.invoice_id', context: context);
 
   @override
   int? get invoice_id {
@@ -99,7 +104,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$select_invoiceAtom = Atom(name: 'HomeStoreBase.select_invoice');
+  late final _$select_invoiceAtom =
+      Atom(name: 'HomeStoreBase.select_invoice', context: context);
 
   @override
   Map<dynamic, dynamic> get select_invoice {
@@ -114,7 +120,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$is_modifyAtom = Atom(name: 'HomeStoreBase.is_modify');
+  late final _$is_modifyAtom =
+      Atom(name: 'HomeStoreBase.is_modify', context: context);
 
   @override
   bool get is_modify {
@@ -129,7 +136,7 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$usersAtom = Atom(name: 'HomeStoreBase.users');
+  late final _$usersAtom = Atom(name: 'HomeStoreBase.users', context: context);
 
   @override
   List<Map<dynamic, dynamic>> get users {
@@ -144,7 +151,24 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$total_invoiceAtom = Atom(name: 'HomeStoreBase.total_invoice');
+  late final _$category_percentsAtom =
+      Atom(name: 'HomeStoreBase.category_percents', context: context);
+
+  @override
+  List<Map<dynamic, dynamic>> get category_percents {
+    _$category_percentsAtom.reportRead();
+    return super.category_percents;
+  }
+
+  @override
+  set category_percents(List<Map<dynamic, dynamic>> value) {
+    _$category_percentsAtom.reportWrite(value, super.category_percents, () {
+      super.category_percents = value;
+    });
+  }
+
+  late final _$total_invoiceAtom =
+      Atom(name: 'HomeStoreBase.total_invoice', context: context);
 
   @override
   int get total_invoice {
@@ -159,8 +183,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$total_invoice_personAtom =
-      Atom(name: 'HomeStoreBase.total_invoice_person');
+  late final _$total_invoice_personAtom =
+      Atom(name: 'HomeStoreBase.total_invoice_person', context: context);
 
   @override
   int get total_invoice_person {
@@ -176,7 +200,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$dateRangeAtom = Atom(name: 'HomeStoreBase.dateRange');
+  late final _$dateRangeAtom =
+      Atom(name: 'HomeStoreBase.dateRange', context: context);
 
   @override
   PickerDateRange get dateRange {
@@ -191,7 +216,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$categoryAtom = Atom(name: 'HomeStoreBase.category');
+  late final _$categoryAtom =
+      Atom(name: 'HomeStoreBase.category', context: context);
 
   @override
   Map<String, dynamic> get category {
@@ -206,7 +232,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$descriptionAtom = Atom(name: 'HomeStoreBase.description');
+  late final _$descriptionAtom =
+      Atom(name: 'HomeStoreBase.description', context: context);
 
   @override
   TextEditingController get description {
@@ -221,7 +248,7 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$priceAtom = Atom(name: 'HomeStoreBase.price');
+  late final _$priceAtom = Atom(name: 'HomeStoreBase.price', context: context);
 
   @override
   MoneyMaskedTextController? get price {
@@ -236,7 +263,7 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$dateAtom = Atom(name: 'HomeStoreBase.date');
+  late final _$dateAtom = Atom(name: 'HomeStoreBase.date', context: context);
 
   @override
   DateTime get date {
@@ -251,7 +278,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$loadingAtom = Atom(name: 'HomeStoreBase.loading');
+  late final _$loadingAtom =
+      Atom(name: 'HomeStoreBase.loading', context: context);
 
   @override
   bool get loading {
@@ -266,45 +294,48 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$set_dateRangeAsyncAction = AsyncAction('HomeStoreBase.set_dateRange');
+  late final _$set_dateRangeAsyncAction =
+      AsyncAction('HomeStoreBase.set_dateRange', context: context);
 
   @override
   Future set_dateRange(PickerDateRange dt) {
     return _$set_dateRangeAsyncAction.run(() => super.set_dateRange(dt));
   }
 
-  final _$get_invoicesAsyncAction = AsyncAction('HomeStoreBase.get_invoices');
+  late final _$get_invoicesAsyncAction =
+      AsyncAction('HomeStoreBase.get_invoices', context: context);
 
   @override
   Future get_invoices() {
     return _$get_invoicesAsyncAction.run(() => super.get_invoices());
   }
 
-  final _$get_categoriesAsyncAction =
-      AsyncAction('HomeStoreBase.get_categories');
+  late final _$get_categoriesAsyncAction =
+      AsyncAction('HomeStoreBase.get_categories', context: context);
 
   @override
   Future get_categories() {
     return _$get_categoriesAsyncAction.run(() => super.get_categories());
   }
 
-  final _$add_invoiceAsyncAction = AsyncAction('HomeStoreBase.add_invoice');
+  late final _$add_invoiceAsyncAction =
+      AsyncAction('HomeStoreBase.add_invoice', context: context);
 
   @override
   Future add_invoice() {
     return _$add_invoiceAsyncAction.run(() => super.add_invoice());
   }
 
-  final _$modify_invoiceAsyncAction =
-      AsyncAction('HomeStoreBase.modify_invoice');
+  late final _$modify_invoiceAsyncAction =
+      AsyncAction('HomeStoreBase.modify_invoice', context: context);
 
   @override
   Future modify_invoice() {
     return _$modify_invoiceAsyncAction.run(() => super.modify_invoice());
   }
 
-  final _$remove_invoiceAsyncAction =
-      AsyncAction('HomeStoreBase.remove_invoice');
+  late final _$remove_invoiceAsyncAction =
+      AsyncAction('HomeStoreBase.remove_invoice', context: context);
 
   @override
   Future remove_invoice(
@@ -313,22 +344,24 @@ mixin _$HomeStore on HomeStoreBase, Store {
         () => super.remove_invoice(user_id: user_id, invoice_id: invoice_id));
   }
 
-  final _$calc_totalAsyncAction = AsyncAction('HomeStoreBase.calc_total');
+  late final _$calc_totalAsyncAction =
+      AsyncAction('HomeStoreBase.calc_total', context: context);
 
   @override
   Future calc_total() {
     return _$calc_totalAsyncAction.run(() => super.calc_total());
   }
 
-  final _$logoutAsyncAction = AsyncAction('HomeStoreBase.logout');
+  late final _$logoutAsyncAction =
+      AsyncAction('HomeStoreBase.logout', context: context);
 
   @override
   Future logout() {
     return _$logoutAsyncAction.run(() => super.logout());
   }
 
-  final _$HomeStoreBaseActionController =
-      ActionController(name: 'HomeStoreBase');
+  late final _$HomeStoreBaseActionController =
+      ActionController(name: 'HomeStoreBase', context: context);
 
   @override
   dynamic setPageAndIndex(int index) {
@@ -408,6 +441,7 @@ invoice_id: ${invoice_id},
 select_invoice: ${select_invoice},
 is_modify: ${is_modify},
 users: ${users},
+category_percents: ${category_percents},
 total_invoice: ${total_invoice},
 total_invoice_person: ${total_invoice_person},
 dateRange: ${dateRange},

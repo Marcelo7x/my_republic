@@ -41,6 +41,9 @@ abstract class HomeStoreBase with Store {
   List<Map<dynamic, dynamic>> users = [{}];
 
   @observable
+  List<Map<dynamic, dynamic>> category_percents = [{}];
+
+  @observable
   int total_invoice = 0;
 
   @observable
@@ -349,7 +352,9 @@ abstract class HomeStoreBase with Store {
 
     total_invoice = 0;
     users = [{}];
+    category_percents = [{}];
     var aux = [{}];
+    var aux_category = [{}];
 
     invoices?.forEach((element) {
       total_invoice += int.parse(element['invoice']['price']);
@@ -363,6 +368,19 @@ abstract class HomeStoreBase with Store {
                   'value': aux[0][element['invoice']['userid']]['value']! +
                       int.parse(element['invoice']['price']),
                   'name': element['users']['name']
+                };
+
+      aux_category[0][element['category']['name']] =
+          aux_category[0][element['category']['name']] == null
+              ? {
+                  'value': int.parse(element['invoice']['price']),
+                  'name': element['category']['name']
+                }
+              : {
+                  'value': aux_category[0][element['category']['name']]
+                          ['value']! +
+                      int.parse(element['invoice']['price']),
+                  'name': element['category']['name']
                 };
     });
 
@@ -383,7 +401,18 @@ abstract class HomeStoreBase with Store {
     });
     users.removeAt(0);
 
-    print("User: ${users}");
+    aux_category[0].forEach((id, value) {
+      category_percents.add({
+        'value': ((((value['value'] * 100) / total_invoice)) / 100),
+        'name': value['name'],
+        'r': Random().nextInt(255),
+        'g': Random().nextInt(255),
+        'b': Random().nextInt(255),
+      });
+    });
+    category_percents.removeAt(0);
+
+    print("User: ${category_percents}");
   }
 
   @action

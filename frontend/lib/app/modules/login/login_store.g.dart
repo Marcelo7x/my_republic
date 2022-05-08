@@ -9,7 +9,8 @@ part of 'login_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$LoginStore on _LoginStoreBase, Store {
-  final _$email_controllerAtom = Atom(name: '_LoginStoreBase.email_controller');
+  late final _$email_controllerAtom =
+      Atom(name: '_LoginStoreBase.email_controller', context: context);
 
   @override
   TextEditingController get email_controller {
@@ -24,8 +25,8 @@ mixin _$LoginStore on _LoginStoreBase, Store {
     });
   }
 
-  final _$password_controllerAtom =
-      Atom(name: '_LoginStoreBase.password_controller');
+  late final _$password_controllerAtom =
+      Atom(name: '_LoginStoreBase.password_controller', context: context);
 
   @override
   TextEditingController get password_controller {
@@ -40,7 +41,8 @@ mixin _$LoginStore on _LoginStoreBase, Store {
     });
   }
 
-  final _$loadingAtom = Atom(name: '_LoginStoreBase.loading');
+  late final _$loadingAtom =
+      Atom(name: '_LoginStoreBase.loading', context: context);
 
   @override
   bool get loading {
@@ -55,7 +57,8 @@ mixin _$LoginStore on _LoginStoreBase, Store {
     });
   }
 
-  final _$loggin_errorAtom = Atom(name: '_LoginStoreBase.loggin_error');
+  late final _$loggin_errorAtom =
+      Atom(name: '_LoginStoreBase.loggin_error', context: context);
 
   @override
   bool get loggin_error {
@@ -70,7 +73,8 @@ mixin _$LoginStore on _LoginStoreBase, Store {
     });
   }
 
-  final _$logginAsyncAction = AsyncAction('_LoginStoreBase.loggin');
+  late final _$logginAsyncAction =
+      AsyncAction('_LoginStoreBase.loggin', context: context);
 
   @override
   Future loggin() {

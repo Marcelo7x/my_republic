@@ -311,7 +311,7 @@ Future<Response> _listInvoicesDateInterval(Request request) async {
   List<Map<String, Map<String, dynamic>>>? result;
   try {
     result = await database.mappedResultsQuery(
-        "SELECT i.invoiceid, i.userid, i.homeid, i.description, i.\"categoryId\", i.price, i.date, i.image, i.fixed, u.name, c.name FROM category c INNER JOIN invoice i ON c.\"categoryId\" = i.\"categoryId\" INNER JOIN users u ON i.homeid = u.homeid and @homeid = u.homeid and i.userid = u.userid  WHERE date >= @first_date and date <= @last_date",
+        "SELECT i.invoiceid, i.userid, i.homeid, i.description, i.\"categoryId\", i.price, i.date, i.image, i.fixed, u.name, c.name FROM category c INNER JOIN invoice i ON c.\"categoryId\" = i.\"categoryId\" INNER JOIN users u ON i.homeid = u.homeid and @homeid = u.homeid and i.userid = u.userid  WHERE date >= @first_date and date <= @last_date ORDER BY i.date",
         substitutionValues: {
           'homeid': _result[0]['homeid'],
           'first_date': _result[0]['first_date'],
