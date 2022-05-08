@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
-import 'package:frontend/app/modules/home/widget/selectDate_popup.dart';
+import 'package:frontend/app/modules/home/widget/select_date_popup.dart';
+import 'package:intl/intl.dart';
 
 Widget AddInvoicePopup(
     {required BuildContext context, required HomeStore controller}) {
+  String drop = "teste";
   return AlertDialog(
     title: !controller.is_modify
         ? const Text("Adicionar Gasto")
@@ -15,24 +17,41 @@ Widget AddInvoicePopup(
     actionsAlignment: MainAxisAlignment.spaceBetween,
     content: SingleChildScrollView(
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * .4,
+        height: MediaQuery.of(context).size.height * .5,
         child:
-            Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          TextField(
-              controller: controller.category,
-              decoration: const InputDecoration(
-                label: Text("Adicione uma categoria"),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-              )),
-          TextField(
-              controller: controller.description,
-              decoration: const InputDecoration(
-                label: Text("Adicione uma descrição"),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-              )),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+          Observer(builder: (_) {
+            //! a base da gambiarra
+            return DropdownButton(
+              hint: controller.category.isEmpty
+                  ? const Text("Selecione uma categoria")
+                  : Text(
+                      toBeginningOfSentenceCase(
+                          controller.category['category']['name'].toString())!,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary),
+                    ),
+              underline: Container(
+                height: 2,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              items: controller.categories.map((dynamic e) {
+                return DropdownMenuItem<Map<String, dynamic>>(
+                  value: e,
+                  child: Text(toBeginningOfSentenceCase(
+                      e['category']['name'].toString())!),
+                );
+              }).toList(),
+              onChanged: (Map<String, dynamic>? e) {
+                controller.set_category(e!);
+              },
+            );
+          }),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text("Selecione o dia: "),
               GestureDetector(
@@ -54,12 +73,22 @@ Widget AddInvoicePopup(
                 onTap: () => showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return SelectDatePopup(context: context, controller: controller);
+                    return SelectDatePopup(
+                        context: context, controller: controller);
                   },
                 ),
               ),
             ],
           ),
+          TextField(
+              controller: controller.description,
+              maxLines: 2,
+              maxLength: 100,
+              decoration: const InputDecoration(
+                label: Text("Adicione uma descrição"),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+              )),
           TextField(
               controller: controller.price,
               keyboardType: TextInputType.number,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
-import 'package:frontend/app/modules/home/widget/addInvoicePopup.dart';
+import 'package:frontend/app/modules/home/widget/add_invoice_popup.dart';
 import 'package:frontend/app/modules/home/widget/balance_page.dart';
 import 'package:frontend/app/modules/home/widget/invoices_page.dart';
 import 'package:frontend/app/modules/home/widget/options_page.dart';
@@ -28,6 +28,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
     var logo = AssetImage("images/logo.png");
 
     controller.get_invoices();
+    controller.get_categories();
 
     // Lista de contas
     List<Widget> _listWidget = <Widget>[

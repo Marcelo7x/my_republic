@@ -39,33 +39,18 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$is_modifyAtom = Atom(name: 'HomeStoreBase.is_modify');
+  final _$idAtom = Atom(name: 'HomeStoreBase.id');
 
   @override
-  bool get is_modify {
-    _$is_modifyAtom.reportRead();
-    return super.is_modify;
+  int? get id {
+    _$idAtom.reportRead();
+    return super.id;
   }
 
   @override
-  set is_modify(bool value) {
-    _$is_modifyAtom.reportWrite(value, super.is_modify, () {
-      super.is_modify = value;
-    });
-  }
-
-  final _$dateRangeAtom = Atom(name: 'HomeStoreBase.dateRange');
-
-  @override
-  PickerDateRange get dateRange {
-    _$dateRangeAtom.reportRead();
-    return super.dateRange;
-  }
-
-  @override
-  set dateRange(PickerDateRange value) {
-    _$dateRangeAtom.reportWrite(value, super.dateRange, () {
-      super.dateRange = value;
+  set id(int? value) {
+    _$idAtom.reportWrite(value, super.id, () {
+      super.id = value;
     });
   }
 
@@ -84,31 +69,138 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$idAtom = Atom(name: 'HomeStoreBase.id');
+  final _$categoriesAtom = Atom(name: 'HomeStoreBase.categories');
 
   @override
-  int? get id {
-    _$idAtom.reportRead();
-    return super.id;
+  List<dynamic> get categories {
+    _$categoriesAtom.reportRead();
+    return super.categories;
   }
 
   @override
-  set id(int? value) {
-    _$idAtom.reportWrite(value, super.id, () {
-      super.id = value;
+  set categories(List<dynamic> value) {
+    _$categoriesAtom.reportWrite(value, super.categories, () {
+      super.categories = value;
+    });
+  }
+
+  final _$invoice_idAtom = Atom(name: 'HomeStoreBase.invoice_id');
+
+  @override
+  int? get invoice_id {
+    _$invoice_idAtom.reportRead();
+    return super.invoice_id;
+  }
+
+  @override
+  set invoice_id(int? value) {
+    _$invoice_idAtom.reportWrite(value, super.invoice_id, () {
+      super.invoice_id = value;
+    });
+  }
+
+  final _$select_invoiceAtom = Atom(name: 'HomeStoreBase.select_invoice');
+
+  @override
+  Map<dynamic, dynamic> get select_invoice {
+    _$select_invoiceAtom.reportRead();
+    return super.select_invoice;
+  }
+
+  @override
+  set select_invoice(Map<dynamic, dynamic> value) {
+    _$select_invoiceAtom.reportWrite(value, super.select_invoice, () {
+      super.select_invoice = value;
+    });
+  }
+
+  final _$is_modifyAtom = Atom(name: 'HomeStoreBase.is_modify');
+
+  @override
+  bool get is_modify {
+    _$is_modifyAtom.reportRead();
+    return super.is_modify;
+  }
+
+  @override
+  set is_modify(bool value) {
+    _$is_modifyAtom.reportWrite(value, super.is_modify, () {
+      super.is_modify = value;
+    });
+  }
+
+  final _$usersAtom = Atom(name: 'HomeStoreBase.users');
+
+  @override
+  List<Map<dynamic, dynamic>> get users {
+    _$usersAtom.reportRead();
+    return super.users;
+  }
+
+  @override
+  set users(List<Map<dynamic, dynamic>> value) {
+    _$usersAtom.reportWrite(value, super.users, () {
+      super.users = value;
+    });
+  }
+
+  final _$total_invoiceAtom = Atom(name: 'HomeStoreBase.total_invoice');
+
+  @override
+  int get total_invoice {
+    _$total_invoiceAtom.reportRead();
+    return super.total_invoice;
+  }
+
+  @override
+  set total_invoice(int value) {
+    _$total_invoiceAtom.reportWrite(value, super.total_invoice, () {
+      super.total_invoice = value;
+    });
+  }
+
+  final _$total_invoice_personAtom =
+      Atom(name: 'HomeStoreBase.total_invoice_person');
+
+  @override
+  int get total_invoice_person {
+    _$total_invoice_personAtom.reportRead();
+    return super.total_invoice_person;
+  }
+
+  @override
+  set total_invoice_person(int value) {
+    _$total_invoice_personAtom.reportWrite(value, super.total_invoice_person,
+        () {
+      super.total_invoice_person = value;
+    });
+  }
+
+  final _$dateRangeAtom = Atom(name: 'HomeStoreBase.dateRange');
+
+  @override
+  PickerDateRange get dateRange {
+    _$dateRangeAtom.reportRead();
+    return super.dateRange;
+  }
+
+  @override
+  set dateRange(PickerDateRange value) {
+    _$dateRangeAtom.reportWrite(value, super.dateRange, () {
+      super.dateRange = value;
     });
   }
 
   final _$categoryAtom = Atom(name: 'HomeStoreBase.category');
 
   @override
-  TextEditingController get category {
+  Map<String, dynamic> get category {
     _$categoryAtom.reportRead();
     return super.category;
   }
 
   @override
-  set category(TextEditingController value) {
+  set category(Map<String, dynamic> value) {
     _$categoryAtom.reportWrite(value, super.category, () {
       super.category = value;
     });
@@ -174,66 +266,6 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  final _$invoice_idAtom = Atom(name: 'HomeStoreBase.invoice_id');
-
-  @override
-  int? get invoice_id {
-    _$invoice_idAtom.reportRead();
-    return super.invoice_id;
-  }
-
-  @override
-  set invoice_id(int? value) {
-    _$invoice_idAtom.reportWrite(value, super.invoice_id, () {
-      super.invoice_id = value;
-    });
-  }
-
-  final _$select_invoiceAtom = Atom(name: 'HomeStoreBase.select_invoice');
-
-  @override
-  Map<dynamic, dynamic> get select_invoice {
-    _$select_invoiceAtom.reportRead();
-    return super.select_invoice;
-  }
-
-  @override
-  set select_invoice(Map<dynamic, dynamic> value) {
-    _$select_invoiceAtom.reportWrite(value, super.select_invoice, () {
-      super.select_invoice = value;
-    });
-  }
-
-  final _$total_invoiceAtom = Atom(name: 'HomeStoreBase.total_invoice');
-
-  @override
-  int get total_invoice {
-    _$total_invoiceAtom.reportRead();
-    return super.total_invoice;
-  }
-
-  @override
-  set total_invoice(int value) {
-    _$total_invoiceAtom.reportWrite(value, super.total_invoice, () {
-      super.total_invoice = value;
-    });
-  }
-
-  final _$usersAtom = Atom(name: 'HomeStoreBase.users');
-
-  @override
-  List<Map<dynamic, dynamic>> get users {
-    _$usersAtom.reportRead();
-    return super.users;
-  }
-
-  @override
-  set users(List<Map<dynamic, dynamic>> value) {
-    _$usersAtom.reportWrite(value, super.users, () {
-      super.users = value;
-    });
-  }
-
   final _$set_dateRangeAsyncAction = AsyncAction('HomeStoreBase.set_dateRange');
 
   @override
@@ -246,6 +278,14 @@ mixin _$HomeStore on HomeStoreBase, Store {
   @override
   Future get_invoices() {
     return _$get_invoicesAsyncAction.run(() => super.get_invoices());
+  }
+
+  final _$get_categoriesAsyncAction =
+      AsyncAction('HomeStoreBase.get_categories');
+
+  @override
+  Future get_categories() {
+    return _$get_categoriesAsyncAction.run(() => super.get_categories());
   }
 
   final _$add_invoiceAsyncAction = AsyncAction('HomeStoreBase.add_invoice');
@@ -313,6 +353,17 @@ mixin _$HomeStore on HomeStoreBase, Store {
   }
 
   @override
+  dynamic set_category(Map<String, dynamic> e) {
+    final _$actionInfo = _$HomeStoreBaseActionController.startAction(
+        name: 'HomeStoreBase.set_category');
+    try {
+      return super.set_category(e);
+    } finally {
+      _$HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic set_date(DateTime dt) {
     final _$actionInfo = _$HomeStoreBaseActionController.startAction(
         name: 'HomeStoreBase.set_date');
@@ -335,23 +386,36 @@ mixin _$HomeStore on HomeStoreBase, Store {
   }
 
   @override
+  dynamic clear_input() {
+    final _$actionInfo = _$HomeStoreBaseActionController.startAction(
+        name: 'HomeStoreBase.clear_input');
+    try {
+      return super.clear_input();
+    } finally {
+      _$HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 selectedIndex: ${selectedIndex},
 page_controller: ${page_controller},
-is_modify: ${is_modify},
-dateRange: ${dateRange},
-invoices: ${invoices},
 id: ${id},
+invoices: ${invoices},
+categories: ${categories},
+invoice_id: ${invoice_id},
+select_invoice: ${select_invoice},
+is_modify: ${is_modify},
+users: ${users},
+total_invoice: ${total_invoice},
+total_invoice_person: ${total_invoice_person},
+dateRange: ${dateRange},
 category: ${category},
 description: ${description},
 price: ${price},
 date: ${date},
-loading: ${loading},
-invoice_id: ${invoice_id},
-select_invoice: ${select_invoice},
-total_invoice: ${total_invoice},
-users: ${users}
+loading: ${loading}
     ''';
   }
 }

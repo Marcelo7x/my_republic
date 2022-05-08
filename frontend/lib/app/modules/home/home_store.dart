@@ -26,6 +26,9 @@ abstract class HomeStoreBase with Store {
   List<dynamic>? invoices;
 
   @observable
+  List<dynamic> categories = [];
+
+  @observable
   int? invoice_id;
 
   @observable
@@ -49,7 +52,7 @@ abstract class HomeStoreBase with Store {
       DateTime.utc(DateTime.now().year, DateTime.now().month, 20));
 
   @observable
-  TextEditingController category = TextEditingController();
+  Map<String, dynamic> category = {};
 
   @observable
   TextEditingController description = TextEditingController();
@@ -78,6 +81,11 @@ abstract class HomeStoreBase with Store {
   }
 
   @action
+  set_category(Map<String, dynamic> e) {
+    category = e;
+  }
+
+  @action
   set_dateRange(PickerDateRange dt) async {
     dateRange = dt;
 
@@ -98,9 +106,9 @@ abstract class HomeStoreBase with Store {
 
     final prefs = await SharedPreferences.getInstance();
     int? home_id = prefs.getInt('home_id');
-    
-    String url = await SharedPreferences.getInstance().then((value) => value.getString('url')!);
 
+    String url = await SharedPreferences.getInstance()
+        .then((value) => value.getString('url')!);
 
     var result = await Dio().post(
       url + 'list-invoices-date-interval',
@@ -121,7 +129,30 @@ abstract class HomeStoreBase with Store {
 
     calc_total();
 
-    print(invoices);
+    //print(invoices);
+
+    loading = false;
+  }
+
+  @action
+  get_categories() async {
+    loading = true;
+
+    final prefs = await SharedPreferences.getInstance();
+    String url = await SharedPreferences.getInstance()
+        .then((value) => value.getString('url')!);
+
+    var result;
+
+    try {
+      result = await Dio().get(url + 'list-categories');
+    } on Exception catch (e) {
+      print(e);
+    }
+
+    categories = jsonDecode(result.data);
+
+    //print("Cateories....: ${categories}");
 
     loading = false;
   }
@@ -138,7 +169,12 @@ abstract class HomeStoreBase with Store {
 
   modify(e) {
     is_modify = true;
-    category.text = e['invoice']['category'];
+    category = {
+      'category': {
+        'categoryId': e['invoice']['categoryId'],
+        'name': e['category']['name']
+      }
+    };
     description.text = e['invoice']['description'];
     price!.updateValue(int.parse(e['invoice']['price']) / 100);
     date = e['invoice']['date'];
@@ -148,7 +184,7 @@ abstract class HomeStoreBase with Store {
   @action
   clear_input() {
     description.text = "";
-    category.text = "";
+    category = {};
     price!.updateValue(0.00);
     date = DateTime.now();
     is_modify = false;
@@ -160,8 +196,8 @@ abstract class HomeStoreBase with Store {
 
     final prefs = await SharedPreferences.getInstance();
     bool? logged = prefs.getBool('is_logged');
-    String url = await SharedPreferences.getInstance().then((value) => value.getString('url')!);
-
+    String url = await SharedPreferences.getInstance()
+        .then((value) => value.getString('url')!);
 
     int? id;
     int? home_id;
@@ -178,7 +214,7 @@ abstract class HomeStoreBase with Store {
         data: jsonEncode([
           {
             "description": description.text,
-            "category": category.text,
+            "categoryId": category['category']['categoryId'],
             "price": (price!.numberValue * 100).toInt().toString(),
             "date": date.toIso8601String().toString(),
             "userId": id.toString(),
@@ -203,8 +239,8 @@ abstract class HomeStoreBase with Store {
 
     final prefs = await SharedPreferences.getInstance();
     bool? logged = prefs.getBool('is_logged');
-    String url = await SharedPreferences.getInstance().then((value) => value.getString('url')!);
-
+    String url = await SharedPreferences.getInstance()
+        .then((value) => value.getString('url')!);
 
     int? id;
     int? home_id;
@@ -219,7 +255,7 @@ abstract class HomeStoreBase with Store {
         data: jsonEncode([
           {
             "description": description.text,
-            "category": category.text,
+            "categoryId": category['category']['categoryId'],
             "price": (price!.numberValue * 100).toInt().toString(),
             "date": date.toIso8601String().toString(),
             "userId": id.toString(),
@@ -229,7 +265,7 @@ abstract class HomeStoreBase with Store {
       )
           .then((value) {
         description.text = "";
-        category.text = "";
+        category = {};
         price!.updateValue(0.00);
         date = DateTime.now();
       });
@@ -248,8 +284,8 @@ abstract class HomeStoreBase with Store {
 
     final prefs = await SharedPreferences.getInstance();
     bool? logged = prefs.getBool('is_logged');
-    String url = await SharedPreferences.getInstance().then((value) => value.getString('url')!);
-
+    String url = await SharedPreferences.getInstance()
+        .then((value) => value.getString('url')!);
 
     int? id;
     int? home_id;
@@ -284,8 +320,8 @@ abstract class HomeStoreBase with Store {
   calc_total() async {
     final prefs = await SharedPreferences.getInstance();
     bool? logged = prefs.getBool('is_logged');
-    String url = await SharedPreferences.getInstance().then((value) => value.getString('url')!);
-
+    String url = await SharedPreferences.getInstance()
+        .then((value) => value.getString('url')!);
 
     int? home_id;
     if (logged != null && logged) {

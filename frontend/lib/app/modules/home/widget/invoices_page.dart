@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
 import 'package:frontend/app/modules/home/widget/selectRageDate_popup.dart';
-import 'package:frontend/app/modules/home/widget/showInformationPopup.dart';
+import 'package:frontend/app/modules/home/widget/show_information_popup.dart';
 import 'package:intl/intl.dart';
 
 Widget InvoicesPage(
@@ -10,7 +10,6 @@ Widget InvoicesPage(
   final _height = MediaQuery.of(context).size.height;
   final _width = MediaQuery.of(context).size.width;
   var numberFormat = NumberFormat('##0.00');
-
 
   return Container(
     child: SafeArea(
@@ -48,7 +47,8 @@ Widget InvoicesPage(
                       onTap: () => showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return SelectRageDatePopup(context: context, controller: controller);
+                          return SelectRageDatePopup(
+                              context: context, controller: controller);
                         },
                       ),
                     ),
@@ -56,7 +56,8 @@ Widget InvoicesPage(
                       onTap: () => showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return SelectRageDatePopup(context: context, controller: controller);
+                          return SelectRageDatePopup(
+                              context: context, controller: controller);
                         },
                       ),
                       child: Padding(
@@ -104,7 +105,8 @@ Widget InvoicesPage(
                                 child: Container(
                                   height: 65,
                                   //margin: EdgeInsets.only(top: 5),
-                                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 20, 0),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
