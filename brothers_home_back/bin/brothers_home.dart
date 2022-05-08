@@ -19,6 +19,7 @@ final _router = Router()
   ..post('/add-invoice', _addInvoice)
   ..post('/modify-invoice', _modifyInvoice)
   ..get('/list-invoices', _listInvoices)
+  ..get('/list-categories', _listCategory)
   ..post('/list-invoices-date-interval', _listInvoicesDateInterval)
   ..post('/remove-user', _removeUser)
   ..post('/remove-invoice', _removeInvoice)
@@ -189,7 +190,7 @@ Future<Response> _addInvoice(Request request) async {
   var database = await db.database;
 
   var description = result[0]['description'] ?? '-';
-  var category = result[0]['category'] ?? '-';
+  var categoryId = result[0]['categoryId'] ?? '-';
   var price = result[0]['price'] ?? '-';
   var date = result[0]['date'] ?? '-';
   var image = result[0]['image'] ?? '-';
@@ -202,10 +203,10 @@ Future<Response> _addInvoice(Request request) async {
 
   try {
     await database.query(
-        'INSERT INTO invoice(invoiceId,description,category,price,date,image,userId,homeId) VALUES (DEFAULT, @description, @category, @price, @date, @image, @userId, @homeId)',
+        'INSERT INTO invoice(invoiceId,description,\"categoryId\",price,date,image,userId,homeId) VALUES (DEFAULT, @description, @categoryId, @price, @date, @image, @userId, @homeId)',
         substitutionValues: {
           'description': description,
-          'category': category,
+          'categoryId': categoryId,
           'price': price,
           'date': date,
           'image': image,
@@ -228,7 +229,7 @@ Future<Response> _modifyInvoice(Request request) async {
   var database = await db.database;
 
   var description = result[0]['description'] ?? '-';
-  var category = result[0]['category'] ?? '-';
+  var categoryId = result[0]['categoryId'] ?? '-';
   var price = result[0]['price'] ?? '-';
   var date = result[0]['date'] ?? '-';
   var image = result[0]['image'] ?? '-';
@@ -241,10 +242,10 @@ Future<Response> _modifyInvoice(Request request) async {
 
   try {
     await database.query(
-        'UPDATE invoice SET description = @description, category = @category, price = @price, date = @date, image = @image WHERE invoiceId = @invoiceId and userId = @userId',
+        'UPDATE invoice SET description = @description, \"categoryId\" = @categoryId, price = @price, date = @date, image = @image WHERE invoiceId = @invoiceId and userId = @userId',
         substitutionValues: {
           'description': description,
-          'category': category,
+          'categoryId': categoryId,
           'price': price,
           'date': date,
           'image': image,
@@ -310,7 +311,7 @@ Future<Response> _listInvoicesDateInterval(Request request) async {
   List<Map<String, Map<String, dynamic>>>? result;
   try {
     result = await database.mappedResultsQuery(
-        "SELECT i.invoiceid, i.userid, i.homeid, i.description, i.category, i.price, i.date, i.image, i.fixed, u.name FROM invoice i INNER JOIN users u ON i.homeid = u.homeid and @homeid = u.homeid and i.userid = u.userid WHERE date >= @first_date and date <= @last_date",
+        "SELECT i.invoiceid, i.userid, i.homeid, i.description, i.\"categoryId\", i.price, i.date, i.image, i.fixed, u.name, c.name FROM category c INNER JOIN invoice i ON c.\"categoryId\" = i.\"categoryId\" INNER JOIN users u ON i.homeid = u.homeid and @homeid = u.homeid and i.userid = u.userid  WHERE date >= @first_date and date <= @last_date",
         substitutionValues: {
           'homeid': _result[0]['homeid'],
           'first_date': _result[0]['first_date'],
@@ -328,9 +329,23 @@ Future<Response> _listInvoicesDateInterval(Request request) async {
   }));
 }
 
+Future<Response> _listCategory(Request request) async {
+  var db = DB.instance;
+  var database = await db.database;
+
+  List<Map<String, Map<String, dynamic>>>? result;
+  try {
+    result = await database.mappedResultsQuery("SELECT * FROM category");
+  } catch (e) {
+    print(e);
+  }
+
+  return Response.ok(jsonEncode(result!));
+}
+
 void main(List<String> args) async {
   //connection BD
-  print("connectando BD...");
+  print("connectando BD dev...");
   var db = DB.instance;
   await db.database;
 
@@ -341,7 +356,7 @@ void main(List<String> args) async {
   final _handler = Pipeline().addMiddleware(logRequests()).addHandler(_router);
 
   // For running in containers, we respect the PORT environment variable.
-  final port = int.parse(Platform.environment['PORT'] ?? '8080');
+  final port = int.parse(Platform.environment['PORT'] ?? '8081');
   final server = await serve(_handler, ip, port);
   print('Server listening on port ${server.port}');
 }

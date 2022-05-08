@@ -15,6 +15,7 @@ class SplashStore = _SplashStoreBase with _$SplashStore;
 
 abstract class _SplashStoreBase with Store {
   final String version = '0.0.2';
+  final String url = 'http://192.168.1.9:8081/';
 
   @observable
   bool error = false;
@@ -48,7 +49,7 @@ abstract class _SplashStoreBase with Store {
     try {
       result = await Dio()
           .get(
-        'http://192.168.1.9:8080',
+        url,
       )
           .timeout(Duration(seconds: 10), onTimeout: () {
         error = true;
@@ -60,9 +61,11 @@ abstract class _SplashStoreBase with Store {
       erro_menssage = "O servidor está desligado, tente voltar daqui a pouco.";
     }
 
-    if(!error) verify_version(jsonDecode(result.data)["force_update"]);
+    if (!error) verify_version(jsonDecode(result.data)["force_update"]);
 
     //logged = false;
+
+    await prefs.setString('url', url);
 
     if (!error) {
       if (logged != null && logged) {
