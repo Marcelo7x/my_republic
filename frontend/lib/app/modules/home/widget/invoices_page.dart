@@ -31,7 +31,7 @@ Widget InvoicesPage(
                   children: const [
                     Icon(Icons.money_off),
                     Text(
-                      "Contas do mês",
+                      "Contas do Mês",
                       style: TextStyle(fontSize: 20),
                     ),
                   ],
@@ -127,8 +127,8 @@ Widget InvoicesPage(
                                                 Row(
                                                   children: [
                                                     Text(
-                                                      e['category']['name']
-                                                          .toString(),
+                                                      toBeginningOfSentenceCase(e['category']['name']
+                                                          .toString())!,
                                                       style: const TextStyle(
                                                           fontSize: 16,
                                                           fontWeight:
@@ -149,7 +149,7 @@ Widget InvoicesPage(
                                                   ],
                                                 ),
                                                 Text(
-                                                  e['users']['name'].toString(),
+                                                  toBeginningOfSentenceCase(e['users']['name'].toString())!,
                                                   style: const TextStyle(
                                                     fontSize: 14,
                                                     fontWeight:
