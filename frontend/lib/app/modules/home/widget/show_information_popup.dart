@@ -66,15 +66,18 @@ Widget ShowInformationPopup(
                         const Text(
                           "Categoria",
                           style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          e['category']['name'].toString(),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            toBeginningOfSentenceCase(e['category']['name'].toString())!,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
                           ),
                         ),
                       ]),
@@ -84,15 +87,18 @@ Widget ShowInformationPopup(
                         const Text(
                           "Usuário",
                           style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          e['users']['name'].toString(),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            toBeginningOfSentenceCase(e['users']['name'].toString())!,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
                           ),
                         ),
                       ]),
@@ -104,15 +110,19 @@ Widget ShowInformationPopup(
                 const Text(
                   "Descrição",
                   style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  e['invoice']['description'].toString(),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(
+                    toBeginningOfSentenceCase(e['invoice']['description'].toString())!,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
                   ),
                 ),
               ],
