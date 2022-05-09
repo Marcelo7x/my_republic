@@ -27,8 +27,8 @@ final _router = Router()
 
 Response _rootHandler(Request req) {
   Map<String, dynamic> data = {
-    "current_version" : "0.0.2",
-    "force_update" : "0.0.2",
+    "current_version" : "0.0.3",
+    "force_update" : "0.0.3",
   };
 
   return Response.ok(jsonEncode(data));
@@ -356,7 +356,7 @@ void main(List<String> args) async {
   final _handler = Pipeline().addMiddleware(logRequests()).addHandler(_router);
 
   // For running in containers, we respect the PORT environment variable.
-  final port = int.parse(Platform.environment['PORT'] ?? '8081');
+  final port = int.parse(Platform.environment['PORT'] ?? '8080');
   final server = await serve(_handler, ip, port);
   print('Server listening on port ${server.port}');
 }
