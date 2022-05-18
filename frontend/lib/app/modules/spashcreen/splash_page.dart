@@ -22,7 +22,7 @@ class _SplashPageState extends ModularState<SplashPage, SplashStore> {
     var logo = AssetImage("images/logo.png");
 
     return Container(
-      color: Theme.of(context).backgroundColor,
+      //color: Theme.of(context).backgroundColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -48,7 +48,7 @@ class _SplashPageState extends ModularState<SplashPage, SplashStore> {
                           decoration: TextDecoration.none),
                     ),
                 )
-                : CircularProgressIndicator();
+                : const CircularProgressIndicator();
           }),
         ],
       ),

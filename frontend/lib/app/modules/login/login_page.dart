@@ -19,44 +19,17 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
     final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
 
-    //var logo = AssetImage("logo.png");
-
-    // void _loading() {
-    //   showDialog(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       // retorna um objeto do tipo Dialog
-    //       return AlertDialog(
-    //         content: Container(
-    //           height: 100,
-    //           width: 100,
-    //           child: CircularProgressIndicator(),
-    //         ),
-    //         actions: <Widget>[
-    //           // define os botões na base do dialogo
-    //           TextButton(
-    //             child: Text("Fechar"),
-    //             onPressed: () {
-    //               Navigator.of(context).pop();
-    //             },
-    //           ),
-    //         ],
-    //       );
-    //     },
-    //   );
-    // }
-
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: Container(
+      //backgroundColor: Theme.of(context).backgroundColor,
+      body: SizedBox(
         width: _width,
         height: _height - 100,
-        color: Theme.of(context).backgroundColor,
+        //color: Theme.of(context).backgroundColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset("images/logo.png", height: 200, width: 200),
-            Container(
+            SizedBox(
               //input de email
               width: _width * .8,
               height: 70,
@@ -66,7 +39,11 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
                 decoration: const InputDecoration(
                   label: Text("Email"),
                   prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(18),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -81,7 +58,11 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
                 decoration: const InputDecoration(
                   label: Text("Senha"),
                   prefixIcon: Icon(Icons.password),
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(18),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -105,12 +86,14 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: Observer(builder: (_) {
-                return controller.loggin_error? Text(
-                  "Ô cabaço!! O email ou senha está errado.",
-                  style: TextStyle(
-                    color: Theme.of(context).errorColor,
-                  ),
-                ) : const Text("");
+                return controller.loggin_error
+                    ? Text(
+                        "Ô cabaço!! O email ou senha está errado.",
+                        style: TextStyle(
+                          color: Theme.of(context).errorColor,
+                        ),
+                      )
+                    : const Text("");
               }),
             ),
           ],

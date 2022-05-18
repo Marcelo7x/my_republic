@@ -37,65 +37,64 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
       OptionsPage(context: context, controller: controller),
     ];
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: Observer(builder: (_) {
-        return Container(
-          width: _width,
-          height: _height,
-          child: PageView(
-            controller: controller.page_controller,
-            children: _listWidget,
-            onPageChanged: (index) => controller.setIndex(index),
-          ),
-        );
-      }),
-      bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        shape: const CircularNotchedRectangle(),
-        child: SizedBox(
-          width: _width,
-          child: Row(
-            children: [
-              SizedBox(
-                width: _width * 0.75,
-                child: Observer(builder: (_) {
-                  return BottomNavigationBar(
-                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    elevation: 0,
-                    currentIndex: controller.selectedIndex,
-                    onTap: (index) => controller.setPageAndIndex(index),
-                    items: const [
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.money_off),
-                        label: "Contas",
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.graphic_eq),
-                        label: "Balanço",
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.settings),
-                        label: "Opções",
-                      ),
-                    ],
-                  );
-                }),
+    return Observer(
+      builder: (_) {
+        return Scaffold(
+          body: Observer(builder: (_) {
+            return Container(
+              width: _width,
+              height: _height,
+              child: PageView(
+                controller: controller.page_controller,
+                children: _listWidget,
+                onPageChanged: (index) => controller.setIndex(index),
               ),
-            ],
+            );
+          }),
+          bottomNavigationBar: ClipRRect(
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(18), topRight: Radius.circular(18)),
+            child: Observer(builder: (_) {
+              return NavigationBar(
+                height: _height * .08,
+                onDestinationSelected: (index) =>
+                    controller.setPageAndIndex(index),
+                selectedIndex: controller.selectedIndex,
+                labelBehavior:
+                    NavigationDestinationLabelBehavior.onlyShowSelected,
+                destinations: const [
+                  NavigationDestination(
+                    icon: Icon(Icons.money_off),
+                    label: "Contas",
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.graphic_eq),
+                    label: "Balanço",
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.settings),
+                    label: "Opções",
+                  ),
+                ],
+              );
+            }),
           ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AddInvoicePopup(context: context, controller: controller);
-          },
-        ),
-        child: const Icon(Icons.add),
-      ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.miniCenterFloat,
+          floatingActionButton: controller.selectedIndex == 0
+              ? FloatingActionButton(
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AddInvoicePopup(
+                          context: context, controller: controller);
+                    },
+                  ),
+                  child: const Icon(Icons.add),
+                )
+              : Container(),
+        );
+      },
     );
   }
 }

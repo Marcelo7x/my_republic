@@ -73,7 +73,8 @@ Widget ShowInformationPopup(
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
-                            toBeginningOfSentenceCase(e['category']['name'].toString())!,
+                            toBeginningOfSentenceCase(
+                                e['category']['name'].toString())!,
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.normal,
@@ -94,7 +95,8 @@ Widget ShowInformationPopup(
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
-                            toBeginningOfSentenceCase(e['users']['name'].toString())!,
+                            toBeginningOfSentenceCase(
+                                e['users']['name'].toString())!,
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.normal,
@@ -117,7 +119,8 @@ Widget ShowInformationPopup(
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: Text(
-                    toBeginningOfSentenceCase(e['invoice']['description'].toString())!,
+                    toBeginningOfSentenceCase(
+                        e['invoice']['description'].toString())!,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 14,
@@ -188,9 +191,17 @@ Widget ShowInformationPopup(
                       });
                 },
                 child: Row(
-                  children: const [
-                    Icon(Icons.delete),
-                    Text("Excluir"),
+                  children: [
+                    Icon(
+                      Icons.delete,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    Text(
+                      "Excluir",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
                   ],
                 ),
               )

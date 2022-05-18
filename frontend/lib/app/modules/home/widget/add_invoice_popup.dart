@@ -26,6 +26,7 @@ Widget AddInvoicePopup(
           Observer(builder: (_) {
             //! a base da gambiarra
             return DropdownButton(
+              borderRadius: BorderRadius.circular(18),
               hint: controller.category.isEmpty
                   ? const Text("Selecione uma categoria")
                   : Text(
@@ -60,13 +61,13 @@ Widget AddInvoicePopup(
                     Observer(builder: (_) {
                       return Text(
                         "${controller.date.day}/${controller.date.month}/${controller.date.year}",
-                        style: const TextStyle(color: Colors.blueAccent),
+                        style: TextStyle(color: Theme.of(context).colorScheme.primary),
                       );
                     }),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 3),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 3),
                       child:
-                          Icon(Icons.calendar_month, color: Colors.blueAccent),
+                          Icon(Icons.calendar_month, color: Theme.of(context).colorScheme.primary),
                     )
                   ],
                 ),
