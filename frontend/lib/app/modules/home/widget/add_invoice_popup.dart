@@ -18,87 +18,124 @@ Widget AddInvoicePopup(
     content: SingleChildScrollView(
       child: SizedBox(
         height: MediaQuery.of(context).size.height * .5,
-        child:
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-          Observer(builder: (_) {
-            //! a base da gambiarra
-            return DropdownButton(
-              borderRadius: BorderRadius.circular(18),
-              hint: controller.category.isEmpty
-                  ? const Text("Selecione uma categoria")
-                  : Text(
-                      toBeginningOfSentenceCase(
-                          controller.category['category']['name'].toString())!,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary),
-                    ),
-              underline: Container(
-                height: 2,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              items: controller.categories.map((dynamic e) {
-                return DropdownMenuItem<Map<String, dynamic>>(
-                  value: e,
-                  child: Text(toBeginningOfSentenceCase(
-                      e['category']['name'].toString())!),
-                );
-              }).toList(),
-              onChanged: (Map<String, dynamic>? e) {
-                controller.set_category(e!);
-              },
-            );
-          }),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text("Selecione o dia: "),
-              GestureDetector(
-                child: Row(
-                  children: [
-                    Observer(builder: (_) {
-                      return Text(
-                        "${controller.date.day}/${controller.date.month}/${controller.date.year}",
-                        style: TextStyle(color: Theme.of(context).colorScheme.primary),
-                      );
-                    }),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 3),
-                      child:
-                          Icon(Icons.calendar_month, color: Theme.of(context).colorScheme.primary),
-                    )
-                  ],
-                ),
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return SelectDatePopup(
-                        context: context, controller: controller);
+              Observer(builder: (_) {
+                //! a base da gambiarra
+                return DropdownButton(
+                  borderRadius: BorderRadius.circular(18),
+                  hint: controller.category.isEmpty
+                      ? const Text("Selecione uma categoria")
+                      : Text(
+                          toBeginningOfSentenceCase(controller
+                              .category['category']['name']
+                              .toString())!,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                  underline: Container(
+                    height: 2,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  items: controller.categories.map((dynamic e) {
+                    return DropdownMenuItem<Map<String, dynamic>>(
+                      value: e,
+                      child: Text(toBeginningOfSentenceCase(
+                          e['category']['name'].toString())!),
+                    );
+                  }).toList(),
+                  onChanged: (Map<String, dynamic>? e) {
+                    controller.set_category(e!);
                   },
-                ),
+                );
+              }),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Selecione o dia: "),
+                  GestureDetector(
+                    child: Row(
+                      children: [
+                        Observer(builder: (_) {
+                          return Text(
+                            "${controller.date.day}/${controller.date.month}/${controller.date.year}",
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary),
+                          );
+                        }),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 3),
+                          child: Icon(Icons.calendar_month,
+                              color: Theme.of(context).colorScheme.primary),
+                        )
+                      ],
+                    ),
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SelectDatePopup(
+                            context: context, controller: controller);
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          TextField(
-              controller: controller.description,
-              maxLines: 2,
-              maxLength: 100,
-              decoration: const InputDecoration(
-                label: Text("Adicione uma descrição"),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-              )),
-          TextField(
-              controller: controller.price,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                label: Text("Digite o valor"),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-              )),
-        ]),
+              TextField(
+                  controller: controller.description,
+                  maxLines: 2,
+                  maxLength: 100,
+                  decoration: const InputDecoration(
+                    label: Text("Adicione uma descrição"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                  )),
+              TextField(
+                  controller: controller.price,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    label: Text("Digite o valor"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                  )),
+              Observer(builder: (_) {
+                return DropdownButton<bool?>(
+                  borderRadius: BorderRadius.circular(18),
+                  hint: controller.is_payed == null
+                      ? Text("Em aberto")
+                      : controller.is_payed == false
+                          ? Text("Pago por mim")
+                          : Text(
+                              "pago por todos",
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary),
+                            ),
+                  underline: Container(
+                    height: 2,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  value: controller.is_payed,
+                  items: const [
+                    DropdownMenuItem<bool?>(
+                      value: null,
+                      child: Text("Em aberto"),
+                    ),
+                    DropdownMenuItem<bool?>(
+                      value: true,
+                      child: Text("Pago por mim"),
+                    ),
+                    DropdownMenuItem<bool?>(
+                      value: false,
+                      child: Text("Pago por todos"),
+                    ),
+                  ],
+                  onChanged: (bool? e) {
+                    controller.set_paid(e);
+                  },
+                );
+              }),
+            ]),
       ),
     ),
     actions: <Widget>[

@@ -56,7 +56,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                 topLeft: Radius.circular(18), topRight: Radius.circular(18)),
             child: Observer(builder: (_) {
               return NavigationBar(
-                height: _height * .08,
+                height: _height * .09,
                 onDestinationSelected: (index) =>
                     controller.setPageAndIndex(index),
                 selectedIndex: controller.selectedIndex,

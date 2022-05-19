@@ -15,7 +15,7 @@ class SplashStore = _SplashStoreBase with _$SplashStore;
 
 abstract class _SplashStoreBase with Store {
   final String version = '0.0.3';
-  final String url = 'http://192.168.1.9:8080/';
+  final String url = 'http://192.168.1.9:8081/';
 
   @observable
   bool error = false;

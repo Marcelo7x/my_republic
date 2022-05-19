@@ -26,24 +26,20 @@ Widget BalancePage(
                   Icon(Icons.graphic_eq),
                   Text(
                     "Balanço",
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 22),
                   ),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Intervalo: "
-                  ),
+                  const Text("Intervalo: "),
                   GestureDetector(
                     child: Observer(builder: (_) {
                       return Text(
                           "${controller.dateRange.startDate?.day}/${controller.dateRange.startDate?.month}/${controller.dateRange.startDate?.year} a ${controller.dateRange.endDate?.day}/${controller.dateRange.endDate?.month}/${controller.dateRange.endDate?.year}",
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary
-                          )                          
-                          );
+                              color: Theme.of(context).colorScheme.primary));
                     }),
                     onTap: () => showDialog(
                       context: context,
@@ -98,30 +94,69 @@ Widget BalancePage(
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(top: 5),
-                          child: Text("Valor por morador: R\$ "),
-                        ),
-                        Text(
-                          numberFormat
-                              .format(controller.total_invoice_person / 100),
-                          style: const TextStyle(
-                            fontSize: 28,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 30, bottom: 10),
-                      child: Text(
-                        "Lançamento por Morador",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    controller.total_invoice != 0
+                        ? Column(
+                            //mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(top: 5),
+                                child: Text(
+                                  "Valor por morador",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 30.0 * controller.users.length,
+                                child: ListView(
+                                  children: controller.users
+                                      .map(
+                                        (e) => Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 3),
+                                              child: Text(e['name']),
+                                            ),
+                                            const Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  4, 3, 1, 0),
+                                              child: Text(
+                                                "R\$",
+                                                style: TextStyle(fontSize: 10),
+                                              ),
+                                            ),
+                                            Text(
+                                              numberFormat.format((controller
+                                                          .total_invoice_person -
+                                                      e['paid']) /
+                                                  100),
+                                              style: const TextStyle(
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Container(),
+                    controller.total_invoice != 0
+                        ? const Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                              "Lançamento por Morador",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          )
+                        : Container(),
                     Wrap(
                         children: controller.users.map((e) {
                       return Container(
@@ -137,7 +172,7 @@ Widget BalancePage(
                               e['b'],
                             ),
                           ),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(18),
                         ),
                         width: 120,
                         child: Text(
@@ -176,14 +211,16 @@ Widget BalancePage(
                     ),
 
                     //category percents
-                    const Padding(
-                      padding: EdgeInsets.only(top: 30, bottom: 10),
-                      child: Text(
-                        "Gasto por Categoria",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    controller.total_invoice != 0
+                        ? const Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                              "Gasto por Categoria",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          )
+                        : Container(),
                     Wrap(
                         //mainAxisAlignment: MainAxisAlignment.center,
                         children: controller.category_percents.map((e) {
@@ -200,7 +237,7 @@ Widget BalancePage(
                               e['b'],
                             ),
                           ),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(18),
                         ),
                         width: 120,
                         child: Text(

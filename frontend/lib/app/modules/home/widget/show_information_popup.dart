@@ -11,114 +11,123 @@ Widget ShowInformationPopup(
   var numberFormat = NumberFormat('##0.00');
   var e = controller.select_invoice;
 
-  return Container(child: Observer(builder: (_) {
-    return AlertDialog(
-      content: SizedBox(
-        height: MediaQuery.of(context).size.height * .4,
-        child: Column(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
+  return Observer(builder: (_) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * .4,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            //mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(right: 3, top: 7),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(left: 10, top: 12),
+                          child: Text(
+                            "R\$",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          "${(numberFormat.format(int.parse(e['invoice']['price']) / 100))}",
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 5, top: 12),
                       child: Text(
-                        "R\$",
-                        style: TextStyle(
+                        "${e['invoice']['date'].day}/${e['invoice']['date'].month}/${e['invoice']['date'].year}",
+                        style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
+                          fontStyle: FontStyle.italic,
                         ),
-                      ),
-                    ),
-                    Text(
-                      "${(numberFormat.format(int.parse(e['invoice']['price']) / 100))}",
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
-                const Padding(
-                    padding: EdgeInsets.only(
-                  left: 5,
-                )),
+              ),
+              Row(children: [
+                const Text(
+                  "Usuário: ",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 Text(
-                  "${e['invoice']['date'].day}/${e['invoice']['date'].month}/${e['invoice']['date'].year}",
+                  toBeginningOfSentenceCase(e['users']['name'].toString())!,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
                   ),
                 ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              ]),
+              e['invoice']['paid'] != null
+                  ? Row(children: [
+                      const Text(
+                        "Pago por: ",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        e['invoice']['paid'] == true
+                            ? toBeginningOfSentenceCase(
+                                e['users']['name'].toString())!
+                            : 'Todos',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ])
+                  : Container(),
+              Row(
                 children: [
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Categoria",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            toBeginningOfSentenceCase(
-                                e['category']['name'].toString())!,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                      ]),
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Usuário",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            toBeginningOfSentenceCase(
-                                e['users']['name'].toString())!,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                      ]),
+                  const Text(
+                    "Categoria: ",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    toBeginningOfSentenceCase(
+                        e['category']['name'].toString())!,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
                 ],
               ),
-            ),
-            Column(
-              children: [
-                const Text(
-                  "Descrição",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+              Row(
+                children: [
+                  const Text(
+                    "Descrição: ",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Text(
+                  Text(
                     toBeginningOfSentenceCase(
                         e['invoice']['description'].toString())!,
                     textAlign: TextAlign.center,
@@ -127,92 +136,112 @@ Widget ShowInformationPopup(
                       fontWeight: FontWeight.normal,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      actions: <Widget>[
-        e['invoice']['userid'] == controller.id
-            ? ElevatedButton(
-                onPressed: () async {
-                  controller.modify(e);
+                ],
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  e['invoice']['userid'] == controller.id
+                      ? SizedBox(
+                          width: 120,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              controller.modify(e);
 
-                  await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AddInvoicePopup(
-                            context: context, controller: controller);
-                      });
+                              await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AddInvoicePopup(
+                                        context: context,
+                                        controller: controller);
+                                  });
+                            },
+                            child: Row(
+                              children: const [
+                                Icon(Icons.edit_road),
+                                Text("Editar"),
+                              ],
+                            ),
+                          ),
+                        )
+                      : Container(),
+                  e['invoice']['userid'] == controller.id
+                      ? SizedBox(
+                          width: 120,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    // retorna um objeto do tipo Dialog
+                                    return AlertDialog(
+                                      actionsAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      content: const Text(
+                                          "Tem certeza que deseja excluir essa conta?"),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () async {
+                                            await controller.remove_invoice(
+                                                user_id: e['invoice']['userid'],
+                                                invoice_id: e['invoice']
+                                                    ['invoiceid']);
 
-                  Modular.to.pop();
-                },
-                child: Row(
-                  children: const [
-                    Icon(Icons.edit_road),
-                    Text("Editar"),
-                  ],
-                ),
-              )
-            : Container(),
-        e['invoice']['userid'] == controller.id
-            ? ElevatedButton(
+                                            Navigator.of(context).pop();
+
+                                            await controller.get_invoices();
+                                          },
+                                          child: const Text("Sim"),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            "Cancelar",
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .error),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.delete,
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
+                                Text(
+                                  "Excluir",
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+              TextButton(
                 onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        // retorna um objeto do tipo Dialog
-                        return AlertDialog(
-                          title: const Text(
-                              "Tem certeza que deseja excluir essa conta?"),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () async {
-                                await controller.remove_invoice(
-                                    user_id: e['invoice']['userid'],
-                                    invoice_id: e['invoice']['invoiceid']);
-
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pop();
-
-                                await controller.get_invoices();
-                              },
-                              child: const Text("Sim"),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text("Cancelar"),
-                            ),
-                          ],
-                        );
-                      });
+                  controller.set_select_invoice({});
                 },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.delete,
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                    Text(
-                      "Excluir",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            : Container(),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text("Fechar"),
-        ),
-      ],
+                child: Icon(Icons.arrow_upward),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
-  }));
+  });
 }

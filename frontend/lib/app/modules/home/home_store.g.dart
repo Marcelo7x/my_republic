@@ -6,7 +6,7 @@ part of 'home_store.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$HomeStore on HomeStoreBase, Store {
   late final _$selectedIndexAtom =
@@ -183,6 +183,22 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  late final _$any_payedAtom =
+      Atom(name: 'HomeStoreBase.any_payed', context: context);
+
+  @override
+  int get any_payed {
+    _$any_payedAtom.reportRead();
+    return super.any_payed;
+  }
+
+  @override
+  set any_payed(int value) {
+    _$any_payedAtom.reportWrite(value, super.any_payed, () {
+      super.any_payed = value;
+    });
+  }
+
   late final _$total_invoice_personAtom =
       Atom(name: 'HomeStoreBase.total_invoice_person', context: context);
 
@@ -229,6 +245,22 @@ mixin _$HomeStore on HomeStoreBase, Store {
   set category(Map<String, dynamic> value) {
     _$categoryAtom.reportWrite(value, super.category, () {
       super.category = value;
+    });
+  }
+
+  late final _$is_payedAtom =
+      Atom(name: 'HomeStoreBase.is_payed', context: context);
+
+  @override
+  bool? get is_payed {
+    _$is_payedAtom.reportRead();
+    return super.is_payed;
+  }
+
+  @override
+  set is_payed(bool? value) {
+    _$is_payedAtom.reportWrite(value, super.is_payed, () {
+      super.is_payed = value;
     });
   }
 
@@ -397,6 +429,17 @@ mixin _$HomeStore on HomeStoreBase, Store {
   }
 
   @override
+  dynamic set_paid(bool? e) {
+    final _$actionInfo = _$HomeStoreBaseActionController.startAction(
+        name: 'HomeStoreBase.set_paid');
+    try {
+      return super.set_paid(e);
+    } finally {
+      _$HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic set_date(DateTime dt) {
     final _$actionInfo = _$HomeStoreBaseActionController.startAction(
         name: 'HomeStoreBase.set_date');
@@ -443,9 +486,11 @@ is_modify: ${is_modify},
 users: ${users},
 category_percents: ${category_percents},
 total_invoice: ${total_invoice},
+any_payed: ${any_payed},
 total_invoice_person: ${total_invoice_person},
 dateRange: ${dateRange},
 category: ${category},
+is_payed: ${is_payed},
 description: ${description},
 price: ${price},
 date: ${date},

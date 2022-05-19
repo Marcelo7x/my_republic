@@ -24,7 +24,7 @@ Widget OptionsPage(
                   Icon(Icons.settings),
                   Text(
                     "Configurações",
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 22),
                   ),
                 ],
               ),

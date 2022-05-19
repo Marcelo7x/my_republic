@@ -196,6 +196,7 @@ Future<Response> _addInvoice(Request request) async {
   var image = result[0]['image'] ?? '-';
   var userId = result[0]['userId'] ?? '-';
   var homeId = result[0]['homeId'] ?? '-';
+  var paid = result[0]['paid'];
 
   if (price.toString().contains('.') || price.toString().contains(',')) {
     return Response.ok('Ops!!! Não conseguimos adicionar a conta.\n');
@@ -203,7 +204,7 @@ Future<Response> _addInvoice(Request request) async {
 
   try {
     await database.query(
-        'INSERT INTO invoice(invoiceId,description,\"categoryId\",price,date,image,userId,homeId) VALUES (DEFAULT, @description, @categoryId, @price, @date, @image, @userId, @homeId)',
+        'INSERT INTO invoice(invoiceId,description,\"categoryId\",price,date,paid,image,userId,homeId) VALUES (DEFAULT, @description, @categoryId, @price, @date, @paid, @image, @userId, @homeId)',
         substitutionValues: {
           'description': description,
           'categoryId': categoryId,
@@ -211,7 +212,8 @@ Future<Response> _addInvoice(Request request) async {
           'date': date,
           'image': image,
           'userId': userId,
-          'homeId': homeId
+          'homeId': homeId,
+          'paid': paid
         });
   } catch (e) {
     print("Erro: funçao _addInvoice");
@@ -235,6 +237,7 @@ Future<Response> _modifyInvoice(Request request) async {
   var image = result[0]['image'] ?? '-';
   var userId = result[0]['userId'] ?? '-';
   var invoiceId = result[0]['invoiceId'] ?? '-';
+  var paid = result[0]['paid'];
 
   if (price.toString().contains('.') || price.toString().contains(',')) {
     return Response.ok('Ops!!! Não conseguimos adicionar a conta.\n');
@@ -242,7 +245,7 @@ Future<Response> _modifyInvoice(Request request) async {
 
   try {
     await database.query(
-        'UPDATE invoice SET description = @description, \"categoryId\" = @categoryId, price = @price, date = @date, image = @image WHERE invoiceId = @invoiceId and userId = @userId',
+        'UPDATE invoice SET description = @description, \"categoryId\" = @categoryId, price = @price, date = @date, image = @image, paid = @paid WHERE invoiceId = @invoiceId and userId = @userId',
         substitutionValues: {
           'description': description,
           'categoryId': categoryId,
@@ -250,7 +253,8 @@ Future<Response> _modifyInvoice(Request request) async {
           'date': date,
           'image': image,
           'userId': userId,
-          'invoiceId': invoiceId
+          'invoiceId': invoiceId,
+          'paid': paid
         });
   } catch (e) {
     print("Erro: funçao _modifyInvoice");
@@ -311,7 +315,7 @@ Future<Response> _listInvoicesDateInterval(Request request) async {
   List<Map<String, Map<String, dynamic>>>? result;
   try {
     result = await database.mappedResultsQuery(
-        "SELECT i.invoiceid, i.userid, i.homeid, i.description, i.\"categoryId\", i.price, i.date, i.image, i.fixed, u.name, c.name FROM category c INNER JOIN invoice i ON c.\"categoryId\" = i.\"categoryId\" INNER JOIN users u ON i.homeid = u.homeid and @homeid = u.homeid and i.userid = u.userid  WHERE date >= @first_date and date <= @last_date ORDER BY i.date",
+        "SELECT i.invoiceid, i.userid, i.homeid, i.description, i.\"categoryId\", i.price, i.date, i.image, i.fixed, i.paid, u.name, c.name FROM category c INNER JOIN invoice i ON c.\"categoryId\" = i.\"categoryId\" INNER JOIN users u ON i.homeid = u.homeid and @homeid = u.homeid and i.userid = u.userid  WHERE date >= @first_date and date <= @last_date ORDER BY i.date",
         substitutionValues: {
           'homeid': _result[0]['homeid'],
           'first_date': _result[0]['first_date'],
@@ -356,7 +360,7 @@ void main(List<String> args) async {
   final _handler = Pipeline().addMiddleware(logRequests()).addHandler(_router);
 
   // For running in containers, we respect the PORT environment variable.
-  final port = int.parse(Platform.environment['PORT'] ?? '8080');
+  final port = int.parse(Platform.environment['PORT'] ?? '8081');
   final server = await serve(_handler, ip, port);
   print('Server listening on port ${server.port}');
 }

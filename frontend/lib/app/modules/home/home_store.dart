@@ -47,6 +47,9 @@ abstract class HomeStoreBase with Store {
   int total_invoice = 0;
 
   @observable
+  int any_payed = 0;
+
+  @observable
   int total_invoice_person = 0;
 
   @observable
@@ -56,6 +59,9 @@ abstract class HomeStoreBase with Store {
 
   @observable
   Map<String, dynamic> category = {};
+
+  @observable
+  bool? is_payed;
 
   @observable
   TextEditingController description = TextEditingController();
@@ -86,6 +92,12 @@ abstract class HomeStoreBase with Store {
   @action
   set_category(Map<String, dynamic> e) {
     category = e;
+  }
+
+  @action
+  set_paid(bool? e) {
+    is_payed = e;
+    print(is_payed);
   }
 
   @action
@@ -182,6 +194,7 @@ abstract class HomeStoreBase with Store {
     price!.updateValue(int.parse(e['invoice']['price']) / 100);
     date = e['invoice']['date'];
     invoice_id = e['invoice']['invoiceid'];
+    is_payed = e['invoice']['paid'];
   }
 
   @action
@@ -191,6 +204,7 @@ abstract class HomeStoreBase with Store {
     price!.updateValue(0.00);
     date = DateTime.now();
     is_modify = false;
+    is_payed = null;
   }
 
   @action
@@ -222,6 +236,7 @@ abstract class HomeStoreBase with Store {
             "date": date.toIso8601String().toString(),
             "userId": id.toString(),
             "homeId": home_id.toString(),
+            "paid": is_payed
           }
         ]),
       )
@@ -263,6 +278,7 @@ abstract class HomeStoreBase with Store {
             "date": date.toIso8601String().toString(),
             "userId": id.toString(),
             "invoiceId": invoice_id.toString(),
+            "paid": is_payed
           }
         ]),
       )
@@ -271,6 +287,7 @@ abstract class HomeStoreBase with Store {
         category = {};
         price!.updateValue(0.00);
         date = DateTime.now();
+        is_payed = null;
       });
     } on Exception catch (e) {
       print('modify_invoice:  nao conseguiu modificar invoice');
@@ -351,6 +368,7 @@ abstract class HomeStoreBase with Store {
     }
 
     total_invoice = 0;
+    any_payed = 0;
     users = [{}];
     category_percents = [{}];
     var aux = [{}];
@@ -358,16 +376,26 @@ abstract class HomeStoreBase with Store {
 
     invoices?.forEach((element) {
       total_invoice += int.parse(element['invoice']['price']);
+      any_payed += element['invoice']['paid'] == false
+          ? int.parse(element['invoice']['price'])
+          : 0;
       aux[0][element['invoice']['userid']] =
           aux[0][element['invoice']['userid']] == null
               ? {
                   'value': int.parse(element['invoice']['price']),
-                  'name': element['users']['name']
+                  'name': element['users']['name'],
+                  'paid': element['invoice']['paid'] == true
+                      ? int.parse(element['invoice']['price'])
+                      : 0,
                 }
               : {
                   'value': aux[0][element['invoice']['userid']]['value']! +
                       int.parse(element['invoice']['price']),
-                  'name': element['users']['name']
+                  'name': element['users']['name'],
+                  'paid': element['invoice']['paid'] == true
+                      ? aux[0][element['invoice']['userid']]['paid']! +
+                          int.parse(element['invoice']['price'])
+                      : aux[0][element['invoice']['userid']]['paid']!,
                 };
 
       aux_category[0][element['category']['name']] =
@@ -384,10 +412,13 @@ abstract class HomeStoreBase with Store {
                 };
     });
 
-    if (total_invoice % num_users! == 0) {
-      total_invoice_person = total_invoice ~/ num_users;
+    if (((total_invoice / num_users!) - (any_payed / num_users)) % num_users ==
+        0) {
+      total_invoice_person =
+          ((total_invoice / num_users) - (any_payed / num_users)).toInt();
     } else {
-      total_invoice_person = (total_invoice / num_users + 1).toInt();
+      total_invoice_person =
+          ((total_invoice / num_users) - (any_payed / num_users) + 1).toInt();
     }
 
     aux[0].forEach((id, value) {
@@ -396,7 +427,8 @@ abstract class HomeStoreBase with Store {
         'r': Random().nextInt(255),
         'g': Random().nextInt(255),
         'b': Random().nextInt(255),
-        'name': value['name']
+        'name': value['name'],
+        'paid': value['paid'],
       });
     });
     users.removeAt(0);
@@ -412,7 +444,7 @@ abstract class HomeStoreBase with Store {
     });
     category_percents.removeAt(0);
 
-    print("User: ${category_percents}");
+    print("User: ${users}");
   }
 
   @action
