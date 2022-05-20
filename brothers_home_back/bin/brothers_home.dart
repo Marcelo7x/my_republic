@@ -27,8 +27,8 @@ final _router = Router()
 
 Response _rootHandler(Request req) {
   Map<String, dynamic> data = {
-    "current_version" : "0.0.3",
-    "force_update" : "0.0.3",
+    "current_version": "0.0.3",
+    "force_update": "0.0.3",
   };
 
   return Response.ok(jsonEncode(data));
@@ -169,10 +169,11 @@ Future<Response> _number_of_users_for_home(Request request) async {
   List<Map<String, Map<String, dynamic>>>? result_bd;
   try {
     result_bd = await database.mappedResultsQuery(
-        "SELECT COUNT(userId) FROM users u INNER JOIN home h ON u.homeId = h.homeId WHERE h.homeId = @homeId ",
+        "SELECT u.userid, u.name FROM users u INNER JOIN home h ON u.homeId = h.homeId WHERE h.homeId = @homeId ",
         substitutionValues: {
           "homeId": result[0]['homeId'],
         });
+        
     print(result_bd);
   } catch (e) {
     print("Funçao _number_of_users_for_home");

@@ -348,6 +348,14 @@ abstract class HomeStoreBase with Store {
       home_id = prefs.getInt('home_id');
     }
 
+    total_invoice = 0;
+    total_invoice_person = 0;
+    any_payed = 0;
+    users = [{}];
+    category_percents = [{}];
+    var aux = [{}];
+    var aux_category = [{}];
+
     int? num_users;
     try {
       var result = await Dio().post(
@@ -359,20 +367,24 @@ abstract class HomeStoreBase with Store {
         ]),
       );
 
-      List<dynamic> data = jsonDecode(result.data);
+      List<dynamic>? data = jsonDecode(result.data);
 
-      num_users = data[0][""]?["count"];
+      num_users = data!.length;
+
+      //print("data: $data");
+
+      data.forEach((e) {
+        aux[0][e['users']['userid']] = {
+          'value': 0,
+          'name': e['users']['name'],
+          'paid': 0,
+        };
+      });
+      //print(aux);
     } on Exception catch (e) {
       print('calc_total:  nao conseguiu obter o numero de users');
       print(e);
     }
-
-    total_invoice = 0;
-    any_payed = 0;
-    users = [{}];
-    category_percents = [{}];
-    var aux = [{}];
-    var aux_category = [{}];
 
     invoices?.forEach((element) {
       total_invoice += int.parse(element['invoice']['price']);
@@ -423,7 +435,8 @@ abstract class HomeStoreBase with Store {
 
     aux[0].forEach((id, value) {
       users.add({
-        id: ((((value['value'] * 100) / total_invoice)) / 100),
+        'id': id,
+        'total': ((((value['value'] * 100) / total_invoice)) / 100),
         'r': Random().nextInt(255),
         'g': Random().nextInt(255),
         'b': Random().nextInt(255),
