@@ -1,14 +1,12 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/app_widget.dart';
 import 'package:mobx/mobx.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'dart:async';
 
 part 'splash_store.g.dart';
@@ -16,8 +14,8 @@ part 'splash_store.g.dart';
 class SplashStore = _SplashStoreBase with _$SplashStore;
 
 abstract class _SplashStoreBase with Store {
-  final String version = '0.0.3';
-  final String url = 'http://192.168.1.9:8081/';
+  final String version = '0.0.4';
+  final String url = 'http://192.168.1.9:8080/';
 
   @observable
   bool error = false;
