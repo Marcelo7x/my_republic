@@ -18,6 +18,19 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends ModularState<HomePage, HomeStore> {
   @override
+  initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _asyncMethod();
+    });
+  }
+
+  _asyncMethod() async {
+    await store.get_invoices();
+    await store.get_categories();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
@@ -27,8 +40,8 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
     var id = Modular.args.data;
     var logo = AssetImage("images/logo.png");
 
-    controller.get_invoices();
-    controller.get_categories();
+    //controller.get_invoices();
+    //controller.get_categories();
 
     // Lista de contas
     List<Widget> _listWidget = <Widget>[

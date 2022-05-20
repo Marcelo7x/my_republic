@@ -142,7 +142,7 @@ abstract class HomeStoreBase with Store {
       e['invoice']['date'] = DateTime.parse(e['invoice']['date']);
     }
 
-    calc_total();
+    await calc_total();
 
     //print(invoices);
 
@@ -351,7 +351,7 @@ abstract class HomeStoreBase with Store {
     total_invoice = 0;
     total_invoice_person = 0;
     any_payed = 0;
-    users = [{}];
+    users.clear();
     category_percents = [{}];
     var aux = [{}];
     var aux_category = [{}];
@@ -391,24 +391,15 @@ abstract class HomeStoreBase with Store {
       any_payed += element['invoice']['paid'] == false
           ? int.parse(element['invoice']['price'])
           : 0;
-      aux[0][element['invoice']['userid']] =
-          aux[0][element['invoice']['userid']] == null
-              ? {
-                  'value': int.parse(element['invoice']['price']),
-                  'name': element['users']['name'],
-                  'paid': element['invoice']['paid'] == true
-                      ? int.parse(element['invoice']['price'])
-                      : 0,
-                }
-              : {
-                  'value': aux[0][element['invoice']['userid']]['value']! +
-                      int.parse(element['invoice']['price']),
-                  'name': element['users']['name'],
-                  'paid': element['invoice']['paid'] == true
-                      ? aux[0][element['invoice']['userid']]['paid']! +
-                          int.parse(element['invoice']['price'])
-                      : aux[0][element['invoice']['userid']]['paid']!,
-                };
+      aux[0][element['invoice']['userid']] = {
+        'value': aux[0][element['invoice']['userid']]['value']! +
+            int.parse(element['invoice']['price']),
+        'name': element['users']['name'],
+        'paid': element['invoice']['paid'] == true
+            ? aux[0][element['invoice']['userid']]['paid']! +
+                int.parse(element['invoice']['price'])
+            : aux[0][element['invoice']['userid']]['paid']!,
+      };
 
       aux_category[0][element['category']['name']] =
           aux_category[0][element['category']['name']] == null
@@ -444,7 +435,6 @@ abstract class HomeStoreBase with Store {
         'paid': value['paid'],
       });
     });
-    users.removeAt(0);
 
     aux_category[0].forEach((id, value) {
       category_percents.add({
