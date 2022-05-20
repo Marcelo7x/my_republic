@@ -108,7 +108,7 @@ Widget InvoicesPage(
                                         child: Card(
                                           color: Theme.of(context)
                                               .colorScheme
-                                              .onPrimary,
+                                              .secondaryContainer,
                                           child: Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 10, right: 10),
