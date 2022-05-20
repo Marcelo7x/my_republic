@@ -49,9 +49,11 @@ Widget OptionsPage(
                       child: Switch(
                           value: themeMode.value == ThemeMode.dark,
                           //child: const Text("Trocar tema"),
-                          onChanged: (isDark) {
+                          onChanged: (isDark) async {
                             themeMode.value =
                                 isDark ? ThemeMode.dark : ThemeMode.light;
+                            await controller.switch_theme(
+                                themeMode.value == ThemeMode.dark);
                           }),
                     ),
                   ],

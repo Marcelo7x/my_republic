@@ -15,6 +15,7 @@ class _SplashPageState extends ModularState<SplashPage, SplashStore> {
   Widget build(BuildContext context) {
     initState() async {
       await store.verify_login();
+      await store.verify_theme();
     }
 
     initState();
@@ -38,8 +39,8 @@ class _SplashPageState extends ModularState<SplashPage, SplashStore> {
           Observer(builder: (_) {
             return controller.error
                 ? SizedBox(
-                  width: MediaQuery.of(context).size.width * .8,
-                  child: Text(
+                    width: MediaQuery.of(context).size.width * .8,
+                    child: Text(
                       controller.erro_menssage,
                       style: TextStyle(
                           fontSize: 14,
@@ -47,7 +48,7 @@ class _SplashPageState extends ModularState<SplashPage, SplashStore> {
                           color: Theme.of(context).colorScheme.error,
                           decoration: TextDecoration.none),
                     ),
-                )
+                  )
                 : const CircularProgressIndicator();
           }),
         ],

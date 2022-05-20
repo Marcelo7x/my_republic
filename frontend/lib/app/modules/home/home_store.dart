@@ -472,4 +472,13 @@ abstract class HomeStoreBase with Store {
 
     Modular.to.navigate('/login/');
   }
+
+  switch_theme(bool is_dark_theme) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (is_dark_theme) {
+      prefs.setBool('is_dark_theme', true);
+    } else {
+      prefs.setBool('is_dark_theme', false);
+    }
+  }
 }

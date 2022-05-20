@@ -41,6 +41,30 @@ mixin _$SplashStore on _SplashStoreBase, Store {
     });
   }
 
+  late final _$dark_themeAtom =
+      Atom(name: '_SplashStoreBase.dark_theme', context: context);
+
+  @override
+  bool get dark_theme {
+    _$dark_themeAtom.reportRead();
+    return super.dark_theme;
+  }
+
+  @override
+  set dark_theme(bool value) {
+    _$dark_themeAtom.reportWrite(value, super.dark_theme, () {
+      super.dark_theme = value;
+    });
+  }
+
+  late final _$verify_themeAsyncAction =
+      AsyncAction('_SplashStoreBase.verify_theme', context: context);
+
+  @override
+  Future verify_theme() {
+    return _$verify_themeAsyncAction.run(() => super.verify_theme());
+  }
+
   late final _$verify_loginAsyncAction =
       AsyncAction('_SplashStoreBase.verify_login', context: context);
 
@@ -53,7 +77,8 @@ mixin _$SplashStore on _SplashStoreBase, Store {
   String toString() {
     return '''
 error: ${error},
-erro_menssage: ${erro_menssage}
+erro_menssage: ${erro_menssage},
+dark_theme: ${dark_theme}
     ''';
   }
 }

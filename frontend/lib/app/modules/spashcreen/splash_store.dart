@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:frontend/app/app_widget.dart';
 import 'package:mobx/mobx.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +24,19 @@ abstract class _SplashStoreBase with Store {
 
   @observable
   String erro_menssage = "";
+
+  @observable
+  bool dark_theme = false;
+
+  @action
+  verify_theme() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool? is_dark_theme = prefs.getBool('is_dark_theme');
+
+    if (is_dark_theme != null && is_dark_theme) {
+      themeMode.value = ThemeMode.dark;
+    }
+  }
 
   verify_version(final String v) {
     final v1 = version.split('.');
