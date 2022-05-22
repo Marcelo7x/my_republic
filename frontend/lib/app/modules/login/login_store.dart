@@ -28,8 +28,8 @@ abstract class _LoginStoreBase with Store {
 
     String url = await SharedPreferences.getInstance().then((value) => value.getString('url')!);
 
-    if (email_controller.text.length > 0 &&
-        password_controller.text.length > 0) {
+    if (email_controller.text.isNotEmpty &&
+        password_controller.text.isNotEmpty) {
       
       try {
         var response = await Dio().post(url+'login',

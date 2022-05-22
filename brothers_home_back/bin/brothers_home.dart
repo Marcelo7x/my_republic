@@ -145,7 +145,7 @@ Future<Response> _login(Request request) async {
   List<Map<String, Map<String, dynamic>>>? result_bd;
   try {
     result_bd = await database.mappedResultsQuery(
-        "SELECT userId, homeid FROM users WHERE email = @email and password = @password",
+        "SELECT userId, homeid, name FROM users WHERE email = @email and password = @password",
         substitutionValues: {
           "email": result[0]['email'],
           "password": result[0]['password'],
