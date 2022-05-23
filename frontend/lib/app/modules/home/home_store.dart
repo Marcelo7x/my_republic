@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:frontend/domain/home.dart';
+import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -13,6 +15,9 @@ part 'home_store.g.dart';
 class HomeStore = HomeStoreBase with _$HomeStore;
 
 abstract class HomeStoreBase with Store {
+  User user = Modular.args.data['user'];
+  Home home = Modular.args.data['home'];
+
   @observable
   int selectedIndex = 0;
 
@@ -20,7 +25,7 @@ abstract class HomeStoreBase with Store {
   var page_controller = PageController();
 
   @observable
-  int? id = Modular.args.data;
+  int? id;
 
   @observable
   List<dynamic>? invoices;
@@ -113,6 +118,7 @@ abstract class HomeStoreBase with Store {
 
   @action
   get_invoices() async {
+    id = user.id; //!gambiarra ******************************************
     if (dateRange.startDate == null || dateRange.endDate == null) {
       return;
     }

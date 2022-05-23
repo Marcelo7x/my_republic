@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:frontend/domain/connection_manager.dart';
+import 'package:frontend/domain/home.dart';
+import 'package:frontend/domain/storage_local.dart';
+import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
-import 'package:dio/dio.dart';
-import 'dart:convert';
-
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_store.g.dart';
 
@@ -26,35 +26,23 @@ abstract class _LoginStoreBase with Store {
   loggin() async {
     loading = true;
 
-    String url = await SharedPreferences.getInstance().then((value) => value.getString('url')!);
-
     if (email_controller.text.isNotEmpty &&
         password_controller.text.isNotEmpty) {
-      
-      try {
-        var response = await Dio().post(url+'login',
-            data: jsonEncode([
-              {
-                "email": email_controller.text.replaceAll(RegExp(r' '), ''),
-                "password": password_controller.text
-              }
-            ]));
+      final data = await ConnectionManager.login(
+          email_controller.text, password_controller.text);
 
-        if (jsonDecode(response.data).length > 0) {
-          var id = jsonDecode(response.data)[0]['users']['userid'];
-          var homeid = jsonDecode(response.data)[0]['users']['homeid'];
-          final prefs = await SharedPreferences.getInstance();
+      if (data.length > 0) {
+        final home = Home(data['users']['homeid']);
 
-          await prefs.setInt('id', id);
-          await prefs.setInt('home_id', homeid);
-          await prefs.setBool('is_logged', true);
+        final user =
+            User(data['users']['userid'], data['users']['name'], home: home);
 
-          Modular.to.navigate('/home/', arguments: id);
-        } else {
-          loggin_error = true;
-        }
-      } catch (e) {
-        print(e);
+        final StorageLocal conn = await StorageLocal.getInstance();
+        await conn.salve_credentials(user_id: user.id, user_name: user.name, home_id: user.home_id);
+
+        Modular.to.navigate('/home/', arguments: {'user':user,'home':home});
+      } else {
+        loggin_error = true;
       }
     } else {
       loggin_error = true;

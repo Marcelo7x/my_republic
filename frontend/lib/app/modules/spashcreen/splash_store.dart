@@ -4,6 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/app_widget.dart';
+import 'package:frontend/domain/connection_manager.dart';
+import 'package:frontend/domain/home.dart';
+import 'package:frontend/domain/storage_local.dart';
+import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,8 +32,9 @@ abstract class _SplashStoreBase with Store {
 
   @action
   verify_theme() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? is_dark_theme = prefs.getBool('is_dark_theme');
+    final StorageLocal prefs = await StorageLocal.getInstance();
+
+    bool? is_dark_theme = prefs.connection.getBool('is_dark_theme');
 
     if (is_dark_theme != null && is_dark_theme) {
       themeMode.value = ThemeMode.dark;
@@ -51,39 +56,25 @@ abstract class _SplashStoreBase with Store {
 
   @action
   verify_login() async {
-    Permission.storage.request();
-
-    final prefs = await SharedPreferences.getInstance();
-    bool? logged = prefs.getBool('is_logged');
-
-    await Future.delayed(Duration(seconds: 1));
-
     var result;
     try {
-      result = await Dio()
-          .get(
-        url,
-      )
-          .timeout(Duration(seconds: 10), onTimeout: () {
-        error = true;
-        erro_menssage = "O servidor está desligado, tente voltar daqui a pouco";
-        return Response<String>(requestOptions: RequestOptions(path: ""));
-      });
+      result = await ConnectionManager.verify_server();
     } on Exception catch (e) {
       error = true;
       erro_menssage = "O servidor está desligado, tente voltar daqui a pouco.";
     }
 
-    if (!error) verify_version(jsonDecode(result.data)["force_update"]);
-
-    //logged = false;
-
-    await prefs.setString('url', url);
+    if (!error) verify_version(result["force_update"]);
 
     if (!error) {
-      if (logged != null && logged) {
-        int? id = await prefs.getInt('id');
-        Modular.to.navigate('home/', arguments: id);
+      final StorageLocal conn = await StorageLocal.getInstance();
+      Map<String, dynamic> data = await conn.verify_credentials();
+
+      if (data.length > 0) {
+        Home home = Home(data['home_id']);
+        User user = User(data['user_id'], data['user_name'], home: home);
+
+        Modular.to.navigate('home/', arguments: {'user': user, 'home': home});
       } else {
         Modular.to.navigate('login/');
       }
