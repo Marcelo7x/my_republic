@@ -4,7 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:frontend/domain/category.dart';
+import 'package:frontend/domain/connection_manager.dart';
 import 'package:frontend/domain/home.dart';
+import 'package:frontend/domain/storage_local.dart';
 import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,13 +28,10 @@ abstract class HomeStoreBase with Store {
   var page_controller = PageController();
 
   @observable
-  int? id;
-
-  @observable
   List<dynamic>? invoices;
 
   @observable
-  List<dynamic> categories = [];
+  List<Category> categories = [];
 
   @observable
   int? invoice_id;
@@ -63,7 +63,7 @@ abstract class HomeStoreBase with Store {
       DateTime.utc(DateTime.now().year, DateTime.now().month, 20));
 
   @observable
-  Map<String, dynamic> category = {};
+  Category? category;
 
   @observable
   bool? is_payed;
@@ -95,7 +95,7 @@ abstract class HomeStoreBase with Store {
   }
 
   @action
-  set_category(Map<String, dynamic> e) {
+  set_category(Category e) {
     category = e;
   }
 
@@ -108,49 +108,21 @@ abstract class HomeStoreBase with Store {
   @action
   set_dateRange(PickerDateRange dt) async {
     dateRange = dt;
-
-    // if (dt.startDate != null && dt.endDate != null) {
-    //   final prefs = await SharedPreferences.getInstance();
-    //   await prefs.setStringList('dateRange',
-    //       [dt.startDate!.toIso8601String(), dt.endDate!.toIso8601String()]);
-    // }
   }
 
   @action
   get_invoices() async {
-    id = user.id; //!gambiarra ******************************************
     if (dateRange.startDate == null || dateRange.endDate == null) {
       return;
     }
 
     loading = true;
 
-    final prefs = await SharedPreferences.getInstance();
-    int? home_id = prefs.getInt('home_id');
-
-    String url = await SharedPreferences.getInstance()
-        .then((value) => value.getString('url')!);
-
-    var result = await Dio().post(
-      url + 'list-invoices-date-interval',
-      data: jsonEncode([
-        {
-          'first_date': dateRange.startDate!.toIso8601String().toString(),
-          'last_date': dateRange.endDate!.toIso8601String().toString(),
-          'homeid': home_id,
-        }
-      ]),
-    );
-
-    invoices = jsonDecode(result.data);
+    invoices = await ConnectionManager.get_invoices(start_date: dateRange.startDate!, end_date: dateRange.endDate!, home_id: home.id);
 
     for (var e in invoices!) {
       e['invoice']['date'] = DateTime.parse(e['invoice']['date']);
     }
-
-    await calc_total();
-
-    //print(invoices);
 
     loading = false;
   }
@@ -159,21 +131,11 @@ abstract class HomeStoreBase with Store {
   get_categories() async {
     loading = true;
 
-    final prefs = await SharedPreferences.getInstance();
-    String url = await SharedPreferences.getInstance()
-        .then((value) => value.getString('url')!);
+    List<Category> result = await ConnectionManager.get_categories();
 
-    var result;
+    categories = result;
 
-    try {
-      result = await Dio().get(url + 'list-categories');
-    } on Exception catch (e) {
-      print(e);
-    }
-
-    categories = jsonDecode(result.data);
-
-    //print("Cateories....: ${categories}");
+    print(result);
 
     loading = false;
   }
@@ -190,12 +152,6 @@ abstract class HomeStoreBase with Store {
 
   modify(e) {
     is_modify = true;
-    category = {
-      'category': {
-        'categoryId': e['invoice']['categoryId'],
-        'name': e['category']['name']
-      }
-    };
     description.text = e['invoice']['description'];
     price!.updateValue(int.parse(e['invoice']['price']) / 100);
     date = e['invoice']['date'];
@@ -206,7 +162,7 @@ abstract class HomeStoreBase with Store {
   @action
   clear_input() {
     description.text = "";
-    category = {};
+    category = null;
     price!.updateValue(0.00);
     date = DateTime.now();
     is_modify = false;
@@ -237,7 +193,7 @@ abstract class HomeStoreBase with Store {
         data: jsonEncode([
           {
             "description": description.text,
-            "categoryId": category['category']['categoryId'],
+            "categoryId": category!.id,
             "price": (price!.numberValue * 100).toInt().toString(),
             "date": date.toIso8601String().toString(),
             "userId": id.toString(),
@@ -279,7 +235,7 @@ abstract class HomeStoreBase with Store {
         data: jsonEncode([
           {
             "description": description.text,
-            "categoryId": category['category']['categoryId'],
+            "categoryId": category!.id,
             "price": (price!.numberValue * 100).toInt().toString(),
             "date": date.toIso8601String().toString(),
             "userId": id.toString(),
@@ -290,7 +246,7 @@ abstract class HomeStoreBase with Store {
       )
           .then((value) {
         description.text = "";
-        category = {};
+        category = null;
         price!.updateValue(0.00);
         date = DateTime.now();
         is_payed = null;

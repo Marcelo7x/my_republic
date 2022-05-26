@@ -28,6 +28,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
   _asyncMethod() async {
     await store.get_invoices();
     await store.get_categories();
+    await store.calc_total();
   }
 
   @override

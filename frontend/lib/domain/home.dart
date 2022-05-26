@@ -10,7 +10,7 @@ class Home {
   set name(name) => _name = name;
   set users(users) => _users = users;
 
-  get id => _id;
-  get name => _name;
-  get users => _users;
+  int get id => _id;
+  String get name => _name;
+  List<User> get users => _users;
 }

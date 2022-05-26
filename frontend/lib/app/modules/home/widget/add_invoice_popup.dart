@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
 import 'package:frontend/app/modules/home/widget/select_date_popup.dart';
+import 'package:frontend/domain/category.dart';
 import 'package:intl/intl.dart';
 
 Widget AddInvoicePopup(
@@ -26,11 +27,11 @@ Widget AddInvoicePopup(
                 //! a base da gambiarra
                 return DropdownButton(
                   borderRadius: BorderRadius.circular(18),
-                  hint: controller.category.isEmpty
+                  hint: controller.category == null
                       ? const Text("Selecione uma categoria")
                       : Text(
                           toBeginningOfSentenceCase(controller
-                              .category['category']['name']
+                              .category!.name
                               .toString())!,
                           style: TextStyle(
                               color: Theme.of(context).colorScheme.primary),
@@ -39,14 +40,15 @@ Widget AddInvoicePopup(
                     height: 2,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  items: controller.categories.map((dynamic e) {
-                    return DropdownMenuItem<Map<String, dynamic>>(
+                  value: controller.category,
+                  items: controller.categories.map((Category e) {
+                    return DropdownMenuItem<Category>(
                       value: e,
                       child: Text(toBeginningOfSentenceCase(
-                          e['category']['name'].toString())!),
+                          e.name)!),
                     );
                   }).toList(),
-                  onChanged: (Map<String, dynamic>? e) {
+                  onChanged: (Category? e) {
                     controller.set_category(e!);
                   },
                 );
