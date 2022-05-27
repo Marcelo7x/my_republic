@@ -124,18 +124,20 @@ abstract class HomeStoreBase with Store {
         end_date: dateRange.endDate!,
         home_id: home.id);
 
+    invoices.clear();
+
     for (var e in result) {
       User u = User(e['invoice']['userid'], e['users']['name']);
       invoices.add(Invoice(
-        id: e['invoice']['invoiceid'],
-        user: u,
-        home: home,
-        category: Category(id: e['invoice']['categoryId'],name: e['category']['name']),
-        price: int.parse(e['invoice']['price']),
-        description: e['invoice']['description'],
-        date: DateTime.parse(e['invoice']['date']),
-        paid: e['invoice']['paid']
-      ));
+          id: e['invoice']['invoiceid'],
+          user: u,
+          home: home,
+          category: Category(
+              id: e['invoice']['categoryId'], name: e['category']['name']),
+          price: int.parse(e['invoice']['price']),
+          description: e['invoice']['description'],
+          date: DateTime.parse(e['invoice']['date']),
+          paid: e['invoice']['paid']));
     }
 
     loading = false;
@@ -162,13 +164,13 @@ abstract class HomeStoreBase with Store {
     select_invoice = I;
   }
 
-  modify(e) {
+  modify() {
     is_modify = true;
-    description.text = e['invoice']['description'];
-    price!.updateValue(int.parse(e['invoice']['price']) / 100);
-    date = e['invoice']['date'];
-    invoice_id = e['invoice']['invoiceid'];
-    is_payed = e['invoice']['paid'];
+    description.text = select_invoice!.description;
+    price!.updateValue(select_invoice!.price / 100);
+    date =select_invoice!.date;
+    invoice_id =select_invoice!.id;
+    is_payed =select_invoice!.paid;
   }
 
   @action
@@ -190,14 +192,6 @@ abstract class HomeStoreBase with Store {
     String url = await SharedPreferences.getInstance()
         .then((value) => value.getString('url')!);
 
-    int? id;
-    int? home_id;
-    if (logged != null && logged) {
-      id = prefs.getInt('id');
-      home_id = prefs.getInt('home_id');
-      print(home_id);
-    }
-
     try {
       var result = await Dio()
           .post(
@@ -208,8 +202,8 @@ abstract class HomeStoreBase with Store {
             "categoryId": category!.id,
             "price": (price!.numberValue * 100).toInt().toString(),
             "date": date.toIso8601String().toString(),
-            "userId": id.toString(),
-            "homeId": home_id.toString(),
+            "userId": user.id.toString(),
+            "homeId": home.id.toString(),
             "paid": is_payed
           }
         ]),
@@ -273,7 +267,7 @@ abstract class HomeStoreBase with Store {
   }
 
   @action
-  remove_invoice({required user_id, required invoice_id}) async {
+  remove_invoice() async {
     loading = true;
 
     final prefs = await SharedPreferences.getInstance();
@@ -281,24 +275,13 @@ abstract class HomeStoreBase with Store {
     String url = await SharedPreferences.getInstance()
         .then((value) => value.getString('url')!);
 
-    int? id;
-    int? home_id;
-    if (logged != null && logged) {
-      id = prefs.getInt('id');
-      if (id != user_id) {
-        loading = false;
-        return;
-      }
-    }
-    print("$id $invoice_id");
-
     try {
       var result = await Dio().post(
         url + 'remove-invoice',
         data: jsonEncode([
           {
-            "userId": id.toString(),
-            "invoiceId": invoice_id.toString(),
+            "userId": select_invoice!.user.id.toString(),
+            "invoiceId": select_invoice!.id.toString(),
           }
         ]),
       );
@@ -362,28 +345,20 @@ abstract class HomeStoreBase with Store {
 
     invoices.forEach((Invoice element) {
       total_invoice += element.price;
-      any_payed += element.paid == false
-          ? element.price
-          : 0;
+      any_payed += element.paid == false ? element.price : 0;
       aux[0][element.user.id] = {
-        'value': aux[0][element.user.id]['value']! +
-            element.price,
+        'value': aux[0][element.user.id]['value']! + element.price,
         'name': element.user.name,
         'paid': element.paid == true
-            ? aux[0][element.user.id]['paid']! +
-                element.price
+            ? aux[0][element.user.id]['paid']! + element.price
             : aux[0][element.user.id]['paid']!,
       };
 
       aux_category[0][element.category.name] =
           aux_category[0][element.category.name] == null
-              ? {
-                  'value': element.price,
-                  'name': element.category.name
-                }
+              ? {'value': element.price, 'name': element.category.name}
               : {
-                  'value': aux_category[0][element.category.name]
-                          ['value']! +
+                  'value': aux_category[0][element.category.name]['value']! +
                       element.price,
                   'name': element.category.name
                 };

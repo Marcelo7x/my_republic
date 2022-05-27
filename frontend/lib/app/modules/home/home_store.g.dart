@@ -355,10 +355,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
       AsyncAction('HomeStoreBase.remove_invoice', context: context);
 
   @override
-  Future remove_invoice(
-      {required dynamic user_id, required dynamic invoice_id}) {
-    return _$remove_invoiceAsyncAction.run(
-        () => super.remove_invoice(user_id: user_id, invoice_id: invoice_id));
+  Future remove_invoice() {
+    return _$remove_invoiceAsyncAction.run(() => super.remove_invoice());
   }
 
   late final _$calc_totalAsyncAction =

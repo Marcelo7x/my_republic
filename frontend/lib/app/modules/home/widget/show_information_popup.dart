@@ -150,7 +150,7 @@ Widget ShowInformationPopup(
                           width: 120,
                           child: ElevatedButton(
                             onPressed: () async {
-                              controller.modify(e);
+                              controller.modify();
 
                               await showDialog(
                                   context: context,
@@ -186,9 +186,7 @@ Widget ShowInformationPopup(
                                       actions: <Widget>[
                                         TextButton(
                                           onPressed: () async {
-                                            await controller.remove_invoice(
-                                                user_id: e.user.id,
-                                                invoice_id: e.id);
+                                            await controller.remove_invoice();
 
                                             Navigator.of(context).pop();
 

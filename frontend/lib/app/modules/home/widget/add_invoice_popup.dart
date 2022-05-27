@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 
 Widget AddInvoicePopup(
     {required BuildContext context, required HomeStore controller}) {
-  String drop = "teste";
+  
   return AlertDialog(
     title: !controller.is_modify
         ? const Text("Adicionar Gasto")
@@ -24,18 +24,9 @@ Widget AddInvoicePopup(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Observer(builder: (_) {
-                //! a base da gambiarra
                 return DropdownButton(
                   borderRadius: BorderRadius.circular(18),
-                  hint: controller.category == null
-                      ? const Text("Selecione uma categoria")
-                      : Text(
-                          toBeginningOfSentenceCase(controller
-                              .category!.name
-                              .toString())!,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary),
-                        ),
+                  hint: const Text("Selecione uma categoria"),                 
                   underline: Container(
                     height: 2,
                     color: Theme.of(context).colorScheme.primary,

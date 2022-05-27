@@ -114,6 +114,8 @@ Widget InvoicesPage(
                                                     ? 60
                                                     : _height * .4,
                                             child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 controller.select_invoice != e
                                                     ? Row(
