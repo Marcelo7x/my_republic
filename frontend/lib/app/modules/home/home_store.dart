@@ -7,6 +7,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/domain/category.dart';
 import 'package:frontend/domain/connection_manager.dart';
 import 'package:frontend/domain/home.dart';
+import 'package:frontend/domain/invoice.dart';
 import 'package:frontend/domain/storage_local.dart';
 import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
@@ -28,16 +29,16 @@ abstract class HomeStoreBase with Store {
   var page_controller = PageController();
 
   @observable
-  List<dynamic>? invoices;
+  List<Invoice> invoices = [];
+
+  @observable
+  Invoice? select_invoice;
 
   @observable
   List<Category> categories = [];
 
   @observable
   int? invoice_id;
-
-  @observable
-  Map select_invoice = {};
 
   @observable
   bool is_modify = false;
@@ -49,13 +50,13 @@ abstract class HomeStoreBase with Store {
   List<Map<dynamic, dynamic>> category_percents = [{}];
 
   @observable
-  int total_invoice = 0;
+  num total_invoice = 0;
 
   @observable
-  int any_payed = 0;
+  num any_payed = 0;
 
   @observable
-  int total_invoice_person = 0;
+  num total_invoice_person = 0;
 
   @observable
   PickerDateRange dateRange = PickerDateRange(
@@ -118,10 +119,23 @@ abstract class HomeStoreBase with Store {
 
     loading = true;
 
-    invoices = await ConnectionManager.get_invoices(start_date: dateRange.startDate!, end_date: dateRange.endDate!, home_id: home.id);
+    var result = await ConnectionManager.get_invoices(
+        start_date: dateRange.startDate!,
+        end_date: dateRange.endDate!,
+        home_id: home.id);
 
-    for (var e in invoices!) {
-      e['invoice']['date'] = DateTime.parse(e['invoice']['date']);
+    for (var e in result) {
+      User u = User(e['invoice']['userid'], e['users']['name']);
+      invoices.add(Invoice(
+        id: e['invoice']['invoiceid'],
+        user: u,
+        home: home,
+        category: Category(id: e['invoice']['categoryId'],name: e['category']['name']),
+        price: int.parse(e['invoice']['price']),
+        description: e['invoice']['description'],
+        date: DateTime.parse(e['invoice']['date']),
+        paid: e['invoice']['paid']
+      ));
     }
 
     loading = false;
@@ -135,8 +149,6 @@ abstract class HomeStoreBase with Store {
 
     categories = result;
 
-    print(result);
-
     loading = false;
   }
 
@@ -146,7 +158,7 @@ abstract class HomeStoreBase with Store {
   }
 
   @action
-  set_select_invoice(I) {
+  set_select_invoice(Invoice? I) {
     select_invoice = I;
   }
 
@@ -348,32 +360,32 @@ abstract class HomeStoreBase with Store {
       print(e);
     }
 
-    invoices?.forEach((element) {
-      total_invoice += int.parse(element['invoice']['price']);
-      any_payed += element['invoice']['paid'] == false
-          ? int.parse(element['invoice']['price'])
+    invoices.forEach((Invoice element) {
+      total_invoice += element.price;
+      any_payed += element.paid == false
+          ? element.price
           : 0;
-      aux[0][element['invoice']['userid']] = {
-        'value': aux[0][element['invoice']['userid']]['value']! +
-            int.parse(element['invoice']['price']),
-        'name': element['users']['name'],
-        'paid': element['invoice']['paid'] == true
-            ? aux[0][element['invoice']['userid']]['paid']! +
-                int.parse(element['invoice']['price'])
-            : aux[0][element['invoice']['userid']]['paid']!,
+      aux[0][element.user.id] = {
+        'value': aux[0][element.user.id]['value']! +
+            element.price,
+        'name': element.user.name,
+        'paid': element.paid == true
+            ? aux[0][element.user.id]['paid']! +
+                element.price
+            : aux[0][element.user.id]['paid']!,
       };
 
-      aux_category[0][element['category']['name']] =
-          aux_category[0][element['category']['name']] == null
+      aux_category[0][element.category.name] =
+          aux_category[0][element.category.name] == null
               ? {
-                  'value': int.parse(element['invoice']['price']),
-                  'name': element['category']['name']
+                  'value': element.price,
+                  'name': element.category.name
                 }
               : {
-                  'value': aux_category[0][element['category']['name']]
+                  'value': aux_category[0][element.category.name]
                           ['value']! +
-                      int.parse(element['invoice']['price']),
-                  'name': element['category']['name']
+                      element.price,
+                  'name': element.category.name
                 };
     });
 

@@ -45,15 +45,31 @@ mixin _$HomeStore on HomeStoreBase, Store {
       Atom(name: 'HomeStoreBase.invoices', context: context);
 
   @override
-  List<dynamic>? get invoices {
+  List<Invoice> get invoices {
     _$invoicesAtom.reportRead();
     return super.invoices;
   }
 
   @override
-  set invoices(List<dynamic>? value) {
+  set invoices(List<Invoice> value) {
     _$invoicesAtom.reportWrite(value, super.invoices, () {
       super.invoices = value;
+    });
+  }
+
+  late final _$select_invoiceAtom =
+      Atom(name: 'HomeStoreBase.select_invoice', context: context);
+
+  @override
+  Invoice? get select_invoice {
+    _$select_invoiceAtom.reportRead();
+    return super.select_invoice;
+  }
+
+  @override
+  set select_invoice(Invoice? value) {
+    _$select_invoiceAtom.reportWrite(value, super.select_invoice, () {
+      super.select_invoice = value;
     });
   }
 
@@ -86,22 +102,6 @@ mixin _$HomeStore on HomeStoreBase, Store {
   set invoice_id(int? value) {
     _$invoice_idAtom.reportWrite(value, super.invoice_id, () {
       super.invoice_id = value;
-    });
-  }
-
-  late final _$select_invoiceAtom =
-      Atom(name: 'HomeStoreBase.select_invoice', context: context);
-
-  @override
-  Map<dynamic, dynamic> get select_invoice {
-    _$select_invoiceAtom.reportRead();
-    return super.select_invoice;
-  }
-
-  @override
-  set select_invoice(Map<dynamic, dynamic> value) {
-    _$select_invoiceAtom.reportWrite(value, super.select_invoice, () {
-      super.select_invoice = value;
     });
   }
 
@@ -156,13 +156,13 @@ mixin _$HomeStore on HomeStoreBase, Store {
       Atom(name: 'HomeStoreBase.total_invoice', context: context);
 
   @override
-  int get total_invoice {
+  num get total_invoice {
     _$total_invoiceAtom.reportRead();
     return super.total_invoice;
   }
 
   @override
-  set total_invoice(int value) {
+  set total_invoice(num value) {
     _$total_invoiceAtom.reportWrite(value, super.total_invoice, () {
       super.total_invoice = value;
     });
@@ -172,13 +172,13 @@ mixin _$HomeStore on HomeStoreBase, Store {
       Atom(name: 'HomeStoreBase.any_payed', context: context);
 
   @override
-  int get any_payed {
+  num get any_payed {
     _$any_payedAtom.reportRead();
     return super.any_payed;
   }
 
   @override
-  set any_payed(int value) {
+  set any_payed(num value) {
     _$any_payedAtom.reportWrite(value, super.any_payed, () {
       super.any_payed = value;
     });
@@ -188,13 +188,13 @@ mixin _$HomeStore on HomeStoreBase, Store {
       Atom(name: 'HomeStoreBase.total_invoice_person', context: context);
 
   @override
-  int get total_invoice_person {
+  num get total_invoice_person {
     _$total_invoice_personAtom.reportRead();
     return super.total_invoice_person;
   }
 
   @override
-  set total_invoice_person(int value) {
+  set total_invoice_person(num value) {
     _$total_invoice_personAtom.reportWrite(value, super.total_invoice_person,
         () {
       super.total_invoice_person = value;
@@ -436,7 +436,7 @@ mixin _$HomeStore on HomeStoreBase, Store {
   }
 
   @override
-  dynamic set_select_invoice(dynamic I) {
+  dynamic set_select_invoice(Invoice? I) {
     final _$actionInfo = _$HomeStoreBaseActionController.startAction(
         name: 'HomeStoreBase.set_select_invoice');
     try {
@@ -463,9 +463,9 @@ mixin _$HomeStore on HomeStoreBase, Store {
 selectedIndex: ${selectedIndex},
 page_controller: ${page_controller},
 invoices: ${invoices},
+select_invoice: ${select_invoice},
 categories: ${categories},
 invoice_id: ${invoice_id},
-select_invoice: ${select_invoice},
 is_modify: ${is_modify},
 users: ${users},
 category_percents: ${category_percents},

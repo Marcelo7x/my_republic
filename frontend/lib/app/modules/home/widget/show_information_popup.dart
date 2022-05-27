@@ -40,7 +40,7 @@ Widget ShowInformationPopup(
                           ),
                         ),
                         Text(
-                          "${(numberFormat.format(int.parse(e['invoice']['price']) / 100))}",
+                          (numberFormat.format(e!.price / 100)),
                           style: const TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
@@ -49,9 +49,9 @@ Widget ShowInformationPopup(
                       ],
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 5, top: 12),
+                      padding: const EdgeInsets.only(left: 5, top: 12),
                       child: Text(
-                        "${e['invoice']['date'].day}/${e['invoice']['date'].month}/${e['invoice']['date'].year}",
+                        "${e.date.day}/${e.date.month}/${e.date.year}",
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
@@ -71,14 +71,14 @@ Widget ShowInformationPopup(
                   ),
                 ),
                 Text(
-                  toBeginningOfSentenceCase(e['users']['name'].toString())!,
+                  toBeginningOfSentenceCase(e.user.name.toString())!,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
                   ),
                 ),
               ]),
-              e['invoice']['paid'] != null
+              e.paid != null
                   ? Row(children: [
                       const Text(
                         "Pago por: ",
@@ -88,9 +88,9 @@ Widget ShowInformationPopup(
                         ),
                       ),
                       Text(
-                        e['invoice']['paid'] == true
+                        e.paid == true
                             ? toBeginningOfSentenceCase(
-                                e['users']['name'].toString())!
+                                e.user.name.toString())!
                             : 'Todos',
                         style: const TextStyle(
                           fontSize: 14,
@@ -110,7 +110,7 @@ Widget ShowInformationPopup(
                   ),
                   Text(
                     toBeginningOfSentenceCase(
-                        e['category']['name'].toString())!,
+                        e.category.name.toString())!,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
@@ -129,7 +129,7 @@ Widget ShowInformationPopup(
                   ),
                   Text(
                     toBeginningOfSentenceCase(
-                        e['invoice']['description'].toString())!,
+                        e.description.toString())!,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 14,
@@ -145,7 +145,7 @@ Widget ShowInformationPopup(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  e['invoice']['userid'] == controller.id
+                  e.user.id == controller.user.id
                       ? SizedBox(
                           width: 120,
                           child: ElevatedButton(
@@ -169,7 +169,7 @@ Widget ShowInformationPopup(
                           ),
                         )
                       : Container(),
-                  e['invoice']['userid'] == controller.id
+                  e.user.id == controller.user.id
                       ? SizedBox(
                           width: 120,
                           child: ElevatedButton(
@@ -187,9 +187,8 @@ Widget ShowInformationPopup(
                                         TextButton(
                                           onPressed: () async {
                                             await controller.remove_invoice(
-                                                user_id: e['invoice']['userid'],
-                                                invoice_id: e['invoice']
-                                                    ['invoiceid']);
+                                                user_id: e.user.id,
+                                                invoice_id: e.id);
 
                                             Navigator.of(context).pop();
 
@@ -234,9 +233,9 @@ Widget ShowInformationPopup(
               ),
               TextButton(
                 onPressed: () {
-                  controller.set_select_invoice({});
+                  controller.set_select_invoice(null);
                 },
-                child: Icon(Icons.arrow_upward),
+                child: const  Icon(Icons.arrow_upward),
               ),
             ],
           ),

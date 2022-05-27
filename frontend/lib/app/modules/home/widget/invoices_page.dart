@@ -83,90 +83,72 @@ Widget InvoicesPage(
                 height: _height * .75,
                 width: _width * .95,
                 padding: const EdgeInsets.only(bottom: 5, top: 5),
-                child:
-                    controller.invoices != null &&
-                            !controller.loading &&
-                            controller.invoices!.isNotEmpty
-                        ? RefreshIndicator(
-                            onRefresh: () async =>
-                                await controller.get_invoices(),
-                            child: ListView(
-                              children: controller.invoices!
-                                  .map(
-                                    (e) => GestureDetector(
-                                      onTap: () async {
-                                        controller.select_invoice != e
-                                            ? await controller
-                                                .set_select_invoice(e)
-                                            : await controller
-                                                .set_select_invoice({});
-                                      },
-                                      child: AnimatedSize(
-                                        alignment: Alignment.topCenter,
-                                        duration: Duration(milliseconds: 500),
-                                        curve: Curves.fastOutSlowIn,
-                                        child: Card(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondaryContainer,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10, right: 10),
-                                            child: Observer(builder: (_) {
-                                              return SizedBox(
-                                                height:
-                                                    controller.select_invoice !=
-                                                            e
-                                                        ? 60
-                                                        : _height * .4,
-                                                child: Column(
-                                                  children: [
-                                                    controller.select_invoice !=
-                                                            e
-                                                        ? Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              SizedBox(
-                                                                height: 50,
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceEvenly,
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
+                child: !controller.loading && controller.invoices.isNotEmpty
+                    ? RefreshIndicator(
+                        onRefresh: () async => await controller.get_invoices(),
+                        child: ListView(
+                          children: controller.invoices
+                              .map(
+                                (e) => GestureDetector(
+                                  onTap: () async {
+                                    controller.select_invoice != e
+                                        ? await controller.set_select_invoice(e)
+                                        : await controller
+                                            .set_select_invoice(null);
+                                  },
+                                  child: AnimatedSize(
+                                    alignment: Alignment.topCenter,
+                                    duration: const Duration(milliseconds: 500),
+                                    curve: Curves.fastOutSlowIn,
+                                    child: Card(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondaryContainer,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        child: Observer(builder: (_) {
+                                          return SizedBox(
+                                            height:
+                                                controller.select_invoice != e
+                                                    ? 60
+                                                    : _height * .4,
+                                            child: Column(
+                                              children: [
+                                                controller.select_invoice != e
+                                                    ? Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          SizedBox(
+                                                            height: 50,
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceEvenly,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
                                                                   children: [
-                                                                    Row(
-                                                                      children: [
-                                                                        Text(
-                                                                          toBeginningOfSentenceCase(
-                                                                              e['category']['name'].toString())!,
-                                                                          style: const TextStyle(
-                                                                              fontSize: 16,
-                                                                              fontWeight: FontWeight.bold),
-                                                                        ),
-                                                                        const Padding(
-                                                                            padding:
-                                                                                EdgeInsets.only(left: 5)),
-                                                                        Text(
-                                                                          "${e['invoice']['date'].day}/${e['invoice']['date'].month}",
-                                                                          style:
-                                                                              const TextStyle(
-                                                                            fontSize:
-                                                                                14,
-                                                                            fontWeight:
-                                                                                FontWeight.normal,
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
                                                                     Text(
-                                                                      toBeginningOfSentenceCase(e['users']
-                                                                              [
-                                                                              'name']
+                                                                      toBeginningOfSentenceCase(e
+                                                                          .category
+                                                                          .name
                                                                           .toString())!,
+                                                                      style: const TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                    const Padding(
+                                                                        padding:
+                                                                            EdgeInsets.only(left: 5)),
+                                                                    Text(
+                                                                      "${e.date.day}/${e.date.month}",
                                                                       style:
                                                                           const TextStyle(
                                                                         fontSize:
@@ -177,39 +159,79 @@ Widget InvoicesPage(
                                                                     ),
                                                                   ],
                                                                 ),
-                                                              ),
-                                                              Row(
-                                                                children: [
-                                                                  const Padding(
-                                                                    padding: EdgeInsets.only(
+                                                                Text(
+                                                                  toBeginningOfSentenceCase(e
+                                                                      .user.name
+                                                                      .toString())!,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              const Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
                                                                         right:
                                                                             5,
                                                                         top: 7),
-                                                                    child: Text(
-                                                                      "R\$",
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            14,
-                                                                        fontWeight:
-                                                                            FontWeight.normal,
+                                                                child: Text(
+                                                                  "R\$",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                (numberFormat
+                                                                    .format(
+                                                                        e.price /
+                                                                            100)),
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontSize: 28,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
+                                                              e.paid == true
+                                                                  ? Container(
+                                                                      width: 54,
+                                                                      height:
+                                                                          20,
+                                                                      margin: const EdgeInsets
+                                                                              .only(
+                                                                          bottom:
+                                                                              20,
+                                                                          left:
+                                                                              10),
+                                                                      child:
+                                                                          Row(
+                                                                        children: const [
+                                                                          Icon(Icons
+                                                                              .person),
+                                                                          Icon(
+                                                                              Icons.monetization_on_rounded,
+                                                                              color: Colors.green)
+                                                                        ],
                                                                       ),
-                                                                    ),
-                                                                  ),
-                                                                  Text(
-                                                                    "${(numberFormat.format(int.parse(e['invoice']['price']) / 100))}",
-                                                                    style:
-                                                                        const TextStyle(
-                                                                      fontSize:
-                                                                          28,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                    ),
-                                                                  ),
-                                                                  e['invoice'][
-                                                                              'paid'] ==
-                                                                          true
+                                                                    )
+                                                                  : e.paid ==
+                                                                          false
                                                                       ? Container(
                                                                           width:
                                                                               54,
@@ -219,57 +241,42 @@ Widget InvoicesPage(
                                                                               bottom: 20,
                                                                               left: 10),
                                                                           child:
-                                                                              Row(
-                                                                            children: const [
-                                                                              Icon(Icons.person),
-                                                                              Icon(Icons.monetization_on_rounded, color: Colors.green)
-                                                                            ],
-                                                                          ),
+                                                                              Row(children: const [
+                                                                            Icon(Icons.group),
+                                                                            Icon(Icons.monetization_on_rounded,
+                                                                                color: Colors.green)
+                                                                          ]),
                                                                         )
-                                                                      : e['invoice']['paid'] ==
-                                                                              false
-                                                                          ? Container(
-                                                                              width: 54,
-                                                                              height: 20,
-                                                                              margin: const EdgeInsets.only(bottom: 20, left: 10),
-                                                                              child: Row(children: const [
-                                                                                Icon(Icons.group),
-                                                                                Icon(Icons.monetization_on_rounded, color: Colors.green)
-                                                                              ]),
-                                                                            )
-                                                                          : Container(),
-                                                                ],
-                                                              ),
+                                                                      : Container(),
                                                             ],
-                                                          )
-                                                        : Container(),
-                                                    controller.select_invoice ==
-                                                            e
-                                                        ? ShowInformationPopup(
-                                                            context: context,
-                                                            controller:
-                                                                controller)
-                                                        : Container(),
-                                                  ],
-                                                ),
-                                              );
-                                            }),
-                                          ),
-                                        ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    : Container(),
+                                                controller.select_invoice == e
+                                                    ? ShowInformationPopup(
+                                                        context: context,
+                                                        controller: controller)
+                                                    : Container(),
+                                              ],
+                                            ),
+                                          );
+                                        }),
                                       ),
                                     ),
-                                  )
-                                  .toList(),
-                            ),
-                          )
-                        : controller.invoices != null &&
-                                controller.invoices!.isEmpty
-                            ? RefreshIndicator(
-                                onRefresh: () async =>
-                                    await controller.get_invoices(),
-                                child: const Center(
-                                    child: Text("Ainda não há contas")))
-                            : const CircularProgressIndicator(),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      )
+                    : controller.invoices.isEmpty
+                        ? RefreshIndicator(
+                            onRefresh: () async =>
+                                await controller.get_invoices(),
+                            child: const Center(
+                                child: Text("Ainda não há contas")))
+                        : const CircularProgressIndicator(),
               ),
             );
           })
