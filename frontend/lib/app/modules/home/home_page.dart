@@ -41,9 +41,6 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
     var id = Modular.args.data;
     var logo = AssetImage("images/logo.png");
 
-    //controller.get_invoices();
-    //controller.get_categories();
-
     // Lista de contas
     List<Widget> _listWidget = <Widget>[
       InvoicesPage(context: context, controller: controller),

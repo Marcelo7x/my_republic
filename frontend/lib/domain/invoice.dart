@@ -14,6 +14,8 @@ class Invoice {
   late ByteData _image;
   late bool? _paid;
 
+  // static int _total_sum_price = 0;
+
   Invoice(
       {required int id,
       required User user,
@@ -33,6 +35,9 @@ class Invoice {
     _date = date;
     _paid = paid;
     if (image != null) _image = image;
+
+    // _total_sum_price += _price;
+    // print("price: $_total_sum_price");
   }
 
   get id => _id;

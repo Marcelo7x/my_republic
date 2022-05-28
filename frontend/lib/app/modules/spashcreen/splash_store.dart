@@ -74,9 +74,9 @@ abstract class _SplashStoreBase with Store {
         Home home = Home(data['home_id']);
         User user = User(data['user_id'], data['user_name'], home: home);
 
-        Modular.to.navigate('home/', arguments: {'user': user, 'home': home});
+        Modular.to.navigate('/home', arguments: {'user': user, 'home': home});
       } else {
-        Modular.to.navigate('login/');
+        Modular.to.navigate('/login');
       }
     }
   }

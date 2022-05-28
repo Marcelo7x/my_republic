@@ -136,6 +136,13 @@ Widget AddInvoicePopup(
       ElevatedButton(
         child: const Text("Adicionar"),
         onPressed: () async {
+          if(controller.description.text == "" ||
+          controller.category == null ||
+          controller.price!.value == 0.00 ||
+          controller.is_payed == null) {
+            return;
+          }
+
           !controller.is_modify
               ? await controller.add_invoice()
               : await controller.modify_invoice();
