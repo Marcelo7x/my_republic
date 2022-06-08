@@ -168,9 +168,9 @@ abstract class HomeStoreBase with Store {
     is_modify = true;
     description.text = select_invoice!.description;
     price!.updateValue(select_invoice!.price / 100);
-    date =select_invoice!.date;
-    invoice_id =select_invoice!.id;
-    is_payed =select_invoice!.paid;
+    date = select_invoice!.date;
+    invoice_id = select_invoice!.id;
+    is_payed = select_invoice!.paid;
   }
 
   @action
@@ -372,6 +372,8 @@ abstract class HomeStoreBase with Store {
       total_invoice_person =
           ((total_invoice / num_users) - (any_payed / num_users) + 1).toInt();
     }
+
+    if (total_invoice == 0) return;
 
     aux[0].forEach((id, value) {
       users.add({
