@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 
 Widget BalancePage(
     {required BuildContext context, required HomeStore controller}) {
-  final _height = MediaQuery.of(context).size.height;
-  final _width = MediaQuery.of(context).size.width;
+  final height = MediaQuery.of(context).size.height;
+  final width = MediaQuery.of(context).size.width;
   var numberFormat = NumberFormat('##0.00');
 
   return SafeArea(
@@ -16,8 +16,8 @@ Widget BalancePage(
         children: [
           SizedBox(
             //header
-            height: _height * 0.1,
-            width: _width * 0.9,
+            height: height * 0.1,
+            width: width * 0.9,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -31,51 +31,15 @@ Widget BalancePage(
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Intervalo: "),
-                    GestureDetector(
-                      child: Observer(builder: (_) {
-                        return Text(
-                            "${controller.dateRange.startDate?.day}/${controller.dateRange.startDate?.month}/${controller.dateRange.startDate?.year} a ${controller.dateRange.endDate?.day}/${controller.dateRange.endDate?.month}/${controller.dateRange.endDate?.year}",
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary));
-                      }),
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return SelectRageDatePopup(
-                              context: context, controller: controller);
-                        },
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return SelectRageDatePopup(
-                              context: context, controller: controller);
-                        },
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Icon(
-                          Icons.calendar_month,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                SelectDateInterval(context, controller)
               ],
             ),
           ),
           Observer(builder: (_) {
             return Card(
               child: Container(
-                height: _height * .75,
-                width: _width * .95,
+                height: height * .75,
+                width: width * .95,
                 padding: const EdgeInsets.all(10),
                 child: controller.invoices.isEmpty
                     ? RefreshIndicator(
@@ -197,7 +161,7 @@ Widget BalancePage(
                             ClipRRect(
                               borderRadius: BorderRadius.circular(18),
                               child: SizedBox(
-                                width: _width * .8,
+                                width: width * .8,
                                 height: 25,
                                 //margin: const EdgeInsets.only(top: 5),
                                 child: Row(
@@ -213,7 +177,7 @@ Widget BalancePage(
                                               e['b'],
                                             ),
                                           ),
-                                          width: _width * .8 * (e['total']),
+                                          width: width * .8 * (e['total']),
                                         ),
                                       )
                                       .toList(),
@@ -264,7 +228,7 @@ Widget BalancePage(
                             ClipRRect(
                               borderRadius: BorderRadius.circular(18),
                               child: SizedBox(
-                                width: _width * .8,
+                                width: width * .8,
                                 height: 25,
                                 //margin: const EdgeInsets.only(top: 5),
                                 child: Row(
@@ -280,7 +244,7 @@ Widget BalancePage(
                                               e['b'],
                                             ),
                                           ),
-                                          width: _width * .8 * (e['value']),
+                                          width: width * .8 * (e['value']),
                                         ),
                                       )
                                       .toList(),

@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends ModularState<HomePage, HomeStore> {
+class _HomePageState extends State<HomePage> {
   @override
   initState() {
     super.initState();
@@ -26,24 +26,19 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
   }
 
   _asyncMethod() async {
-    await store.get_invoices();
-    await store.get_categories();
-    await store.calc_total();
+    await Modular.get<HomeStore>().get_invoices();
+    await Modular.get<HomeStore>().get_categories();
+    await Modular.get<HomeStore>().calc_total();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height;
-    final _width = MediaQuery.of(context).size.width;
-
-    var numberFormat = NumberFormat('##0.00');
-
-    var id = Modular.args.data;
-    var logo = AssetImage("images/logo.png");
-
+    final HomeStore controller = Modular.get<HomeStore>();
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     // Lista de contas
-    List<Widget> _listWidget = <Widget>[
-      InvoicesPage(context: context, controller: controller),
+    List<Widget> listWidget = <Widget>[
+      const InvoicesPage(),
       BalancePage(context: context, controller: controller),
       OptionsPage(context: context, controller: controller),
     ];
@@ -52,12 +47,12 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
       builder: (_) {
         return Scaffold(
           body: Observer(builder: (_) {
-            return Container(
-              width: _width,
-              height: _height,
+            return SizedBox(
+              width: width,
+              height: height,
               child: PageView(
                 controller: controller.page_controller,
-                children: _listWidget,
+                children: listWidget,
                 onPageChanged: (index) => controller.setIndex(index),
               ),
             );
@@ -67,7 +62,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                 topLeft: Radius.circular(18), topRight: Radius.circular(18)),
             child: Observer(builder: (_) {
               return NavigationBar(
-                height: _height * .09,
+                height: height * .09,
                 onDestinationSelected: (index) =>
                     controller.setPageAndIndex(index),
                 selectedIndex: controller.selectedIndex,

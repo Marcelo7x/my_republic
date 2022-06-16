@@ -35,7 +35,7 @@ abstract class _LoginStoreBase with Store {
         final home = Home(data['users']['homeid']);
 
         final user =
-            User(data['users']['userid'], data['users']['name'], home: home);
+            User(data['users']['userid'], 'a', home: home);
 
         final StorageLocal conn = await StorageLocal.getInstance();
         await conn.salve_credentials(user_id: user.id, user_name: user.name, home_id: user.home_id);

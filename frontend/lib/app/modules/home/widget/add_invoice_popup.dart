@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 
 Widget AddInvoicePopup(
     {required BuildContext context, required HomeStore controller}) {
-  
   return AlertDialog(
     title: !controller.is_modify
         ? const Text("Adicionar Gasto")
@@ -26,7 +25,7 @@ Widget AddInvoicePopup(
               Observer(builder: (_) {
                 return DropdownButton(
                   borderRadius: BorderRadius.circular(18),
-                  hint: const Text("Selecione uma categoria"),                 
+                  hint: const Text("Selecione uma categoria"),
                   underline: Container(
                     height: 2,
                     color: Theme.of(context).colorScheme.primary,
@@ -35,8 +34,7 @@ Widget AddInvoicePopup(
                   items: controller.categories.map((Category e) {
                     return DropdownMenuItem<Category>(
                       value: e,
-                      child: Text(toBeginningOfSentenceCase(
-                          e.name)!),
+                      child: Text(toBeginningOfSentenceCase(e.name)!),
                     );
                   }).toList(),
                   onChanged: (Category? e) {
@@ -136,12 +134,12 @@ Widget AddInvoicePopup(
       ElevatedButton(
         child: const Text("Adicionar"),
         onPressed: () async {
-          if(controller.description.text == "" ||
-          controller.category == null ||
-          controller.price!.value == 0.00 ||
-          controller.is_payed == null) {
+          if (controller.description.text == "" ||
+              controller.category == null ||
+              controller.price!.value == 0.00) {
             return;
           }
+          print('jklashd');
 
           !controller.is_modify
               ? await controller.add_invoice()

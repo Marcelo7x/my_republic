@@ -37,4 +37,11 @@ class StorageLocal {
     } else
       return {};
   }
+
+  Future<bool> remove_credentials() async {
+    await _connection.setInt('id', -1);
+    await _connection.setBool('is_logged', false);
+
+    return true;
+  }
 }

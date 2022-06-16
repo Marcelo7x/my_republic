@@ -140,17 +140,16 @@ abstract class HomeStoreBase with Store {
           paid: e['invoice']['paid']));
     }
 
+    calc_total();
+
     loading = false;
   }
 
   @action
   get_categories() async {
     loading = true;
-
     List<Category> result = await ConnectionManager.get_categories();
-
     categories = result;
-
     loading = false;
   }
 
@@ -185,29 +184,17 @@ abstract class HomeStoreBase with Store {
 
   @action
   add_invoice() async {
+    print(add_invoice);
     loading = true;
-
-    final prefs = await SharedPreferences.getInstance();
-    bool? logged = prefs.getBool('is_logged');
-    String url = await SharedPreferences.getInstance()
-        .then((value) => value.getString('url')!);
-
     try {
-      var result = await Dio()
-          .post(
-        url + 'add-invoice',
-        data: jsonEncode([
-          {
-            "description": description.text,
-            "categoryId": category!.id,
-            "price": (price!.numberValue * 100).toInt().toString(),
-            "date": date.toIso8601String().toString(),
-            "userId": user.id.toString(),
-            "homeId": home.id.toString(),
-            "paid": is_payed
-          }
-        ]),
-      )
+      var result = await ConnectionManager.add_invoice(
+              description: description.text,
+              categoryId: category!.id,
+              price: (price!.numberValue * 100).toInt(),
+              date: date,
+              userId: user.id,
+              homeId: home.id,
+              isPayed: is_payed)
           .then((value) {
         clear_input();
       });
@@ -222,40 +209,17 @@ abstract class HomeStoreBase with Store {
   @action
   modify_invoice() async {
     loading = true;
-
-    final prefs = await SharedPreferences.getInstance();
-    bool? logged = prefs.getBool('is_logged');
-    String url = await SharedPreferences.getInstance()
-        .then((value) => value.getString('url')!);
-
-    int? id;
-    int? home_id;
-    if (logged != null && logged) {
-      id = prefs.getInt('id');
-    }
-
     try {
-      var result = await Dio()
-          .post(
-        url + 'modify-invoice',
-        data: jsonEncode([
-          {
-            "description": description.text,
-            "categoryId": category!.id,
-            "price": (price!.numberValue * 100).toInt().toString(),
-            "date": date.toIso8601String().toString(),
-            "userId": id.toString(),
-            "invoiceId": invoice_id.toString(),
-            "paid": is_payed
-          }
-        ]),
-      )
+      var result = await ConnectionManager.modify_invoice(
+              description: description.text,
+              categoryId: category!.id,
+              price: (price!.numberValue * 100).toInt(),
+              date: date,
+              userId: user.id,
+              invoiceId: invoice_id!,
+              isPayed: is_payed)
           .then((value) {
-        description.text = "";
-        category = null;
-        price!.updateValue(0.00);
-        date = DateTime.now();
-        is_payed = null;
+        clear_input();
       });
     } on Exception catch (e) {
       print('modify_invoice:  nao conseguiu modificar invoice');
@@ -269,21 +233,10 @@ abstract class HomeStoreBase with Store {
   @action
   remove_invoice() async {
     loading = true;
-
-    final prefs = await SharedPreferences.getInstance();
-    bool? logged = prefs.getBool('is_logged');
-    String url = await SharedPreferences.getInstance()
-        .then((value) => value.getString('url')!);
-
     try {
-      var result = await Dio().post(
-        url + 'remove-invoice',
-        data: jsonEncode([
-          {
-            "userId": select_invoice!.user.id.toString(),
-            "invoiceId": select_invoice!.id.toString(),
-          }
-        ]),
+      var result = await ConnectionManager.remove_invoice(
+        userId: select_invoice!.user.id,
+        invoiceId: select_invoice!.id,
       );
     } on Exception catch (e) {
       print('remove_invoice:  nao conseguiu remover invoice');
@@ -295,49 +248,27 @@ abstract class HomeStoreBase with Store {
 
   @action
   calc_total() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? logged = prefs.getBool('is_logged');
-    String url = await SharedPreferences.getInstance()
-        .then((value) => value.getString('url')!);
-
-    int? home_id;
-    if (logged != null && logged) {
-      home_id = prefs.getInt('home_id');
-    }
-
     total_invoice = 0;
     total_invoice_person = 0;
     any_payed = 0;
     users.clear();
     category_percents = [{}];
-    var aux = [{}];
-    var aux_category = [{}];
+    var aux = {};
+    var auxCategory = {};
 
-    int? num_users;
+    int? numUsers;
     try {
-      var result = await Dio().post(
-        url + 'number-users',
-        data: jsonEncode([
-          {
-            "homeId": home_id.toString(),
-          }
-        ]),
-      );
+      var data = await ConnectionManager.number_users(homeId: home.id);
 
-      List<dynamic>? data = jsonDecode(result.data);
-
-      num_users = data!.length;
-
-      //print("data: $data");
+      numUsers = data!.length;
 
       data.forEach((e) {
-        aux[0][e['users']['userid']] = {
+        aux[e['users']['userid']] = {
           'value': 0,
           'name': e['users']['name'],
           'paid': 0,
         };
       });
-      //print(aux);
     } on Exception catch (e) {
       print('calc_total:  nao conseguiu obter o numero de users');
       print(e);
@@ -346,36 +277,36 @@ abstract class HomeStoreBase with Store {
     invoices.forEach((Invoice element) {
       total_invoice += element.price;
       any_payed += element.paid == false ? element.price : 0;
-      aux[0][element.user.id] = {
-        'value': aux[0][element.user.id]['value']! + element.price,
+      aux[element.user.id] = {
+        'value': aux[element.user.id]['value']! + element.price,
         'name': element.user.name,
         'paid': element.paid == true
-            ? aux[0][element.user.id]['paid']! + element.price
-            : aux[0][element.user.id]['paid']!,
+            ? aux[element.user.id]['paid']! + element.price
+            : aux[element.user.id]['paid']!,
       };
 
-      aux_category[0][element.category.name] =
-          aux_category[0][element.category.name] == null
+      auxCategory[element.category.name] =
+          auxCategory[element.category.name] == null
               ? {'value': element.price, 'name': element.category.name}
               : {
-                  'value': aux_category[0][element.category.name]['value']! +
+                  'value': auxCategory[element.category.name]['value']! +
                       element.price,
                   'name': element.category.name
                 };
     });
 
-    if (((total_invoice / num_users!) - (any_payed / num_users)) % num_users ==
+    if (((total_invoice / numUsers!) - (any_payed / numUsers)) % numUsers ==
         0) {
       total_invoice_person =
-          ((total_invoice / num_users) - (any_payed / num_users)).toInt();
+          ((total_invoice / numUsers) - (any_payed / numUsers)).toInt();
     } else {
       total_invoice_person =
-          ((total_invoice / num_users) - (any_payed / num_users) + 1).toInt();
+          ((total_invoice / numUsers) - (any_payed / numUsers) + 1).toInt();
     }
 
     if (total_invoice == 0) return;
 
-    aux[0].forEach((id, value) {
+    aux.forEach((id, value) {
       users.add({
         'id': id,
         'total': ((((value['value'] * 100) / total_invoice)) / 100),
@@ -387,7 +318,7 @@ abstract class HomeStoreBase with Store {
       });
     });
 
-    aux_category[0].forEach((id, value) {
+    auxCategory.forEach((id, value) {
       category_percents.add({
         'value': ((((value['value'] * 100) / total_invoice)) / 100),
         'name': value['name'],
@@ -405,18 +336,17 @@ abstract class HomeStoreBase with Store {
   logout() async {
     loading = true;
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('id', -1);
-    await prefs.setBool('is_logged', false);
+    await StorageLocal.getInstance()
+        .then((instance) => instance.remove_credentials());
 
     loading = false;
 
     Modular.to.navigate('/login/');
   }
 
-  switch_theme(bool is_dark_theme) async {
+  switch_theme(bool isDarkTheme) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (is_dark_theme) {
+    if (isDarkTheme) {
       prefs.setBool('is_dark_theme', true);
     } else {
       prefs.setBool('is_dark_theme', false);

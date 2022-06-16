@@ -41,6 +41,19 @@ class ConnectionManager {
     return data;
   }
 
+  static Future number_users({required homeId}) async {
+    var result = await _conn.post(
+        '${_url}number-users',
+        data: jsonEncode([
+          {
+            "homeId": homeId.toString(),
+          }
+        ]),
+      );
+
+    return jsonDecode(result.data);
+  }
+
   static Future<dynamic> get_invoices(
       {required DateTime start_date,
       required DateTime end_date,
@@ -73,5 +86,76 @@ class ConnectionManager {
     }
 
     return categories;
+  }
+
+  static Future add_invoice(
+      {required String description,
+      required int categoryId,
+      required int price,
+      required DateTime date,
+      required int userId,
+      required int homeId,
+      required bool? isPayed}) async {
+    print('add_invoice');
+    var result = await _conn.post(
+      '${_url}add-invoice',
+      data: jsonEncode([
+        {
+          "description": description,
+          "categoryId": categoryId.toString(),
+          "price": price.toString(),
+          "date": date.toIso8601String().toString(),
+          "userId": userId.toString(),
+          "homeId": homeId.toString(),
+          "paid": isPayed
+        }
+      ]),
+    );
+
+    return jsonDecode(result.data);
+  }
+
+  static Future modify_invoice(
+      {required String description,
+      required int categoryId,
+      required int price,
+      required DateTime date,
+      required int userId,
+      required int invoiceId,
+      required bool? isPayed}) async {
+    print('modify_invoice');
+    var result = await _conn.post(
+      '${_url}modify-invoice',
+      data: jsonEncode([
+        {
+          "description": description,
+          "categoryId": categoryId.toString(),
+          "price": price.toString(),
+          "date": date.toIso8601String().toString(),
+          "userId": userId.toString(),
+          "invoiceId": invoiceId.toString(),
+          "paid": isPayed
+        }
+      ]),
+    );
+
+    return jsonDecode(result.data);
+  }
+
+  static Future remove_invoice({
+    required int userId,
+    required int invoiceId,
+  }) async {
+    var result = await _conn.post(
+      '${_url}remove-invoice',
+      data: jsonEncode([
+        {
+          "userId": userId.toString(),
+          "invoiceId": invoiceId.toString(),
+        }
+      ]),
+    );
+
+    return jsonDecode(result.data);
   }
 }
