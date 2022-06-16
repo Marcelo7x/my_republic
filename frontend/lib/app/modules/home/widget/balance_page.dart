@@ -203,6 +203,7 @@ Widget BalancePage(
                                 children: controller.category_percents.map((e) {
                               return Container(
                                 height: 30,
+                                width: 150,
                                 margin: const EdgeInsets.all(10),
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
@@ -216,7 +217,6 @@ Widget BalancePage(
                                   ),
                                   borderRadius: BorderRadius.circular(18),
                                 ),
-                                width: 120,
                                 child: Text(
                                   "${toBeginningOfSentenceCase(e['name'].toString())!} ${(e['value'] * 100).round().toString()}%",
                                   style: const TextStyle(

@@ -94,9 +94,9 @@ Widget AddInvoicePopup(
                 return DropdownButton<bool?>(
                   borderRadius: BorderRadius.circular(18),
                   hint: controller.is_payed == null
-                      ? Text("Em aberto")
+                      ? const Text("Em aberto")
                       : controller.is_payed == false
-                          ? Text("Pago por mim")
+                          ? const Text("Pago por mim")
                           : Text(
                               "pago por todos",
                               style: TextStyle(
@@ -146,6 +146,7 @@ Widget AddInvoicePopup(
               : await controller.modify_invoice();
 
           Navigator.of(context).pop();
+          controller.get_invoices();
           Modular.to.navigate('/home/');
         },
       ),

@@ -6,7 +6,6 @@ import 'package:frontend/app/modules/home/widget/add_invoice_popup.dart';
 import 'package:frontend/app/modules/home/widget/balance_page.dart';
 import 'package:frontend/app/modules/home/widget/invoices_page.dart';
 import 'package:frontend/app/modules/home/widget/options_page.dart';
-import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
