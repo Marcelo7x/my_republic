@@ -25,22 +25,6 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  late final _$page_controllerAtom =
-      Atom(name: 'HomeStoreBase.page_controller', context: context);
-
-  @override
-  PageController get page_controller {
-    _$page_controllerAtom.reportRead();
-    return super.page_controller;
-  }
-
-  @override
-  set page_controller(PageController value) {
-    _$page_controllerAtom.reportWrite(value, super.page_controller, () {
-      super.page_controller = value;
-    });
-  }
-
   late final _$invoicesAtom =
       Atom(name: 'HomeStoreBase.invoices', context: context);
 
@@ -459,7 +443,6 @@ mixin _$HomeStore on HomeStoreBase, Store {
   String toString() {
     return '''
 selectedIndex: ${selectedIndex},
-page_controller: ${page_controller},
 invoices: ${invoices},
 select_invoice: ${select_invoice},
 categories: ${categories},

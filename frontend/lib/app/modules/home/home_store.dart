@@ -25,8 +25,7 @@ abstract class HomeStoreBase with Store {
   @observable
   int selectedIndex = 0;
 
-  @observable
-  var page_controller = PageController();
+  PageController page_controller = PageController();
 
   @observable
   List<Invoice> invoices = [];
@@ -84,7 +83,7 @@ abstract class HomeStoreBase with Store {
 
   @action
   setPageAndIndex(int index) {
-    selectedIndex = index;
+    setIndex(index);
 
     page_controller.animateToPage(index,
         duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
