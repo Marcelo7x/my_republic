@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-Widget SelectRageDatePopup(BuildContext context, HomeStore controller) {
+Widget SelectRageDatePopup(BuildContext context, HomeStore controller, invoices_controller) {
   return AlertDialog(
     title: const Text("Selecione o intevalo"),
     content: SfDateRangePicker(
@@ -18,7 +18,7 @@ Widget SelectRageDatePopup(BuildContext context, HomeStore controller) {
       ElevatedButton(
         child: const Text("Confirmar"),
         onPressed: () {
-          controller.get_invoices();
+          invoices_controller.get_invoices();
           Navigator.of(context).pop();
         },
       ),
@@ -26,7 +26,7 @@ Widget SelectRageDatePopup(BuildContext context, HomeStore controller) {
   );
 }
 
-Widget SelectDateInterval(BuildContext context, HomeStore controller) {
+Widget SelectDateInterval(BuildContext context, HomeStore controller, invoices_controller) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -40,7 +40,7 @@ Widget SelectDateInterval(BuildContext context, HomeStore controller) {
         onTap: () => showDialog(
           context: context,
           builder: (BuildContext context) {
-            return SelectRageDatePopup(context, controller);
+            return SelectRageDatePopup(context, controller, invoices_controller);
           },
         ),
       ),
@@ -48,7 +48,7 @@ Widget SelectDateInterval(BuildContext context, HomeStore controller) {
         onTap: () => showDialog(
           context: context,
           builder: (BuildContext context) {
-            return SelectRageDatePopup(context, controller);
+            return SelectRageDatePopup(context, controller, invoices_controller);
           },
         ),
         child: Padding(

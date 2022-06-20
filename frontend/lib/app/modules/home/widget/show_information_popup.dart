@@ -7,9 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 Widget ShowInformationPopup(
-    {required BuildContext context, required HomeStore controller}) {
+    {required BuildContext context, required HomeStore controller, invoices_controller}) {
   var numberFormat = NumberFormat('##0.00');
-  var e = controller.select_invoice;
+  var e = invoices_controller.select_invoice;
 
   return Observer(builder: (_) {
     return SizedBox(
@@ -150,14 +150,16 @@ Widget ShowInformationPopup(
                           width: 120,
                           child: ElevatedButton(
                             onPressed: () async {
-                              controller.modify();
+                              invoices_controller.modify();
 
                               await showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AddInvoicePopup(
                                         context: context,
-                                        controller: controller);
+                                        controller: controller,
+                                        invoices_controller: invoices_controller
+                                        );
                                   });
                             },
                             child: Row(
@@ -186,11 +188,11 @@ Widget ShowInformationPopup(
                                       actions: <Widget>[
                                         TextButton(
                                           onPressed: () async {
-                                            await controller.remove_invoice();
+                                            await invoices_controller.remove_invoice();
 
                                             Navigator.of(context).pop();
 
-                                            await controller.get_invoices();
+                                            await invoices_controller.get_invoices(controller.dateRange);
                                           },
                                           child: const Text("Sim"),
                                         ),
@@ -231,7 +233,7 @@ Widget ShowInformationPopup(
               ),
               TextButton(
                 onPressed: () {
-                  controller.set_select_invoice(null);
+                  invoices_controller.set_select_invoice(null);
                 },
                 child: const  Icon(Icons.arrow_upward),
               ),

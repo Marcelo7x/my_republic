@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
+import 'package:frontend/app/modules/home/invoice_store.dart';
 import 'package:frontend/app/modules/home/widget/add_invoice_popup.dart';
 import 'package:frontend/app/modules/home/widget/balance_page.dart';
 import 'package:frontend/app/modules/home/widget/invoices_page.dart';
 import 'package:frontend/app/modules/home/widget/options_page.dart';
+import 'package:frontend/domain/invoice.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -25,20 +27,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   _asyncMethod() async {
-    await Modular.get<HomeStore>().get_invoices();
-    await Modular.get<HomeStore>().get_categories();
-    await Modular.get<HomeStore>().calc_total();
+    final InvoiceStore invoices_controller = Modular.get<InvoiceStore>();
+    await invoices_controller.get_invoices();
+    await invoices_controller.get_categories();
+    await invoices_controller.calc_total();
   }
 
   @override
   Widget build(BuildContext context) {
     final HomeStore controller = Modular.get<HomeStore>();
+    final InvoiceStore invoices_controller = Modular.get<InvoiceStore>();
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     // Lista de contas
     List<Widget> listWidget = <Widget>[
       const InvoicesPage(),
-      BalancePage(context: context, controller: controller),
+      BalancePage(context: context, invoices_controller: invoices_controller),
       OptionsPage(context: context, controller: controller),
     ];
 
@@ -92,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AddInvoicePopup(
-                          context: context, controller: controller);
+                          context: context, controller: controller, invoices_controller: invoices_controller);
                     },
                   ),
                   child: const Icon(Icons.add),
