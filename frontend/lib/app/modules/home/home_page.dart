@@ -27,23 +27,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   _asyncMethod() async {
-    final InvoiceStore invoices_controller = Modular.get<InvoiceStore>();
-    await invoices_controller.get_invoices();
-    await invoices_controller.get_categories();
-    await invoices_controller.calc_total();
+    final InvoiceStore invoicesController = Modular.get<InvoiceStore>();
+    await invoicesController.getInvoices();
+    await invoicesController.getCategories();
+    await invoicesController.calcTotal();
   }
 
   @override
   Widget build(BuildContext context) {
-    final HomeStore controller = Modular.get<HomeStore>();
-    final InvoiceStore invoices_controller = Modular.get<InvoiceStore>();
+    final HomeStore homeController = Modular.get<HomeStore>();
+    final InvoiceStore invoicesController = Modular.get<InvoiceStore>();
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     // Lista de contas
     List<Widget> listWidget = <Widget>[
       const InvoicesPage(),
-      BalancePage(context: context, invoices_controller: invoices_controller),
-      OptionsPage(context: context, controller: controller),
+      BalancePage(context: context, invoicesController: invoicesController),
+      OptionsPage(context: context, homeController: homeController),
     ];
 
     return Observer(
@@ -54,9 +54,9 @@ class _HomePageState extends State<HomePage> {
               width: width,
               height: height,
               child: PageView(
-                controller: controller.page_controller,
+                controller: homeController.page_controller,
                 children: listWidget,
-                onPageChanged: (index) => controller.setIndex(index),
+                onPageChanged: (index) => homeController.setIndex(index),
               ),
             );
           }),
@@ -67,8 +67,8 @@ class _HomePageState extends State<HomePage> {
               return NavigationBar(
                 height: height * .09,
                 onDestinationSelected: (index) =>
-                    controller.setPageAndIndex(index),
-                selectedIndex: controller.selectedIndex,
+                    homeController.setPageAndIndex(index),
+                selectedIndex: homeController.selectedIndex,
                 labelBehavior:
                     NavigationDestinationLabelBehavior.onlyShowSelected,
                 destinations: const [
@@ -90,13 +90,13 @@ class _HomePageState extends State<HomePage> {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.miniCenterFloat,
-          floatingActionButton: controller.selectedIndex == 0
+          floatingActionButton: homeController.selectedIndex == 0
               ? FloatingActionButton(
                   onPressed: () => showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AddInvoicePopup(
-                          context: context, controller: controller, invoices_controller: invoices_controller);
+                          context: context, invoicesController: invoicesController);
                     },
                   ),
                   child: const Icon(Icons.add),

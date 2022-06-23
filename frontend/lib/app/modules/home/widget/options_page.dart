@@ -3,18 +3,17 @@ import 'package:frontend/app/app_widget.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
 
 Widget OptionsPage(
-    {required BuildContext context, required HomeStore controller}) {
-  final _height = MediaQuery.of(context).size.height;
-  final _width = MediaQuery.of(context).size.width;
-  bool theme_selected = true;
+    {required BuildContext context, required HomeStore homeController}) {
+  final height = MediaQuery.of(context).size.height;
+  final width = MediaQuery.of(context).size.width;
 
   return SafeArea(
     child: Column(
       children: [
         SizedBox(
           //header
-          height: _height * 0.1,
-          width: _width * 0.9,
+          height: height * 0.1,
+          width: width * 0.9,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -32,7 +31,7 @@ Widget OptionsPage(
           ),
         ),
         SizedBox(
-          height: _height * 0.75,
+          height: height * 0.75,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -52,7 +51,7 @@ Widget OptionsPage(
                           onChanged: (isDark) async {
                             themeMode.value =
                                 isDark ? ThemeMode.dark : ThemeMode.light;
-                            await controller.switch_theme(
+                            await homeController.switch_theme(
                                 themeMode.value == ThemeMode.dark);
                           }),
                     ),
@@ -65,7 +64,7 @@ Widget OptionsPage(
                 child: ElevatedButton(
                     child: const Text("Sair"),
                     onPressed: () {
-                      controller.logout();
+                      homeController.logout();
                     }),
               ),
             ],

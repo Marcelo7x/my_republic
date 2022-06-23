@@ -7,9 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 Widget ShowInformationPopup(
-    {required BuildContext context, required HomeStore controller, invoices_controller}) {
+    {required BuildContext context, required HomeStore homeController, invoicesController}) {
   var numberFormat = NumberFormat('##0.00');
-  var e = invoices_controller.select_invoice;
+  var e = invoicesController.select_invoice;
 
   return Observer(builder: (_) {
     return SizedBox(
@@ -145,20 +145,19 @@ Widget ShowInformationPopup(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  e.user.id == controller.user.id
+                  e.user.id == homeController.user.id
                       ? SizedBox(
                           width: 120,
                           child: ElevatedButton(
                             onPressed: () async {
-                              invoices_controller.modify();
+                              invoicesController.modify();
 
                               await showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AddInvoicePopup(
                                         context: context,
-                                        controller: controller,
-                                        invoices_controller: invoices_controller
+                                        invoicesController: invoicesController
                                         );
                                   });
                             },
@@ -171,7 +170,7 @@ Widget ShowInformationPopup(
                           ),
                         )
                       : Container(),
-                  e.user.id == controller.user.id
+                  e.user.id == homeController.user.id
                       ? SizedBox(
                           width: 120,
                           child: ElevatedButton(
@@ -188,11 +187,11 @@ Widget ShowInformationPopup(
                                       actions: <Widget>[
                                         TextButton(
                                           onPressed: () async {
-                                            await invoices_controller.remove_invoice();
+                                            await invoicesController.remove_invoice();
 
                                             Navigator.of(context).pop();
 
-                                            await invoices_controller.get_invoices(controller.dateRange);
+                                            await invoicesController.get_invoices(homeController.dateRange);
                                           },
                                           child: const Text("Sim"),
                                         ),
@@ -233,7 +232,7 @@ Widget ShowInformationPopup(
               ),
               TextButton(
                 onPressed: () {
-                  invoices_controller.set_select_invoice(null);
+                  invoicesController.set_select_invoice(null);
                 },
                 child: const  Icon(Icons.arrow_upward),
               ),

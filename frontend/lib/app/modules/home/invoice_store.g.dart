@@ -41,67 +41,67 @@ mixin _$InvoiceStore on InvoiceStoreBase, Store {
     });
   }
 
-  late final _$select_invoiceAtom =
-      Atom(name: 'InvoiceStoreBase.select_invoice', context: context);
+  late final _$selectedInvoiceAtom =
+      Atom(name: 'InvoiceStoreBase.selectedInvoice', context: context);
 
   @override
-  Invoice? get select_invoice {
-    _$select_invoiceAtom.reportRead();
-    return super.select_invoice;
+  Invoice? get selectedInvoice {
+    _$selectedInvoiceAtom.reportRead();
+    return super.selectedInvoice;
   }
 
   @override
-  set select_invoice(Invoice? value) {
-    _$select_invoiceAtom.reportWrite(value, super.select_invoice, () {
-      super.select_invoice = value;
+  set selectedInvoice(Invoice? value) {
+    _$selectedInvoiceAtom.reportWrite(value, super.selectedInvoice, () {
+      super.selectedInvoice = value;
     });
   }
 
-  late final _$invoice_idAtom =
-      Atom(name: 'InvoiceStoreBase.invoice_id', context: context);
+  late final _$invoiceIdAtom =
+      Atom(name: 'InvoiceStoreBase.invoiceId', context: context);
 
   @override
-  int? get invoice_id {
-    _$invoice_idAtom.reportRead();
-    return super.invoice_id;
+  int? get invoiceId {
+    _$invoiceIdAtom.reportRead();
+    return super.invoiceId;
   }
 
   @override
-  set invoice_id(int? value) {
-    _$invoice_idAtom.reportWrite(value, super.invoice_id, () {
-      super.invoice_id = value;
+  set invoiceId(int? value) {
+    _$invoiceIdAtom.reportWrite(value, super.invoiceId, () {
+      super.invoiceId = value;
     });
   }
 
-  late final _$is_modifyAtom =
-      Atom(name: 'InvoiceStoreBase.is_modify', context: context);
+  late final _$isModifyAtom =
+      Atom(name: 'InvoiceStoreBase.isModify', context: context);
 
   @override
-  bool get is_modify {
-    _$is_modifyAtom.reportRead();
-    return super.is_modify;
+  bool get isModify {
+    _$isModifyAtom.reportRead();
+    return super.isModify;
   }
 
   @override
-  set is_modify(bool value) {
-    _$is_modifyAtom.reportWrite(value, super.is_modify, () {
-      super.is_modify = value;
+  set isModify(bool value) {
+    _$isModifyAtom.reportWrite(value, super.isModify, () {
+      super.isModify = value;
     });
   }
 
-  late final _$is_payedAtom =
-      Atom(name: 'InvoiceStoreBase.is_payed', context: context);
+  late final _$isPayedAtom =
+      Atom(name: 'InvoiceStoreBase.isPayed', context: context);
 
   @override
-  bool? get is_payed {
-    _$is_payedAtom.reportRead();
-    return super.is_payed;
+  bool? get isPayed {
+    _$isPayedAtom.reportRead();
+    return super.isPayed;
   }
 
   @override
-  set is_payed(bool? value) {
-    _$is_payedAtom.reportWrite(value, super.is_payed, () {
-      super.is_payed = value;
+  set isPayed(bool? value) {
+    _$isPayedAtom.reportWrite(value, super.isPayed, () {
+      super.isPayed = value;
     });
   }
 
@@ -184,68 +184,67 @@ mixin _$InvoiceStore on InvoiceStoreBase, Store {
     });
   }
 
-  late final _$total_invoiceAtom =
-      Atom(name: 'InvoiceStoreBase.total_invoice', context: context);
+  late final _$totalInvoiceAtom =
+      Atom(name: 'InvoiceStoreBase.totalInvoice', context: context);
 
   @override
-  num get total_invoice {
-    _$total_invoiceAtom.reportRead();
-    return super.total_invoice;
+  num get totalInvoice {
+    _$totalInvoiceAtom.reportRead();
+    return super.totalInvoice;
   }
 
   @override
-  set total_invoice(num value) {
-    _$total_invoiceAtom.reportWrite(value, super.total_invoice, () {
-      super.total_invoice = value;
+  set totalInvoice(num value) {
+    _$totalInvoiceAtom.reportWrite(value, super.totalInvoice, () {
+      super.totalInvoice = value;
     });
   }
 
-  late final _$any_payedAtom =
-      Atom(name: 'InvoiceStoreBase.any_payed', context: context);
+  late final _$anyPayedAtom =
+      Atom(name: 'InvoiceStoreBase.anyPayed', context: context);
 
   @override
-  num get any_payed {
-    _$any_payedAtom.reportRead();
-    return super.any_payed;
+  num get anyPayed {
+    _$anyPayedAtom.reportRead();
+    return super.anyPayed;
   }
 
   @override
-  set any_payed(num value) {
-    _$any_payedAtom.reportWrite(value, super.any_payed, () {
-      super.any_payed = value;
+  set anyPayed(num value) {
+    _$anyPayedAtom.reportWrite(value, super.anyPayed, () {
+      super.anyPayed = value;
     });
   }
 
-  late final _$total_invoice_personAtom =
-      Atom(name: 'InvoiceStoreBase.total_invoice_person', context: context);
+  late final _$totalInvoicePersonAtom =
+      Atom(name: 'InvoiceStoreBase.totalInvoicePerson', context: context);
 
   @override
-  num get total_invoice_person {
-    _$total_invoice_personAtom.reportRead();
-    return super.total_invoice_person;
+  num get totalInvoicePerson {
+    _$totalInvoicePersonAtom.reportRead();
+    return super.totalInvoicePerson;
   }
 
   @override
-  set total_invoice_person(num value) {
-    _$total_invoice_personAtom.reportWrite(value, super.total_invoice_person,
-        () {
-      super.total_invoice_person = value;
+  set totalInvoicePerson(num value) {
+    _$totalInvoicePersonAtom.reportWrite(value, super.totalInvoicePerson, () {
+      super.totalInvoicePerson = value;
     });
   }
 
-  late final _$category_percentsAtom =
-      Atom(name: 'InvoiceStoreBase.category_percents', context: context);
+  late final _$categoryPercentsAtom =
+      Atom(name: 'InvoiceStoreBase.categoryPercents', context: context);
 
   @override
-  List<Map<dynamic, dynamic>> get category_percents {
-    _$category_percentsAtom.reportRead();
-    return super.category_percents;
+  List<Map<dynamic, dynamic>> get categoryPercents {
+    _$categoryPercentsAtom.reportRead();
+    return super.categoryPercents;
   }
 
   @override
-  set category_percents(List<Map<dynamic, dynamic>> value) {
-    _$category_percentsAtom.reportWrite(value, super.category_percents, () {
-      super.category_percents = value;
+  set categoryPercents(List<Map<dynamic, dynamic>> value) {
+    _$categoryPercentsAtom.reportWrite(value, super.categoryPercents, () {
+      super.categoryPercents = value;
     });
   }
 
@@ -265,107 +264,107 @@ mixin _$InvoiceStore on InvoiceStoreBase, Store {
     });
   }
 
-  late final _$get_invoicesAsyncAction =
-      AsyncAction('InvoiceStoreBase.get_invoices', context: context);
+  late final _$getInvoicesAsyncAction =
+      AsyncAction('InvoiceStoreBase.getInvoices', context: context);
 
   @override
-  Future get_invoices() {
-    return _$get_invoicesAsyncAction.run(() => super.get_invoices());
+  Future getInvoices() {
+    return _$getInvoicesAsyncAction.run(() => super.getInvoices());
   }
 
-  late final _$add_invoiceAsyncAction =
-      AsyncAction('InvoiceStoreBase.add_invoice', context: context);
+  late final _$addInvoiceAsyncAction =
+      AsyncAction('InvoiceStoreBase.addInvoice', context: context);
 
   @override
-  Future add_invoice() {
-    return _$add_invoiceAsyncAction.run(() => super.add_invoice());
+  Future addInvoice() {
+    return _$addInvoiceAsyncAction.run(() => super.addInvoice());
   }
 
-  late final _$modify_invoiceAsyncAction =
-      AsyncAction('InvoiceStoreBase.modify_invoice', context: context);
+  late final _$modifyInvoiceAsyncAction =
+      AsyncAction('InvoiceStoreBase.modifyInvoice', context: context);
 
   @override
-  Future modify_invoice() {
-    return _$modify_invoiceAsyncAction.run(() => super.modify_invoice());
+  Future modifyInvoice() {
+    return _$modifyInvoiceAsyncAction.run(() => super.modifyInvoice());
   }
 
-  late final _$remove_invoiceAsyncAction =
-      AsyncAction('InvoiceStoreBase.remove_invoice', context: context);
+  late final _$removeInvoiceAsyncAction =
+      AsyncAction('InvoiceStoreBase.removeInvoice', context: context);
 
   @override
-  Future remove_invoice() {
-    return _$remove_invoiceAsyncAction.run(() => super.remove_invoice());
+  Future removeInvoice() {
+    return _$removeInvoiceAsyncAction.run(() => super.removeInvoice());
   }
 
-  late final _$get_categoriesAsyncAction =
-      AsyncAction('InvoiceStoreBase.get_categories', context: context);
+  late final _$getCategoriesAsyncAction =
+      AsyncAction('InvoiceStoreBase.getCategories', context: context);
 
   @override
-  Future get_categories() {
-    return _$get_categoriesAsyncAction.run(() => super.get_categories());
+  Future getCategories() {
+    return _$getCategoriesAsyncAction.run(() => super.getCategories());
   }
 
-  late final _$calc_totalAsyncAction =
-      AsyncAction('InvoiceStoreBase.calc_total', context: context);
+  late final _$calcTotalAsyncAction =
+      AsyncAction('InvoiceStoreBase.calcTotal', context: context);
 
   @override
-  Future calc_total() {
-    return _$calc_totalAsyncAction.run(() => super.calc_total());
+  Future calcTotal() {
+    return _$calcTotalAsyncAction.run(() => super.calcTotal());
   }
 
   late final _$InvoiceStoreBaseActionController =
       ActionController(name: 'InvoiceStoreBase', context: context);
 
   @override
-  dynamic set_select_invoice(Invoice? I) {
+  dynamic selectInvoice(Invoice? I) {
     final _$actionInfo = _$InvoiceStoreBaseActionController.startAction(
-        name: 'InvoiceStoreBase.set_select_invoice');
+        name: 'InvoiceStoreBase.selectInvoice');
     try {
-      return super.set_select_invoice(I);
+      return super.selectInvoice(I);
     } finally {
       _$InvoiceStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  dynamic set_paid(bool? e) {
+  dynamic setPaid(bool? e) {
     final _$actionInfo = _$InvoiceStoreBaseActionController.startAction(
-        name: 'InvoiceStoreBase.set_paid');
+        name: 'InvoiceStoreBase.setPaid');
     try {
-      return super.set_paid(e);
+      return super.setPaid(e);
     } finally {
       _$InvoiceStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  dynamic set_category(Category e) {
+  dynamic setCategory(Category e) {
     final _$actionInfo = _$InvoiceStoreBaseActionController.startAction(
-        name: 'InvoiceStoreBase.set_category');
+        name: 'InvoiceStoreBase.setCategory');
     try {
-      return super.set_category(e);
+      return super.setCategory(e);
     } finally {
       _$InvoiceStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  dynamic set_date(DateTime dt) {
+  dynamic setDate(DateTime dt) {
     final _$actionInfo = _$InvoiceStoreBaseActionController.startAction(
-        name: 'InvoiceStoreBase.set_date');
+        name: 'InvoiceStoreBase.setDate');
     try {
-      return super.set_date(dt);
+      return super.setDate(dt);
     } finally {
       _$InvoiceStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  dynamic clear_input() {
+  dynamic clearInput() {
     final _$actionInfo = _$InvoiceStoreBaseActionController.startAction(
-        name: 'InvoiceStoreBase.clear_input');
+        name: 'InvoiceStoreBase.clearInput');
     try {
-      return super.clear_input();
+      return super.clearInput();
     } finally {
       _$InvoiceStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -376,19 +375,19 @@ mixin _$InvoiceStore on InvoiceStoreBase, Store {
     return '''
 loading: ${loading},
 invoices: ${invoices},
-select_invoice: ${select_invoice},
-invoice_id: ${invoice_id},
-is_modify: ${is_modify},
-is_payed: ${is_payed},
+selectedInvoice: ${selectedInvoice},
+invoiceId: ${invoiceId},
+isModify: ${isModify},
+isPayed: ${isPayed},
 category: ${category},
 description: ${description},
 price: ${price},
 date: ${date},
 categories: ${categories},
-total_invoice: ${total_invoice},
-any_payed: ${any_payed},
-total_invoice_person: ${total_invoice_person},
-category_percents: ${category_percents},
+totalInvoice: ${totalInvoice},
+anyPayed: ${anyPayed},
+totalInvoicePerson: ${totalInvoicePerson},
+categoryPercents: ${categoryPercents},
 users: ${users}
     ''';
   }

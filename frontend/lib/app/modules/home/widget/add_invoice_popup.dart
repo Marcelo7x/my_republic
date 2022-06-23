@@ -8,9 +8,9 @@ import 'package:frontend/domain/category.dart';
 import 'package:intl/intl.dart';
 
 Widget AddInvoicePopup(
-    {required BuildContext context, required HomeStore controller, required InvoiceStore invoices_controller}) {
+    {required BuildContext context, required InvoiceStore invoicesController}) {
   return AlertDialog(
-    title: !invoices_controller.is_modify
+    title: !invoicesController.isModify
         ? const Text("Adicionar Gasto")
         : const Text("Modificar Gasto"),
     contentPadding: const EdgeInsets.all(10),
@@ -31,15 +31,15 @@ Widget AddInvoicePopup(
                     height: 2,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  value: invoices_controller.category,
-                  items: invoices_controller.categories.map((Category e) {
+                  value: invoicesController.category,
+                  items: invoicesController.categories.map((Category e) {
                     return DropdownMenuItem<Category>(
                       value: e,
                       child: Text(toBeginningOfSentenceCase(e.name)!),
                     );
                   }).toList(),
                   onChanged: (Category? e) {
-                    invoices_controller.set_category(e!);
+                    invoicesController.setCategory(e!);
                   },
                 );
               }),
@@ -52,7 +52,7 @@ Widget AddInvoicePopup(
                       children: [
                         Observer(builder: (_) {
                           return Text(
-                            "${invoices_controller.date.day}/${invoices_controller.date.month}/${invoices_controller.date.year}",
+                            "${invoicesController.date.day}/${invoicesController.date.month}/${invoicesController.date.year}",
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.primary),
                           );
@@ -68,14 +68,14 @@ Widget AddInvoicePopup(
                       context: context,
                       builder: (BuildContext context) {
                         return SelectDatePopup(
-                            context: context, invoices_controller: invoices_controller);
+                            context: context, invoicesController: invoicesController);
                       },
                     ),
                   ),
                 ],
               ),
               TextField(
-                  controller: invoices_controller.description,
+                  controller: invoicesController.description,
                   maxLines: 2,
                   maxLength: 100,
                   decoration: const InputDecoration(
@@ -84,7 +84,7 @@ Widget AddInvoicePopup(
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                   )),
               TextField(
-                  controller: invoices_controller.price,
+                  controller: invoicesController.price,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     label: Text("Digite o valor"),
@@ -94,9 +94,9 @@ Widget AddInvoicePopup(
               Observer(builder: (_) {
                 return DropdownButton<bool?>(
                   borderRadius: BorderRadius.circular(18),
-                  hint: invoices_controller.is_payed == null
+                  hint: invoicesController.isPayed == null
                       ? const Text("Em aberto")
-                      : invoices_controller.is_payed == false
+                      : invoicesController.isPayed == false
                           ? const Text("Pago por mim")
                           : Text(
                               "pago por todos",
@@ -107,7 +107,7 @@ Widget AddInvoicePopup(
                     height: 2,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  value: invoices_controller.is_payed,
+                  value: invoicesController.isPayed,
                   items: const [
                     DropdownMenuItem<bool?>(
                       value: null,
@@ -123,7 +123,7 @@ Widget AddInvoicePopup(
                     ),
                   ],
                   onChanged: (bool? e) {
-                    invoices_controller.set_paid(e);
+                    invoicesController.setPaid(e);
                   },
                 );
               }),
@@ -135,19 +135,19 @@ Widget AddInvoicePopup(
       ElevatedButton(
         child: const Text("Adicionar"),
         onPressed: () async {
-          if (invoices_controller.description.text == "" ||
-              invoices_controller.category == null ||
-              invoices_controller.price!.value == 0.00) {
+          if (invoicesController.description.text == "" ||
+              invoicesController.category == null ||
+              invoicesController.price!.value == 0.00) {
             return;
           }
           print('jklashd');
 
-          !invoices_controller.is_modify
-              ? await invoices_controller.add_invoice()
-              : await invoices_controller.modify_invoice();
+          !invoicesController.isModify
+              ? await invoicesController.addInvoice()
+              : await invoicesController.modifyInvoice();
 
           Navigator.of(context).pop();
-          invoices_controller.get_invoices();
+          invoicesController.getInvoices();
           Modular.to.navigate('/home/');
         },
       ),
@@ -159,7 +159,7 @@ Widget AddInvoicePopup(
           ),
         ),
         onPressed: () {
-          invoices_controller.clear_input();
+          invoicesController.clearInput();
           Navigator.of(context).pop();
         },
       ),

@@ -17,8 +17,8 @@ class InvoicesPage extends StatefulWidget {
 class _InvoicesPageState extends State<InvoicesPage> {
   @override
   Widget build(BuildContext context) {
-    final HomeStore home_controller = Modular.get<HomeStore>();
-    final InvoiceStore invoices_controller = Modular.get<InvoiceStore>();
+    final HomeStore homeController = Modular.get<HomeStore>();
+    final InvoiceStore invoicesController = Modular.get<InvoiceStore>();
   final height = MediaQuery.of(context).size.height;
   final width = MediaQuery.of(context).size.width;
   var numberFormat = NumberFormat('##0.00');
@@ -46,7 +46,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
                   ),
                 ],
               ),
-              SelectDateInterval(context, home_controller, invoices_controller)
+              SelectDateInterval(context, homeController, invoicesController)
             ],
           ),
         ),
@@ -56,18 +56,18 @@ class _InvoicesPageState extends State<InvoicesPage> {
               height: height * .75,
               width: width * .95,
               padding: const EdgeInsets.only(bottom: 5, top: 5),
-              child: !invoices_controller.loading && invoices_controller.invoices.isNotEmpty
+              child: !invoicesController.loading && invoicesController.invoices.isNotEmpty
                   ? RefreshIndicator(
-                      onRefresh: () async => await invoices_controller.get_invoices(),
+                      onRefresh: () async => await invoicesController.getInvoices(),
                       child:Observer(builder: (_) => ListView(
-                        children: invoices_controller.invoices
+                        children: invoicesController.invoices
                             .map(
                               (e) => GestureDetector(
                                 onTap: () async {
-                                  invoices_controller.select_invoice != e
-                                      ? await invoices_controller.set_select_invoice(e)
-                                      : await invoices_controller
-                                          .set_select_invoice(null);
+                                  invoicesController.selectedInvoice != e
+                                      ? await invoicesController.selectInvoice(e)
+                                      : await invoicesController
+                                          .selectInvoice(null);
                                 },
                                 child: AnimatedSize(
                                   alignment: Alignment.topCenter,
@@ -83,14 +83,14 @@ class _InvoicesPageState extends State<InvoicesPage> {
                                       child: Observer(builder: (_) {
                                         return SizedBox(
                                           height:
-                                              invoices_controller.select_invoice != e
+                                              invoicesController.selectedInvoice != e
                                                   ? 60
                                                   : height * .4,
                                           child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              invoices_controller.select_invoice != e
+                                              invoicesController.selectedInvoice != e
                                                   ? Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -228,10 +228,10 @@ class _InvoicesPageState extends State<InvoicesPage> {
                                                       ],
                                                     )
                                                   : Container(),
-                                              invoices_controller.select_invoice == e
+                                              invoicesController.selectedInvoice == e
                                                   ? ShowInformationPopup(
                                                       context: context,
-                                                      controller: home_controller)
+                                                      homeController: homeController)
                                                   : Container(),
                                             ],
                                           ),
@@ -245,10 +245,10 @@ class _InvoicesPageState extends State<InvoicesPage> {
                             .toList(),
                       )),
                     )
-                  : invoices_controller.invoices.isEmpty
+                  : invoicesController.invoices.isEmpty
                       ? RefreshIndicator(
                           onRefresh: () async =>
-                              await invoices_controller.get_invoices(),
+                              await invoicesController.getInvoices(),
                           child: const Center(
                               child: Text("Ainda não há contas")))
                       : const CircularProgressIndicator(),

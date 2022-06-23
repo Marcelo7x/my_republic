@@ -10,7 +10,6 @@ import 'package:frontend/domain/home.dart';
 import 'package:frontend/domain/invoice.dart';
 import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 part 'invoice_store.g.dart';
 
@@ -27,7 +26,7 @@ abstract class InvoiceStoreBase with Store {
   List<Invoice> invoices = [];
 
   @action
-  get_invoices() async {
+  getInvoices() async {
     final dateRange = Modular.get<HomeStore>().dateRange;
     if (dateRange.startDate == null || dateRange.endDate == null) {
       return;
@@ -56,39 +55,39 @@ abstract class InvoiceStoreBase with Store {
           paid: e['invoice']['paid']));
     }
 
-    calc_total();
+    calcTotal();
 
     loading = false;
   }
 
   @observable
-  Invoice? select_invoice;
+  Invoice? selectedInvoice;
 
   @action
-  set_select_invoice(Invoice? I) {
-    select_invoice = I;
+  selectInvoice(Invoice? I) {
+    selectedInvoice = I;
   }
 
   @observable
-  int? invoice_id;
+  int? invoiceId;
 
   @observable
-  bool is_modify = false;
+  bool isModify = false;
 
   @observable
-  bool? is_payed;
+  bool? isPayed;
 
   @action
-  set_paid(bool? e) {
-    is_payed = e;
-    print(is_payed);
+  setPaid(bool? e) {
+    isPayed = e;
+    print(isPayed);
   }
 
   @observable
   Category? category;
 
   @action
-  set_category(Category e) {
+  setCategory(Category e) {
     category = e;
   }
 
@@ -103,32 +102,31 @@ abstract class InvoiceStoreBase with Store {
   DateTime date = DateTime.now();
 
   @action
-  set_date(DateTime dt) {
+  setDate(DateTime dt) {
     date = dt;
   }
 
   modify() {
-    is_modify = true;
-    description.text = select_invoice!.description;
-    price!.updateValue(select_invoice!.price / 100);
-    date = select_invoice!.date;
-    invoice_id = select_invoice!.id;
-    is_payed = select_invoice!.paid;
+    isModify = true;
+    description.text = selectedInvoice!.description;
+    price!.updateValue(selectedInvoice!.price / 100);
+    date = selectedInvoice!.date;
+    invoiceId = selectedInvoice!.id;
+    isPayed = selectedInvoice!.paid;
   }
 
   @action
-  clear_input() {
+  clearInput() {
     description.text = "";
     category = null;
     price!.updateValue(0.00);
     date = DateTime.now();
-    is_modify = false;
-    is_payed = null;
+    isModify = false;
+    isPayed = null;
   }
 
   @action
-  add_invoice() async {
-    print(add_invoice);
+  addInvoice() async {
     loading = true;
     try {
       var result = await ConnectionManager.add_invoice(
@@ -138,9 +136,9 @@ abstract class InvoiceStoreBase with Store {
               date: date,
               userId: user.id,
               homeId: home.id,
-              isPayed: is_payed)
+              isPayed: isPayed)
           .then((value) {
-        clear_input();
+        clearInput();
       });
     } on Exception catch (e) {
       print('add_invoice:  nao conseguiu adicionar invoice');
@@ -151,7 +149,7 @@ abstract class InvoiceStoreBase with Store {
   }
 
   @action
-  modify_invoice() async {
+  modifyInvoice() async {
     loading = true;
     try {
       var result = await ConnectionManager.modify_invoice(
@@ -160,27 +158,27 @@ abstract class InvoiceStoreBase with Store {
               price: (price!.numberValue * 100).toInt(),
               date: date,
               userId: user.id,
-              invoiceId: invoice_id!,
-              isPayed: is_payed)
+              invoiceId: invoiceId!,
+              isPayed: isPayed)
           .then((value) {
-        clear_input();
+        clearInput();
       });
     } on Exception catch (e) {
       print('modify_invoice:  nao conseguiu modificar invoice');
       print(e);
     }
 
-    is_modify = false;
+    isModify = false;
     loading = false;
   }
 
   @action
-  remove_invoice() async {
+  removeInvoice() async {
     loading = true;
     try {
       var result = await ConnectionManager.remove_invoice(
-        userId: select_invoice!.user.id,
-        invoiceId: select_invoice!.id,
+        userId: selectedInvoice!.user.id,
+        invoiceId: selectedInvoice!.id,
       );
     } on Exception catch (e) {
       print('remove_invoice:  nao conseguiu remover invoice');
@@ -194,7 +192,7 @@ abstract class InvoiceStoreBase with Store {
   List<Category> categories = [];
 
   @action
-  get_categories() async {
+  getCategories() async {
     loading = true;
     List<Category> result = await ConnectionManager.get_categories();
     categories = result;
@@ -202,27 +200,27 @@ abstract class InvoiceStoreBase with Store {
   }
 
   @observable
-  num total_invoice = 0;
+  num totalInvoice = 0;
 
   @observable
-  num any_payed = 0;
+  num anyPayed = 0;
 
   @observable
-  num total_invoice_person = 0;
+  num totalInvoicePerson = 0;
 
   @observable
-  List<Map<dynamic, dynamic>> category_percents = [{}];
+  List<Map<dynamic, dynamic>> categoryPercents = [{}];
 
   @observable
   List<Map<dynamic, dynamic>> users = [{}];
 
   @action
-  calc_total() async {
-    total_invoice = 0;
-    total_invoice_person = 0;
-    any_payed = 0;
+  calcTotal() async {
+    totalInvoice = 0;
+    totalInvoicePerson = 0;
+    anyPayed = 0;
     users.clear();
-    category_percents = [{}];
+    categoryPercents = [{}];
     var aux = {};
     var auxCategory = {};
 
@@ -245,8 +243,8 @@ abstract class InvoiceStoreBase with Store {
     }
 
     for (var element in invoices) {
-      total_invoice += element.price;
-      any_payed += element.paid == false ? element.price : 0;
+      totalInvoice += element.price;
+      anyPayed += element.paid == false ? element.price : 0;
       aux[element.user.id] = {
         'value': aux[element.user.id]['value']! + element.price,
         'name': element.user.name,
@@ -265,21 +263,21 @@ abstract class InvoiceStoreBase with Store {
                 };
     }
 
-    if (((total_invoice / numUsers!) - (any_payed / numUsers)) % numUsers ==
+    if (((totalInvoice / numUsers!) - (anyPayed / numUsers)) % numUsers ==
         0) {
-      total_invoice_person =
-          ((total_invoice / numUsers) - (any_payed / numUsers)).toInt();
+      totalInvoicePerson =
+          ((totalInvoice / numUsers) - (anyPayed / numUsers)).toInt();
     } else {
-      total_invoice_person =
-          ((total_invoice / numUsers) - (any_payed / numUsers) + 1).toInt();
+      totalInvoicePerson =
+          ((totalInvoice / numUsers) - (anyPayed / numUsers) + 1).toInt();
     }
 
-    if (total_invoice == 0) return;
+    if (totalInvoice == 0) return;
 
     aux.forEach((id, value) {
       users.add({
         'id': id,
-        'total': ((((value['value'] * 100) / total_invoice)) / 100),
+        'total': ((((value['value'] * 100) / totalInvoice)) / 100),
         'r': Random().nextInt(255),
         'g': Random().nextInt(255),
         'b': Random().nextInt(255),
@@ -289,15 +287,15 @@ abstract class InvoiceStoreBase with Store {
     });
 
     auxCategory.forEach((id, value) {
-      category_percents.add({
-        'value': ((((value['value'] * 100) / total_invoice)) / 100),
+      categoryPercents.add({
+        'value': ((((value['value'] * 100) / totalInvoice)) / 100),
         'name': value['name'],
         'r': Random().nextInt(255),
         'g': Random().nextInt(255),
         'b': Random().nextInt(255),
       });
     });
-    category_percents.removeAt(0);
+    categoryPercents.removeAt(0);
 
     print("User: ${users}");
   }

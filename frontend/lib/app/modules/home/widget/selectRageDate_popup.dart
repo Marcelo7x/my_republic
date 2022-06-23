@@ -3,22 +3,22 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-Widget SelectRageDatePopup(BuildContext context, HomeStore controller, invoices_controller) {
+Widget SelectRageDatePopup(BuildContext context, HomeStore homeController, invoicesController) {
   return AlertDialog(
     title: const Text("Selecione o intevalo"),
     content: SfDateRangePicker(
       view: DateRangePickerView.year,
-      initialSelectedRange: controller.dateRange,
+      initialSelectedRange: homeController.dateRange,
       selectionMode: DateRangePickerSelectionMode.range,
       onSelectionChanged: (DateRangePickerSelectionChangedArgs date) =>
-          controller.set_dateRange(date.value),
+          homeController.set_dateRange(date.value),
     ),
     actions: <Widget>[
       // define os botões na base do dialogo
       ElevatedButton(
         child: const Text("Confirmar"),
         onPressed: () {
-          invoices_controller.get_invoices();
+          invoicesController.get_invoices();
           Navigator.of(context).pop();
         },
       ),
@@ -26,7 +26,7 @@ Widget SelectRageDatePopup(BuildContext context, HomeStore controller, invoices_
   );
 }
 
-Widget SelectDateInterval(BuildContext context, HomeStore controller, invoices_controller) {
+Widget SelectDateInterval(BuildContext context, HomeStore homeController, invoicesController) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -34,13 +34,13 @@ Widget SelectDateInterval(BuildContext context, HomeStore controller, invoices_c
       GestureDetector(
         child: Observer(builder: (_) {
           return Text(
-              "${controller.dateRange.startDate?.day}/${controller.dateRange.startDate?.month}/${controller.dateRange.startDate?.year} a ${controller.dateRange.endDate?.day}/${controller.dateRange.endDate?.month}/${controller.dateRange.endDate?.year}",
+              "${homeController.dateRange.startDate?.day}/${homeController.dateRange.startDate?.month}/${homeController.dateRange.startDate?.year} a ${homeController.dateRange.endDate?.day}/${homeController.dateRange.endDate?.month}/${homeController.dateRange.endDate?.year}",
               style: TextStyle(color: Theme.of(context).colorScheme.primary));
         }),
         onTap: () => showDialog(
           context: context,
           builder: (BuildContext context) {
-            return SelectRageDatePopup(context, controller, invoices_controller);
+            return SelectRageDatePopup(context, homeController, invoicesController);
           },
         ),
       ),
@@ -48,7 +48,7 @@ Widget SelectDateInterval(BuildContext context, HomeStore controller, invoices_c
         onTap: () => showDialog(
           context: context,
           builder: (BuildContext context) {
-            return SelectRageDatePopup(context, controller, invoices_controller);
+            return SelectRageDatePopup(context, homeController, invoicesController);
           },
         ),
         child: Padding(

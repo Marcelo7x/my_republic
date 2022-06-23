@@ -7,7 +7,7 @@ import 'package:frontend/app/modules/home/widget/selectRageDate_popup.dart';
 import 'package:intl/intl.dart';
 
 Widget BalancePage(
-    {required BuildContext context, required InvoiceStore invoices_controller}) {
+    {required BuildContext context, required InvoiceStore invoicesController}) {
   final height = MediaQuery.of(context).size.height;
   final width = MediaQuery.of(context).size.width;
   var numberFormat = NumberFormat('##0.00');
@@ -33,7 +33,7 @@ Widget BalancePage(
                     ),
                   ],
                 ),
-                SelectDateInterval(context, Modular.get<HomeStore>(), invoices_controller)
+                SelectDateInterval(context, Modular.get<HomeStore>(), invoicesController)
               ],
             ),
           ),
@@ -43,9 +43,9 @@ Widget BalancePage(
                 height: height * .75,
                 width: width * .95,
                 padding: const EdgeInsets.all(10),
-                child: invoices_controller.invoices.isEmpty
+                child: invoicesController.invoices.isEmpty
                     ? RefreshIndicator(
-                        onRefresh: () async => await invoices_controller.get_invoices(),
+                        onRefresh: () async => await invoicesController.getInvoices(),
                         child: const Center(child: Text("Ainda não há contas")))
                     : SingleChildScrollView(
                         child: Column(
@@ -59,14 +59,14 @@ Widget BalancePage(
                                 ),
                                 Text(
                                   numberFormat
-                                      .format(invoices_controller.total_invoice / 100),
+                                      .format(invoicesController.totalInvoice / 100),
                                   style: const TextStyle(
                                     fontSize: 28,
                                   ),
                                 ),
                               ],
                             ),
-                            invoices_controller.total_invoice != 0
+                            invoicesController.totalInvoice != 0
                                 ? Column(
                                     //mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -80,9 +80,9 @@ Widget BalancePage(
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 30.0 * invoices_controller.users.length,
+                                        height: 30.0 * invoicesController.users.length,
                                         child: ListView(
-                                          children: invoices_controller.users
+                                          children: invoicesController.users
                                               .map(
                                                 (e) => Row(
                                                   mainAxisAlignment:
@@ -106,7 +106,7 @@ Widget BalancePage(
                                                     ),
                                                     Text(
                                                       numberFormat.format(
-                                                          (invoices_controller.total_invoice_person -
+                                                          (invoicesController.totalInvoicePerson -
                                                                   e['paid']) /
                                                               100),
                                                       style: const TextStyle(
@@ -122,7 +122,7 @@ Widget BalancePage(
                                     ],
                                   )
                                 : Container(),
-                            invoices_controller.total_invoice != 0
+                            invoicesController.totalInvoice != 0
                                 ? const Padding(
                                     padding:
                                         EdgeInsets.only(top: 10, bottom: 10),
@@ -135,7 +135,7 @@ Widget BalancePage(
                                   )
                                 : Container(),
                             Wrap(
-                                children: invoices_controller.users.map((e) {
+                                children: invoicesController.users.map((e) {
                               return Container(
                                 height: 30,
                                 margin: const EdgeInsets.all(10),
@@ -167,7 +167,7 @@ Widget BalancePage(
                                 height: 25,
                                 //margin: const EdgeInsets.only(top: 5),
                                 child: Row(
-                                  children: invoices_controller.users
+                                  children: invoicesController.users
                                       .map(
                                         (e) => Container(
                                           height: 25,
@@ -188,7 +188,7 @@ Widget BalancePage(
                             ),
 
                             //category percents
-                            invoices_controller.total_invoice != 0
+                            invoicesController.totalInvoice != 0
                                 ? const Padding(
                                     padding:
                                         EdgeInsets.only(top: 20, bottom: 10),
@@ -202,7 +202,7 @@ Widget BalancePage(
                                 : Container(),
                             Wrap(
                                 //mainAxisAlignment: MainAxisAlignment.center,
-                                children: invoices_controller.category_percents.map((e) {
+                                children: invoicesController.categoryPercents.map((e) {
                               return Container(
                                 height: 30,
                                 width: 150,
@@ -234,7 +234,7 @@ Widget BalancePage(
                                 height: 25,
                                 //margin: const EdgeInsets.only(top: 5),
                                 child: Row(
-                                  children: invoices_controller.category_percents
+                                  children: invoicesController.categoryPercents
                                       .map(
                                         (e) => Container(
                                           height: 25,
