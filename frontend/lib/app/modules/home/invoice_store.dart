@@ -209,94 +209,88 @@ abstract class InvoiceStoreBase with Store {
   num totalInvoicePerson = 0;
 
   @observable
-  List<Map<dynamic, dynamic>> categoryPercents = [{}];
+  Map<String, dynamic> categoryPercents = {};
 
   @observable
-  List<Map<dynamic, dynamic>> users = [{}];
+  Map<int, dynamic> residents = {};
 
   @action
-  calcTotal() async {
-    totalInvoice = 0;
-    totalInvoicePerson = 0;
-    anyPayed = 0;
-    users.clear();
-    categoryPercents = [{}];
-    var aux = {};
-    var auxCategory = {};
-
-    int? numUsers;
+  getResidents() async {
     try {
       var data = await ConnectionManager.number_users(homeId: home.id);
 
-      numUsers = data!.length;
-
       data.forEach((e) {
-        aux[e['users']['userid']] = {
+        residents[e['users']['userid']] = {
           'value': 0,
           'name': e['users']['name'],
+          'total': 0,
           'paid': 0,
+          'r': Random().nextInt(255),
+          'g': Random().nextInt(255),
+          'b': Random().nextInt(255),
         };
       });
     } on Exception catch (e) {
       print('calc_total:  nao conseguiu obter o numero de users');
       print(e);
     }
+  }
+
+  @action
+  calcTotal() async {
+    totalInvoice = 0;
+    totalInvoicePerson = 0;
+    anyPayed = 0;
+    categoryPercents = {};
+    var aux = {};
+    var auxCategory = {};
+
+    await getResidents();
 
     for (var element in invoices) {
       totalInvoice += element.price;
       anyPayed += element.paid == false ? element.price : 0;
-      aux[element.user.id] = {
-        'value': aux[element.user.id]['value']! + element.price,
-        'name': element.user.name,
-        'paid': element.paid == true
-            ? aux[element.user.id]['paid']! + element.price
-            : aux[element.user.id]['paid']!,
-      };
+      residents[element.user.id]['value'] += element.price;
+      residents[element.user.id]['paid'] = element.paid == true
+          ? residents[element.user.id]['paid']! + element.price
+          : residents[element.user.id]['paid']!;
 
-      auxCategory[element.category.name] =
-          auxCategory[element.category.name] == null
-              ? {'value': element.price, 'name': element.category.name}
-              : {
-                  'value': auxCategory[element.category.name]['value']! +
-                      element.price,
-                  'name': element.category.name
-                };
+      if (categoryPercents[element.category.name] == null) {
+        categoryPercents[element.category.name] = {
+          'name': element.category.name,
+          'value': element.price,
+          'r': Random().nextInt(255),
+          'g': Random().nextInt(255),
+          'b': Random().nextInt(255),
+        };
+      } else {
+        categoryPercents[element.category.name]['value'] += element.price;
+      }
     }
 
-    if (((totalInvoice / numUsers!) - (anyPayed / numUsers)) % numUsers ==
+    if (((totalInvoice / residents.length) - (anyPayed / residents.length)) %
+            residents.length ==
         0) {
       totalInvoicePerson =
-          ((totalInvoice / numUsers) - (anyPayed / numUsers)).toInt();
+          ((totalInvoice / residents.length) - (anyPayed / residents.length))
+              .toInt();
     } else {
-      totalInvoicePerson =
-          ((totalInvoice / numUsers) - (anyPayed / numUsers) + 1).toInt();
+      totalInvoicePerson = ((totalInvoice / residents.length) -
+              (anyPayed / residents.length) +
+              1)
+          .toInt();
     }
 
     if (totalInvoice == 0) return;
 
-    aux.forEach((id, value) {
-      users.add({
-        'id': id,
-        'total': ((((value['value'] * 100) / totalInvoice)) / 100),
-        'r': Random().nextInt(255),
-        'g': Random().nextInt(255),
-        'b': Random().nextInt(255),
-        'name': value['name'],
-        'paid': value['paid'],
-      });
+    residents.forEach((id, value) {
+      residents[id]['total'] =
+          ((((value['value'] * 100) / totalInvoice)) / 100);
     });
 
-    auxCategory.forEach((id, value) {
-      categoryPercents.add({
-        'value': ((((value['value'] * 100) / totalInvoice)) / 100),
-        'name': value['name'],
-        'r': Random().nextInt(255),
-        'g': Random().nextInt(255),
-        'b': Random().nextInt(255),
-      });
+    categoryPercents.forEach((name, value) {
+      categoryPercents[name]['value'] =
+          ((((value['value'] * 100) / totalInvoice)) / 100);
     });
-    categoryPercents.removeAt(0);
-
-    print("User: ${users}");
   }
 }

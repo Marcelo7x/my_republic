@@ -236,31 +236,31 @@ mixin _$InvoiceStore on InvoiceStoreBase, Store {
       Atom(name: 'InvoiceStoreBase.categoryPercents', context: context);
 
   @override
-  List<Map<dynamic, dynamic>> get categoryPercents {
+  Map<String, dynamic> get categoryPercents {
     _$categoryPercentsAtom.reportRead();
     return super.categoryPercents;
   }
 
   @override
-  set categoryPercents(List<Map<dynamic, dynamic>> value) {
+  set categoryPercents(Map<String, dynamic> value) {
     _$categoryPercentsAtom.reportWrite(value, super.categoryPercents, () {
       super.categoryPercents = value;
     });
   }
 
-  late final _$usersAtom =
-      Atom(name: 'InvoiceStoreBase.users', context: context);
+  late final _$residentsAtom =
+      Atom(name: 'InvoiceStoreBase.residents', context: context);
 
   @override
-  List<Map<dynamic, dynamic>> get users {
-    _$usersAtom.reportRead();
-    return super.users;
+  Map<int, dynamic> get residents {
+    _$residentsAtom.reportRead();
+    return super.residents;
   }
 
   @override
-  set users(List<Map<dynamic, dynamic>> value) {
-    _$usersAtom.reportWrite(value, super.users, () {
-      super.users = value;
+  set residents(Map<int, dynamic> value) {
+    _$residentsAtom.reportWrite(value, super.residents, () {
+      super.residents = value;
     });
   }
 
@@ -302,6 +302,14 @@ mixin _$InvoiceStore on InvoiceStoreBase, Store {
   @override
   Future getCategories() {
     return _$getCategoriesAsyncAction.run(() => super.getCategories());
+  }
+
+  late final _$getResidentsAsyncAction =
+      AsyncAction('InvoiceStoreBase.getResidents', context: context);
+
+  @override
+  Future getResidents() {
+    return _$getResidentsAsyncAction.run(() => super.getResidents());
   }
 
   late final _$calcTotalAsyncAction =
@@ -388,7 +396,7 @@ totalInvoice: ${totalInvoice},
 anyPayed: ${anyPayed},
 totalInvoicePerson: ${totalInvoicePerson},
 categoryPercents: ${categoryPercents},
-users: ${users}
+residents: ${residents}
     ''';
   }
 }

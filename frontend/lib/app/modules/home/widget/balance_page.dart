@@ -33,7 +33,8 @@ Widget BalancePage(
                     ),
                   ],
                 ),
-                SelectDateInterval(context, Modular.get<HomeStore>(), invoicesController)
+                SelectDateInterval(
+                    context, Modular.get<HomeStore>(), invoicesController)
               ],
             ),
           ),
@@ -45,7 +46,8 @@ Widget BalancePage(
                 padding: const EdgeInsets.all(10),
                 child: invoicesController.invoices.isEmpty
                     ? RefreshIndicator(
-                        onRefresh: () async => await invoicesController.getInvoices(),
+                        onRefresh: () async =>
+                            await invoicesController.getInvoices(),
                         child: const Center(child: Text("Ainda não há contas")))
                     : SingleChildScrollView(
                         child: Column(
@@ -58,8 +60,8 @@ Widget BalancePage(
                                   child: Text("Total do período: R\$ "),
                                 ),
                                 Text(
-                                  numberFormat
-                                      .format(invoicesController.totalInvoice / 100),
+                                  numberFormat.format(
+                                      invoicesController.totalInvoice / 100),
                                   style: const TextStyle(
                                     fontSize: 28,
                                   ),
@@ -80,9 +82,11 @@ Widget BalancePage(
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 30.0 * invoicesController.users.length,
+                                        height: 30.0 *
+                                            invoicesController.residents.length,
                                         child: ListView(
-                                          children: invoicesController.users
+                                          children: invoicesController
+                                              .residents.entries
                                               .map(
                                                 (e) => Row(
                                                   mainAxisAlignment:
@@ -92,7 +96,8 @@ Widget BalancePage(
                                                       padding:
                                                           const EdgeInsets.only(
                                                               top: 3),
-                                                      child: Text(e['name']),
+                                                      child:
+                                                          Text(e.value['name']),
                                                     ),
                                                     const Padding(
                                                       padding:
@@ -106,8 +111,10 @@ Widget BalancePage(
                                                     ),
                                                     Text(
                                                       numberFormat.format(
-                                                          (invoicesController.totalInvoicePerson -
-                                                                  e['paid']) /
+                                                          (invoicesController
+                                                                      .totalInvoicePerson -
+                                                                  e.value[
+                                                                      'paid']) /
                                                               100),
                                                       style: const TextStyle(
                                                         fontSize: 20,
@@ -135,7 +142,8 @@ Widget BalancePage(
                                   )
                                 : Container(),
                             Wrap(
-                                children: invoicesController.users.map((e) {
+                                children: invoicesController.residents.entries
+                                    .map((e) {
                               return Container(
                                 height: 30,
                                 margin: const EdgeInsets.all(10),
@@ -144,16 +152,16 @@ Widget BalancePage(
                                   border: Border.all(
                                     color: Color.fromARGB(
                                       255,
-                                      e['r'],
-                                      e['g'],
-                                      e['b'],
+                                      e.value['r'],
+                                      e.value['g'],
+                                      e.value['b'],
                                     ),
                                   ),
                                   borderRadius: BorderRadius.circular(18),
                                 ),
                                 width: 120,
                                 child: Text(
-                                  "${toBeginningOfSentenceCase(e['name'].toString())!} ${(e['total'] * 100).round().toString()}%",
+                                  "${toBeginningOfSentenceCase(e.value['name'].toString())!} ${(e.value['total'] * 100).round().toString()}%",
                                   style: const TextStyle(
                                     fontSize: 14,
                                   ),
@@ -167,19 +175,20 @@ Widget BalancePage(
                                 height: 25,
                                 //margin: const EdgeInsets.only(top: 5),
                                 child: Row(
-                                  children: invoicesController.users
+                                  children: invoicesController.residents.entries
                                       .map(
                                         (e) => Container(
                                           height: 25,
                                           decoration: BoxDecoration(
                                             color: Color.fromARGB(
                                               255,
-                                              e['r'],
-                                              e['g'],
-                                              e['b'],
+                                              e.value['r'],
+                                              e.value['g'],
+                                              e.value['b'],
                                             ),
                                           ),
-                                          width: width * .8 * (e['total']),
+                                          width:
+                                              width * .8 * (e.value['total']),
                                         ),
                                       )
                                       .toList(),
@@ -202,7 +211,9 @@ Widget BalancePage(
                                 : Container(),
                             Wrap(
                                 //mainAxisAlignment: MainAxisAlignment.center,
-                                children: invoicesController.categoryPercents.map((e) {
+                                children: invoicesController
+                                    .categoryPercents.entries
+                                    .map((e) {
                               return Container(
                                 height: 30,
                                 width: 150,
@@ -212,15 +223,15 @@ Widget BalancePage(
                                   border: Border.all(
                                     color: Color.fromARGB(
                                       255,
-                                      e['r'],
-                                      e['g'],
-                                      e['b'],
+                                      e.value['r'],
+                                      e.value['g'],
+                                      e.value['b'],
                                     ),
                                   ),
                                   borderRadius: BorderRadius.circular(18),
                                 ),
                                 child: Text(
-                                  "${toBeginningOfSentenceCase(e['name'].toString())!} ${(e['value'] * 100).round().toString()}%",
+                                  "${toBeginningOfSentenceCase(e.value['name'].toString())!} ${(e.value['value'] * 100).round().toString()}%",
                                   style: const TextStyle(
                                     fontSize: 14,
                                   ),
@@ -234,19 +245,21 @@ Widget BalancePage(
                                 height: 25,
                                 //margin: const EdgeInsets.only(top: 5),
                                 child: Row(
-                                  children: invoicesController.categoryPercents
+                                  children: invoicesController
+                                      .categoryPercents.entries
                                       .map(
                                         (e) => Container(
                                           height: 25,
                                           decoration: BoxDecoration(
                                             color: Color.fromARGB(
                                               255,
-                                              e['r'],
-                                              e['g'],
-                                              e['b'],
+                                              e.value['r'],
+                                              e.value['g'],
+                                              e.value['b'],
                                             ),
                                           ),
-                                          width: width * .8 * (e['value']),
+                                          width:
+                                              width * .8 * (e.value['value']),
                                         ),
                                       )
                                       .toList(),
