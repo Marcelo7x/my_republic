@@ -222,7 +222,7 @@ Future<Response> _addInvoice(Request request) async {
     return Response.ok('Ops!!! Não conseguimos adicionar a conta.\n');
   }
 
-  return Response.ok('Conta adicionada.\n');
+  return Response.ok(jsonEncode('Conta adicionada\n'));
 }
 
 Future<Response> _modifyInvoice(Request request) async {
@@ -241,7 +241,7 @@ Future<Response> _modifyInvoice(Request request) async {
   var paid = result[0]['paid'];
 
   if (price.toString().contains('.') || price.toString().contains(',')) {
-    return Response.ok('Ops!!! Não conseguimos adicionar a conta.\n');
+    return Response.ok('Ops!!! Não conseguimos modificar a conta.\n');
   }
 
   try {
