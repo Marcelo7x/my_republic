@@ -222,7 +222,7 @@ Future<Response> _addInvoice(Request request) async {
     return Response.ok('Ops!!! Não conseguimos adicionar a conta.\n');
   }
 
-  return Response.ok('Conta adicionado\n');
+  return Response.ok('Conta adicionada.\n');
 }
 
 Future<Response> _modifyInvoice(Request request) async {
@@ -350,7 +350,7 @@ Future<Response> _listCategory(Request request) async {
 
 void main(List<String> args) async {
   //connection BD
-  print("connectando BD dev...");
+  print("connectando BD...");
   var db = DB.instance;
   await db.database;
 

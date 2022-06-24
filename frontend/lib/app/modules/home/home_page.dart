@@ -95,8 +95,7 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () => showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return AddInvoicePopup(
-                          context: context, invoicesController: invoicesController);
+                      return const AddInvoicePopup();
                     },
                   ),
                   child: const Icon(Icons.add),

@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
+import 'package:frontend/app/modules/home/invoice_store.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-Widget SelectRageDatePopup(BuildContext context, HomeStore homeController, invoicesController) {
+Widget SelectRageDatePopup(BuildContext context, HomeStore homeController, InvoiceStore invoicesController) {
   return AlertDialog(
     title: const Text("Selecione o intevalo"),
-    content: SfDateRangePicker(
-      view: DateRangePickerView.year,
-      initialSelectedRange: homeController.dateRange,
-      selectionMode: DateRangePickerSelectionMode.range,
-      onSelectionChanged: (DateRangePickerSelectionChangedArgs date) =>
-          homeController.set_dateRange(date.value),
+    content: SizedBox(
+      height: MediaQuery.of(context).size.height * .5,
+      width: MediaQuery.of(context).size.width * .8,
+      child: SfDateRangePicker(
+        view: DateRangePickerView.year,
+        initialSelectedRange: homeController.dateRange,
+        selectionMode: DateRangePickerSelectionMode.range,
+        onSelectionChanged: (DateRangePickerSelectionChangedArgs date) =>
+            homeController.set_dateRange(date.value),
+      ),
     ),
     actions: <Widget>[
       // define os botões na base do dialogo
       ElevatedButton(
         child: const Text("Confirmar"),
         onPressed: () {
-          invoicesController.get_invoices();
+          invoicesController.getInvoices();
           Navigator.of(context).pop();
         },
       ),
