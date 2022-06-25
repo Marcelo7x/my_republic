@@ -224,7 +224,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
                         : invoicesController.invoices.isEmpty
                             ? RefreshIndicator(
                                 onRefresh: () async =>
-                                    await invoicesController.getInvoices(),
+                                    await homeController.reload(),
                                 child: const Center(
                                     child: Text("Ainda não há contas")))
                             : const CircularProgressIndicator(),

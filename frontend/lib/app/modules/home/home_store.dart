@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:frontend/app/modules/home/balance_store.dart';
 import 'package:frontend/app/modules/home/invoice_store.dart';
 import 'package:frontend/domain/category.dart';
 import 'package:frontend/domain/connection_manager.dart';
@@ -64,6 +65,13 @@ abstract class HomeStoreBase with Store {
     loading = false;
 
     Modular.to.navigate('/login/');
+  }
+
+  @action
+  reload() async {
+    await Modular.get<InvoiceStore>().getInvoices();
+    await Modular.get<InvoiceStore>().getCategories();
+    await Modular.get<BalanceStore>().calcTotal();
   }
 
   switch_theme(bool isDarkTheme) async {

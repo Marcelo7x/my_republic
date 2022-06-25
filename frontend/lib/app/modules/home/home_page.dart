@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:frontend/app/modules/home/balance_store.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
 import 'package:frontend/app/modules/home/invoice_store.dart';
 import 'package:frontend/app/modules/home/widget/add_invoice_popup.dart';
@@ -27,10 +28,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _asyncMethod() async {
-    final InvoiceStore invoicesController = Modular.get<InvoiceStore>();
-    await invoicesController.getInvoices();
-    await invoicesController.getCategories();
-    await invoicesController.calcTotal();
+    await Modular.get<HomeStore>().reload();
   }
 
   @override

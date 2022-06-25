@@ -22,8 +22,9 @@ Widget SelectRageDatePopup(BuildContext context, HomeStore homeController, Invoi
       // define os botões na base do dialogo
       ElevatedButton(
         child: const Text("Confirmar"),
-        onPressed: () {
-          invoicesController.getInvoices();
+        onPressed: () async {
+          await homeController.reload();
+
           Navigator.of(context).pop();
         },
       ),

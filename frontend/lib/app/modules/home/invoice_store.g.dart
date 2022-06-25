@@ -184,86 +184,6 @@ mixin _$InvoiceStore on InvoiceStoreBase, Store {
     });
   }
 
-  late final _$totalInvoiceAtom =
-      Atom(name: 'InvoiceStoreBase.totalInvoice', context: context);
-
-  @override
-  num get totalInvoice {
-    _$totalInvoiceAtom.reportRead();
-    return super.totalInvoice;
-  }
-
-  @override
-  set totalInvoice(num value) {
-    _$totalInvoiceAtom.reportWrite(value, super.totalInvoice, () {
-      super.totalInvoice = value;
-    });
-  }
-
-  late final _$anyPayedAtom =
-      Atom(name: 'InvoiceStoreBase.anyPayed', context: context);
-
-  @override
-  num get anyPayed {
-    _$anyPayedAtom.reportRead();
-    return super.anyPayed;
-  }
-
-  @override
-  set anyPayed(num value) {
-    _$anyPayedAtom.reportWrite(value, super.anyPayed, () {
-      super.anyPayed = value;
-    });
-  }
-
-  late final _$totalInvoicePersonAtom =
-      Atom(name: 'InvoiceStoreBase.totalInvoicePerson', context: context);
-
-  @override
-  num get totalInvoicePerson {
-    _$totalInvoicePersonAtom.reportRead();
-    return super.totalInvoicePerson;
-  }
-
-  @override
-  set totalInvoicePerson(num value) {
-    _$totalInvoicePersonAtom.reportWrite(value, super.totalInvoicePerson, () {
-      super.totalInvoicePerson = value;
-    });
-  }
-
-  late final _$categoryPercentsAtom =
-      Atom(name: 'InvoiceStoreBase.categoryPercents', context: context);
-
-  @override
-  Map<String, dynamic> get categoryPercents {
-    _$categoryPercentsAtom.reportRead();
-    return super.categoryPercents;
-  }
-
-  @override
-  set categoryPercents(Map<String, dynamic> value) {
-    _$categoryPercentsAtom.reportWrite(value, super.categoryPercents, () {
-      super.categoryPercents = value;
-    });
-  }
-
-  late final _$residentsAtom =
-      Atom(name: 'InvoiceStoreBase.residents', context: context);
-
-  @override
-  Map<int, dynamic> get residents {
-    _$residentsAtom.reportRead();
-    return super.residents;
-  }
-
-  @override
-  set residents(Map<int, dynamic> value) {
-    _$residentsAtom.reportWrite(value, super.residents, () {
-      super.residents = value;
-    });
-  }
-
   late final _$getInvoicesAsyncAction =
       AsyncAction('InvoiceStoreBase.getInvoices', context: context);
 
@@ -302,22 +222,6 @@ mixin _$InvoiceStore on InvoiceStoreBase, Store {
   @override
   Future getCategories() {
     return _$getCategoriesAsyncAction.run(() => super.getCategories());
-  }
-
-  late final _$getResidentsAsyncAction =
-      AsyncAction('InvoiceStoreBase.getResidents', context: context);
-
-  @override
-  Future getResidents() {
-    return _$getResidentsAsyncAction.run(() => super.getResidents());
-  }
-
-  late final _$calcTotalAsyncAction =
-      AsyncAction('InvoiceStoreBase.calcTotal', context: context);
-
-  @override
-  Future calcTotal() {
-    return _$calcTotalAsyncAction.run(() => super.calcTotal());
   }
 
   late final _$InvoiceStoreBaseActionController =
@@ -391,12 +295,7 @@ category: ${category},
 description: ${description},
 price: ${price},
 date: ${date},
-categories: ${categories},
-totalInvoice: ${totalInvoice},
-anyPayed: ${anyPayed},
-totalInvoicePerson: ${totalInvoicePerson},
-categoryPercents: ${categoryPercents},
-residents: ${residents}
+categories: ${categories}
     ''';
   }
 }

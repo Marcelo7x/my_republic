@@ -189,7 +189,7 @@ Widget ShowInformationPopup(
 
                                             Navigator.of(context).pop();
 
-                                            await invoicesController.getInvoices();
+                                            await homeController.reload();
                                           },
                                           child: const Text("Sim"),
                                         ),

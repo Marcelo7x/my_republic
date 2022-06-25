@@ -159,7 +159,7 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
                 : await invoicesController.modifyInvoice();
 
             Navigator.of(context).pop();
-            invoicesController.getInvoices();
+            await Modular.get<HomeStore>().reload();
             Modular.to.navigate('/home/');
           },
         ),

@@ -73,6 +73,14 @@ mixin _$HomeStore on HomeStoreBase, Store {
     return _$logoutAsyncAction.run(() => super.logout());
   }
 
+  late final _$reloadAsyncAction =
+      AsyncAction('HomeStoreBase.reload', context: context);
+
+  @override
+  Future reload() {
+    return _$reloadAsyncAction.run(() => super.reload());
+  }
+
   late final _$HomeStoreBaseActionController =
       ActionController(name: 'HomeStoreBase', context: context);
 

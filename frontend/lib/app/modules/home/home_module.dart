@@ -1,4 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:frontend/app/modules/home/balance_store.dart';
 import 'package:frontend/app/modules/home/invoice_store.dart';
 import '../home/home_store.dart'; 
 
@@ -9,6 +10,7 @@ class HomeModule extends Module {
   final List<Bind> binds = [
     Bind.lazySingleton((i) => InvoiceStore()),
     Bind.lazySingleton((i) => HomeStore()),
+    Bind.lazySingleton((i) => BalanceStore())
   ];
 
   @override
