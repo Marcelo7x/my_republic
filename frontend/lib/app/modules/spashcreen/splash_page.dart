@@ -10,17 +10,25 @@ class SplashPage extends StatefulWidget {
   _SplashPageState createState() => _SplashPageState();
 }
 
-class _SplashPageState extends ModularState<SplashPage, SplashStore> {
+class _SplashPageState extends State<SplashPage> {
+  @override
+  initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _asyncMethod();
+    });
+  }
+
+  _asyncMethod() async {
+    await Modular.get<SplashStore>().verifyLogin();
+    await Modular.get<SplashStore>().verifyTheme();
+  }
+
   @override
   Widget build(BuildContext context) {
-    initState() async {
-      await store.verify_login();
-      await store.verify_theme();
-    }
+    final SplashStore splashController = Modular.get<SplashStore>();
 
-    initState();
-
-    var logo = AssetImage("images/logo.png");
+    var logo = const AssetImage("images/logo.png");
 
     return Container(
       //color: Theme.of(context).backgroundColor,
@@ -37,11 +45,11 @@ class _SplashPageState extends ModularState<SplashPage, SplashStore> {
             ),
           ),
           Observer(builder: (_) {
-            return controller.error
+            return splashController.error
                 ? SizedBox(
                     width: MediaQuery.of(context).size.width * .8,
                     child: Text(
-                      controller.erro_menssage,
+                      splashController.erroMenssage,
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.normal,

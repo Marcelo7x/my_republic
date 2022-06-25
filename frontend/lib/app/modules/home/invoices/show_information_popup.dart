@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
-import 'package:frontend/app/modules/home/invoice_store.dart';
-import 'package:frontend/app/modules/home/widget/add_invoice_popup.dart';
+import 'package:frontend/app/modules/home/invoices/add_invoice_popup.dart';
+import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 Widget ShowInformationPopup(
-    {required BuildContext context, required HomeStore homeController, required InvoiceStore invoicesController}) {
+    {required BuildContext context,
+    required HomeStore homeController,
+    required InvoiceStore invoicesController}) {
   var numberFormat = NumberFormat('##0.00');
   var e = invoicesController.selectedInvoice;
 
@@ -90,8 +91,7 @@ Widget ShowInformationPopup(
                       ),
                       Text(
                         e.paid == true
-                            ? toBeginningOfSentenceCase(
-                                e.user.name.toString())!
+                            ? toBeginningOfSentenceCase(e.user.name.toString())!
                             : 'Todos',
                         style: const TextStyle(
                           fontSize: 14,
@@ -110,8 +110,7 @@ Widget ShowInformationPopup(
                     ),
                   ),
                   Text(
-                    toBeginningOfSentenceCase(
-                        e.category.name.toString())!,
+                    toBeginningOfSentenceCase(e.category.name.toString())!,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
@@ -129,8 +128,7 @@ Widget ShowInformationPopup(
                     ),
                   ),
                   Text(
-                    toBeginningOfSentenceCase(
-                        e.description.toString())!,
+                    toBeginningOfSentenceCase(e.description.toString())!,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 14,
@@ -185,7 +183,8 @@ Widget ShowInformationPopup(
                                       actions: <Widget>[
                                         TextButton(
                                           onPressed: () async {
-                                            await invoicesController.removeInvoice();
+                                            await invoicesController
+                                                .removeInvoice();
 
                                             Navigator.of(context).pop();
 
@@ -232,7 +231,7 @@ Widget ShowInformationPopup(
                 onPressed: () {
                   invoicesController.selectInvoice(null);
                 },
-                child: const  Icon(Icons.arrow_upward),
+                child: const Icon(Icons.arrow_upward),
               ),
             ],
           ),

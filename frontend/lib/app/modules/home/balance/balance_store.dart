@@ -1,7 +1,6 @@
 import 'dart:math';
-
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:frontend/app/modules/home/invoice_store.dart';
+import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 import 'package:frontend/domain/connection_manager.dart';
 import 'package:frontend/domain/home.dart';
 import 'package:frontend/domain/user.dart';

@@ -15,7 +15,7 @@ class StorageLocal {
 
   get connection => _connection;
 
-  Future salve_credentials(
+  Future salveCredentials(
       {required int user_id,
       required String user_name,
       required int home_id}) async {
@@ -25,7 +25,7 @@ class StorageLocal {
     await _connection.setBool('is_logged', true);
   }
 
-  Future<Map<String, dynamic>> verify_credentials() async {
+  Future<Map<String, dynamic>> verifyCredentials() async {
     bool? logged = await _connection.getBool('is_logged');
 
     if (logged != null && logged) {
@@ -38,7 +38,7 @@ class StorageLocal {
       return {};
   }
 
-  Future<bool> remove_credentials() async {
+  Future<bool> removeCredentials() async {
     await _connection.setInt('id', -1);
     await _connection.setBool('is_logged', false);
 

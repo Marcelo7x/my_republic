@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
-import 'package:frontend/app/modules/home/invoice_store.dart';
+import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-Widget SelectRageDatePopup(BuildContext context, HomeStore homeController, InvoiceStore invoicesController) {
+Widget SelectRageDatePopup(BuildContext context, HomeStore homeController,
+    InvoiceStore invoicesController) {
   return AlertDialog(
     title: const Text("Selecione o intevalo"),
     content: SizedBox(
@@ -15,7 +16,7 @@ Widget SelectRageDatePopup(BuildContext context, HomeStore homeController, Invoi
         initialSelectedRange: homeController.dateRange,
         selectionMode: DateRangePickerSelectionMode.range,
         onSelectionChanged: (DateRangePickerSelectionChangedArgs date) =>
-            homeController.set_dateRange(date.value),
+            homeController.setDateRange(date.value),
       ),
     ),
     actions: <Widget>[
@@ -32,7 +33,8 @@ Widget SelectRageDatePopup(BuildContext context, HomeStore homeController, Invoi
   );
 }
 
-Widget SelectDateInterval(BuildContext context, HomeStore homeController, invoicesController) {
+Widget SelectDateInterval(
+    BuildContext context, HomeStore homeController, invoicesController) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -46,7 +48,8 @@ Widget SelectDateInterval(BuildContext context, HomeStore homeController, invoic
         onTap: () => showDialog(
           context: context,
           builder: (BuildContext context) {
-            return SelectRageDatePopup(context, homeController, invoicesController);
+            return SelectRageDatePopup(
+                context, homeController, invoicesController);
           },
         ),
       ),
@@ -54,7 +57,8 @@ Widget SelectDateInterval(BuildContext context, HomeStore homeController, invoic
         onTap: () => showDialog(
           context: context,
           builder: (BuildContext context) {
-            return SelectRageDatePopup(context, homeController, invoicesController);
+            return SelectRageDatePopup(
+                context, homeController, invoicesController);
           },
         ),
         child: Padding(

@@ -25,29 +25,29 @@ abstract class _SplashStoreBase with Store {
   bool error = false;
 
   @observable
-  String erro_menssage = "";
+  String erroMenssage = "";
 
   @observable
-  bool dark_theme = false;
+  bool darkTheme = false;
 
   @action
-  verify_theme() async {
+  verifyTheme() async {
     final StorageLocal prefs = await StorageLocal.getInstance();
 
-    bool? is_dark_theme = prefs.connection.getBool('is_dark_theme');
+    bool? isDarkTheme = prefs.connection.getBool('is_dark_theme');
 
-    if (is_dark_theme != null && is_dark_theme) {
+    if (isDarkTheme != null && isDarkTheme) {
       themeMode.value = ThemeMode.dark;
     }
   }
 
-  verify_version(final String v) {
+  verifyVersion(final String v) {
     final v1 = version.split('.');
     final v2 = v.split('.');
 
     for (var i = 0; i < v2.length; i++) {
       if (int.parse(v1[i]) < int.parse(v2[i])) {
-        erro_menssage =
+        erroMenssage =
             "O App está desatualizado!\nAtulize-o e tente novamente.";
         error = true;
       }
@@ -55,22 +55,22 @@ abstract class _SplashStoreBase with Store {
   }
 
   @action
-  verify_login() async {
+  verifyLogin() async {
     var result;
     try {
       result = await ConnectionManager.verify_server();
     } on Exception catch (e) {
       error = true;
-      erro_menssage = "O servidor está desligado, tente voltar daqui a pouco.";
+      erroMenssage = "O servidor está desligado, tente voltar daqui a pouco.";
     }
 
-    if (!error) verify_version(result["force_update"]);
+    if (!error) verifyVersion(result["force_update"]);
 
     if (!error) {
       final StorageLocal conn = await StorageLocal.getInstance();
-      Map<String, dynamic> data = await conn.verify_credentials();
+      Map<String, dynamic> data = await conn.verifyCredentials();
 
-      if (data.length > 0) {
+      if (data.isNotEmpty) {
         Home home = Home(data['home_id']);
         User user = User(data['user_id'], data['user_name'], home: home);
 

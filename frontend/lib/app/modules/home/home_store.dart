@@ -1,15 +1,9 @@
-import 'dart:convert';
-import 'dart:math';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:frontend/app/modules/home/balance_store.dart';
-import 'package:frontend/app/modules/home/invoice_store.dart';
-import 'package:frontend/domain/category.dart';
-import 'package:frontend/domain/connection_manager.dart';
+import 'package:frontend/app/modules/home/balance/balance_store.dart';
+import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
+
 import 'package:frontend/domain/home.dart';
-import 'package:frontend/domain/invoice.dart';
 import 'package:frontend/domain/storage_local.dart';
 import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
@@ -55,7 +49,7 @@ abstract class HomeStoreBase with Store {
   }
 
   @action
-  set_dateRange(PickerDateRange dt) async {
+  setDateRange(PickerDateRange dt) async {
     dateRange = dt;
   }
 
@@ -64,7 +58,7 @@ abstract class HomeStoreBase with Store {
     loading = true;
 
     await StorageLocal.getInstance()
-        .then((instance) => instance.remove_credentials());
+        .then((instance) => instance.removeCredentials());
 
     loading = false;
 
@@ -78,7 +72,7 @@ abstract class HomeStoreBase with Store {
     await Modular.get<BalanceStore>().calcTotal();
   }
 
-  switch_theme(bool isDarkTheme) async {
+  switchTheme(bool isDarkTheme) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (isDarkTheme) {
       prefs.setBool('is_dark_theme', true);

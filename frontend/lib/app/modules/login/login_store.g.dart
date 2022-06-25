@@ -9,35 +9,35 @@ part of 'login_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$LoginStore on _LoginStoreBase, Store {
-  late final _$email_controllerAtom =
-      Atom(name: '_LoginStoreBase.email_controller', context: context);
+  late final _$emailControllerAtom =
+      Atom(name: '_LoginStoreBase.emailController', context: context);
 
   @override
-  TextEditingController get email_controller {
-    _$email_controllerAtom.reportRead();
-    return super.email_controller;
+  TextEditingController get emailController {
+    _$emailControllerAtom.reportRead();
+    return super.emailController;
   }
 
   @override
-  set email_controller(TextEditingController value) {
-    _$email_controllerAtom.reportWrite(value, super.email_controller, () {
-      super.email_controller = value;
+  set emailController(TextEditingController value) {
+    _$emailControllerAtom.reportWrite(value, super.emailController, () {
+      super.emailController = value;
     });
   }
 
-  late final _$password_controllerAtom =
-      Atom(name: '_LoginStoreBase.password_controller', context: context);
+  late final _$passwordControllerAtom =
+      Atom(name: '_LoginStoreBase.passwordController', context: context);
 
   @override
-  TextEditingController get password_controller {
-    _$password_controllerAtom.reportRead();
-    return super.password_controller;
+  TextEditingController get passwordController {
+    _$passwordControllerAtom.reportRead();
+    return super.passwordController;
   }
 
   @override
-  set password_controller(TextEditingController value) {
-    _$password_controllerAtom.reportWrite(value, super.password_controller, () {
-      super.password_controller = value;
+  set passwordController(TextEditingController value) {
+    _$passwordControllerAtom.reportWrite(value, super.passwordController, () {
+      super.passwordController = value;
     });
   }
 
@@ -57,19 +57,19 @@ mixin _$LoginStore on _LoginStoreBase, Store {
     });
   }
 
-  late final _$loggin_errorAtom =
-      Atom(name: '_LoginStoreBase.loggin_error', context: context);
+  late final _$logginErrorAtom =
+      Atom(name: '_LoginStoreBase.logginError', context: context);
 
   @override
-  bool get loggin_error {
-    _$loggin_errorAtom.reportRead();
-    return super.loggin_error;
+  bool get logginError {
+    _$logginErrorAtom.reportRead();
+    return super.logginError;
   }
 
   @override
-  set loggin_error(bool value) {
-    _$loggin_errorAtom.reportWrite(value, super.loggin_error, () {
-      super.loggin_error = value;
+  set logginError(bool value) {
+    _$logginErrorAtom.reportWrite(value, super.logginError, () {
+      super.logginError = value;
     });
   }
 
@@ -84,10 +84,10 @@ mixin _$LoginStore on _LoginStoreBase, Store {
   @override
   String toString() {
     return '''
-email_controller: ${email_controller},
-password_controller: ${password_controller},
+emailController: ${emailController},
+passwordController: ${passwordController},
 loading: ${loading},
-loggin_error: ${loggin_error}
+logginError: ${logginError}
     ''';
   }
 }

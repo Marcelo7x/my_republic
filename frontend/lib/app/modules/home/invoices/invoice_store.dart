@@ -196,6 +196,4 @@ abstract class InvoiceStoreBase with Store {
     categories = result;
     loading = false;
   }
-
-  
 }

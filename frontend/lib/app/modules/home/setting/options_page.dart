@@ -51,7 +51,7 @@ Widget OptionsPage(
                           onChanged: (isDark) async {
                             themeMode.value =
                                 isDark ? ThemeMode.dark : ThemeMode.light;
-                            await homeController.switch_theme(
+                            await homeController.switchTheme(
                                 themeMode.value == ThemeMode.dark);
                           }),
                     ),

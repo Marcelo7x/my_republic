@@ -12,40 +12,40 @@ class LoginStore = _LoginStoreBase with _$LoginStore;
 
 abstract class _LoginStoreBase with Store {
   @observable
-  TextEditingController email_controller = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   @observable
-  TextEditingController password_controller = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @observable
   bool loading = false;
 
   @observable
-  bool loggin_error = false;
+  bool logginError = false;
 
   @action
   loggin() async {
     loading = true;
 
-    if (email_controller.text.isNotEmpty &&
-        password_controller.text.isNotEmpty) {
+    if (emailController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty) {
       final data = await ConnectionManager.login(
-          email_controller.text, password_controller.text);
+          emailController.text, passwordController.text);
 
-      if (data.length > 0) {
+      if (data.isNotEmpty) {
         final home = Home(data['users']['homeid']);
 
         final user =
             User(data['users']['userid'], 'a', home: home);
 
         final StorageLocal conn = await StorageLocal.getInstance();
-        await conn.salve_credentials(user_id: user.id, user_name: user.name, home_id: user.home_id);
+        await conn.salveCredentials(user_id: user.id, user_name: user.name, home_id: user.home_id);
 
         Modular.to.navigate('/home/', arguments: {'user':user,'home':home});
       } else {
-        loggin_error = true;
+        logginError = true;
       }
     } else {
-      loggin_error = true;
+      logginError = true;
       print("Nao acessou");
     }
 

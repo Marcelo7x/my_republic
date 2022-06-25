@@ -57,12 +57,12 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  late final _$set_dateRangeAsyncAction =
-      AsyncAction('HomeStoreBase.set_dateRange', context: context);
+  late final _$setDateRangeAsyncAction =
+      AsyncAction('HomeStoreBase.setDateRange', context: context);
 
   @override
-  Future set_dateRange(PickerDateRange dt) {
-    return _$set_dateRangeAsyncAction.run(() => super.set_dateRange(dt));
+  Future setDateRange(PickerDateRange dt) {
+    return _$setDateRangeAsyncAction.run(() => super.setDateRange(dt));
   }
 
   late final _$logoutAsyncAction =

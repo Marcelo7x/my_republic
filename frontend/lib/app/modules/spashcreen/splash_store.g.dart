@@ -25,60 +25,60 @@ mixin _$SplashStore on _SplashStoreBase, Store {
     });
   }
 
-  late final _$erro_menssageAtom =
-      Atom(name: '_SplashStoreBase.erro_menssage', context: context);
+  late final _$erroMenssageAtom =
+      Atom(name: '_SplashStoreBase.erroMenssage', context: context);
 
   @override
-  String get erro_menssage {
-    _$erro_menssageAtom.reportRead();
-    return super.erro_menssage;
+  String get erroMenssage {
+    _$erroMenssageAtom.reportRead();
+    return super.erroMenssage;
   }
 
   @override
-  set erro_menssage(String value) {
-    _$erro_menssageAtom.reportWrite(value, super.erro_menssage, () {
-      super.erro_menssage = value;
+  set erroMenssage(String value) {
+    _$erroMenssageAtom.reportWrite(value, super.erroMenssage, () {
+      super.erroMenssage = value;
     });
   }
 
-  late final _$dark_themeAtom =
-      Atom(name: '_SplashStoreBase.dark_theme', context: context);
+  late final _$darkThemeAtom =
+      Atom(name: '_SplashStoreBase.darkTheme', context: context);
 
   @override
-  bool get dark_theme {
-    _$dark_themeAtom.reportRead();
-    return super.dark_theme;
+  bool get darkTheme {
+    _$darkThemeAtom.reportRead();
+    return super.darkTheme;
   }
 
   @override
-  set dark_theme(bool value) {
-    _$dark_themeAtom.reportWrite(value, super.dark_theme, () {
-      super.dark_theme = value;
+  set darkTheme(bool value) {
+    _$darkThemeAtom.reportWrite(value, super.darkTheme, () {
+      super.darkTheme = value;
     });
   }
 
-  late final _$verify_themeAsyncAction =
-      AsyncAction('_SplashStoreBase.verify_theme', context: context);
+  late final _$verifyThemeAsyncAction =
+      AsyncAction('_SplashStoreBase.verifyTheme', context: context);
 
   @override
-  Future verify_theme() {
-    return _$verify_themeAsyncAction.run(() => super.verify_theme());
+  Future verifyTheme() {
+    return _$verifyThemeAsyncAction.run(() => super.verifyTheme());
   }
 
-  late final _$verify_loginAsyncAction =
-      AsyncAction('_SplashStoreBase.verify_login', context: context);
+  late final _$verifyLoginAsyncAction =
+      AsyncAction('_SplashStoreBase.verifyLogin', context: context);
 
   @override
-  Future verify_login() {
-    return _$verify_loginAsyncAction.run(() => super.verify_login());
+  Future verifyLogin() {
+    return _$verifyLoginAsyncAction.run(() => super.verifyLogin());
   }
 
   @override
   String toString() {
     return '''
 error: ${error},
-erro_menssage: ${erro_menssage},
-dark_theme: ${dark_theme}
+erroMenssage: ${erroMenssage},
+darkTheme: ${darkTheme}
     ''';
   }
 }

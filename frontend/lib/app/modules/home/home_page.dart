@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:frontend/app/modules/home/balance_store.dart';
+import 'package:frontend/app/modules/home/balance/balance_page.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
-import 'package:frontend/app/modules/home/invoice_store.dart';
-import 'package:frontend/app/modules/home/widget/add_invoice_popup.dart';
-import 'package:frontend/app/modules/home/widget/balance_page.dart';
-import 'package:frontend/app/modules/home/widget/invoices_page.dart';
-import 'package:frontend/app/modules/home/widget/options_page.dart';
-import 'package:frontend/domain/invoice.dart';
+import 'package:frontend/app/modules/home/invoices/add_invoice_popup.dart';
+import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
+import 'package:frontend/app/modules/home/invoices/invoices_page.dart';
+import 'package:frontend/app/modules/home/setting/options_page.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
