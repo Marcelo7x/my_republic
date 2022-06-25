@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:frontend/domain/connection_manager.dart';
+import 'package:frontend/domain/home.dart';
+import 'package:frontend/domain/storage_local.dart';
+import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
-import 'package:dio/dio.dart';
-import 'dart:convert';
-
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_store.g.dart';
 
@@ -12,52 +12,40 @@ class LoginStore = _LoginStoreBase with _$LoginStore;
 
 abstract class _LoginStoreBase with Store {
   @observable
-  TextEditingController email_controller = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   @observable
-  TextEditingController password_controller = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @observable
   bool loading = false;
 
   @observable
-  bool loggin_error = false;
+  bool logginError = false;
 
   @action
   loggin() async {
     loading = true;
 
-    String url = await SharedPreferences.getInstance().then((value) => value.getString('url')!);
+    if (emailController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty) {
+      final data = await ConnectionManager.login(
+          emailController.text, passwordController.text);
 
-    if (email_controller.text.length > 0 &&
-        password_controller.text.length > 0) {
-      
-      try {
-        var response = await Dio().post(url+'login',
-            data: jsonEncode([
-              {
-                "email": email_controller.text.replaceAll(RegExp(r' '), ''),
-                "password": password_controller.text
-              }
-            ]));
+      if (data.isNotEmpty) {
+        final home = Home(data['users']['homeid']);
 
-        if (jsonDecode(response.data).length > 0) {
-          var id = jsonDecode(response.data)[0]['users']['userid'];
-          var homeid = jsonDecode(response.data)[0]['users']['homeid'];
-          final prefs = await SharedPreferences.getInstance();
+        final user =
+            User(data['users']['userid'], 'a', home: home);
 
-          await prefs.setInt('id', id);
-          await prefs.setInt('home_id', homeid);
-          await prefs.setBool('is_logged', true);
+        final StorageLocal conn = await StorageLocal.getInstance();
+        await conn.salveCredentials(user_id: user.id, user_name: user.name, home_id: user.home_id);
 
-          Modular.to.navigate('/home/', arguments: id);
-        } else {
-          loggin_error = true;
-        }
-      } catch (e) {
-        print(e);
+        Modular.to.navigate('/home/', arguments: {'user':user,'home':home});
+      } else {
+        logginError = true;
       }
     } else {
-      loggin_error = true;
+      logginError = true;
       print("Nao acessou");
     }
 

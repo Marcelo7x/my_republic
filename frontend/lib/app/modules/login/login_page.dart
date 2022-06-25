@@ -13,17 +13,19 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends ModularState<LoginPage, LoginStore> {
+class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height;
-    final _width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
+    final LoginStore loginController = Modular.get<LoginStore>();
 
     return Scaffold(
       //backgroundColor: Theme.of(context).backgroundColor,
       body: SizedBox(
-        width: _width,
-        height: _height - 100,
+        width: width,
+        height: height - 100,
         //color: Theme.of(context).backgroundColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -31,10 +33,10 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
             Image.asset("images/logo.png", height: 200, width: 200),
             SizedBox(
               //input de email
-              width: _width * .8,
+              width: width * .8,
               height: 70,
               child: TextField(
-                controller: controller.email_controller,
+                controller: loginController.emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
                   label: Text("Email"),
@@ -49,11 +51,11 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
             ),
             Container(
               //input senha
-              width: _width * .8,
+              width: width * .8,
               height: 70,
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
+              margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
               child: TextField(
-                controller: controller.password_controller,
+                controller: loginController.passwordController,
                 obscureText: true,
                 decoration: const InputDecoration(
                   label: Text("Senha"),
@@ -67,15 +69,15 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
               ),
             ),
             SizedBox(
-              width: _width * .8,
+              width: width * .8,
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
                   FocusScope.of(context).requestFocus(FocusNode());
-                  controller.loggin();
+                  loginController.loggin();
                 },
                 child: Observer(builder: (_) {
-                  return !controller.loading
+                  return !loginController.loading
                       ? const Text(
                           "Entrar",
                         )
@@ -86,7 +88,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: Observer(builder: (_) {
-                return controller.loggin_error
+                return loginController.logginError
                     ? Text(
                         "Ô cabaço!! O email ou senha está errado.",
                         style: TextStyle(

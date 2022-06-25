@@ -145,7 +145,7 @@ Future<Response> _login(Request request) async {
   List<Map<String, Map<String, dynamic>>>? result_bd;
   try {
     result_bd = await database.mappedResultsQuery(
-        "SELECT userId, homeid FROM users WHERE email = @email and password = @password",
+        "SELECT userId, homeid, name FROM users WHERE email = @email and password = @password",
         substitutionValues: {
           "email": result[0]['email'],
           "password": result[0]['password'],
@@ -222,7 +222,7 @@ Future<Response> _addInvoice(Request request) async {
     return Response.ok('Ops!!! Não conseguimos adicionar a conta.\n');
   }
 
-  return Response.ok('Conta adicionado\n');
+  return Response.ok(jsonEncode('Conta adicionada\n'));
 }
 
 Future<Response> _modifyInvoice(Request request) async {
@@ -241,7 +241,7 @@ Future<Response> _modifyInvoice(Request request) async {
   var paid = result[0]['paid'];
 
   if (price.toString().contains('.') || price.toString().contains(',')) {
-    return Response.ok('Ops!!! Não conseguimos adicionar a conta.\n');
+    return Response.ok('Ops!!! Não conseguimos modificar a conta.\n');
   }
 
   try {
@@ -350,7 +350,7 @@ Future<Response> _listCategory(Request request) async {
 
 void main(List<String> args) async {
   //connection BD
-  print("connectando BD dev...");
+  print("connectando BD...");
   var db = DB.instance;
   await db.database;
 

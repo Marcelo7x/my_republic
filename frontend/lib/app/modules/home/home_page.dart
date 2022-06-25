@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:frontend/app/modules/home/balance/balance_page.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
-import 'package:frontend/app/modules/home/widget/add_invoice_popup.dart';
-import 'package:frontend/app/modules/home/widget/balance_page.dart';
-import 'package:frontend/app/modules/home/widget/invoices_page.dart';
-import 'package:frontend/app/modules/home/widget/options_page.dart';
-import 'package:intl/intl.dart';
+import 'package:frontend/app/modules/home/invoices/add_invoice_popup.dart';
+import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
+import 'package:frontend/app/modules/home/invoices/invoices_page.dart';
+import 'package:frontend/app/modules/home/setting/options_page.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends ModularState<HomePage, HomeStore> {
+class _HomePageState extends State<HomePage> {
   @override
   initState() {
     super.initState();
@@ -26,41 +26,33 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
   }
 
   _asyncMethod() async {
-    await store.get_invoices();
-    await store.get_categories();
+    await Modular.get<HomeStore>().reload();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height;
-    final _width = MediaQuery.of(context).size.width;
-
-    var numberFormat = NumberFormat('##0.00');
-
-    var id = Modular.args.data;
-    var logo = AssetImage("images/logo.png");
-
-    //controller.get_invoices();
-    //controller.get_categories();
-
+    final HomeStore homeController = Modular.get<HomeStore>();
+    final InvoiceStore invoicesController = Modular.get<InvoiceStore>();
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     // Lista de contas
-    List<Widget> _listWidget = <Widget>[
-      InvoicesPage(context: context, controller: controller),
-      BalancePage(context: context, controller: controller),
-      OptionsPage(context: context, controller: controller),
+    List<Widget> listWidget = <Widget>[
+      const InvoicesPage(),
+      BalancePage(context: context, invoicesController: invoicesController),
+      OptionsPage(context: context, homeController: homeController),
     ];
 
     return Observer(
       builder: (_) {
         return Scaffold(
           body: Observer(builder: (_) {
-            return Container(
-              width: _width,
-              height: _height,
+            return SizedBox(
+              width: width,
+              height: height,
               child: PageView(
-                controller: controller.page_controller,
-                children: _listWidget,
-                onPageChanged: (index) => controller.setIndex(index),
+                controller: homeController.page_controller,
+                children: listWidget,
+                onPageChanged: (index) => homeController.setIndex(index),
               ),
             );
           }),
@@ -69,10 +61,10 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                 topLeft: Radius.circular(18), topRight: Radius.circular(18)),
             child: Observer(builder: (_) {
               return NavigationBar(
-                height: _height * .09,
+                height: height * .09,
                 onDestinationSelected: (index) =>
-                    controller.setPageAndIndex(index),
-                selectedIndex: controller.selectedIndex,
+                    homeController.setPageAndIndex(index),
+                selectedIndex: homeController.selectedIndex,
                 labelBehavior:
                     NavigationDestinationLabelBehavior.onlyShowSelected,
                 destinations: const [
@@ -94,13 +86,12 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.miniCenterFloat,
-          floatingActionButton: controller.selectedIndex == 0
+          floatingActionButton: homeController.selectedIndex == 0
               ? FloatingActionButton(
                   onPressed: () => showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return AddInvoicePopup(
-                          context: context, controller: controller);
+                      return const AddInvoicePopup();
                     },
                   ),
                   child: const Icon(Icons.add),
