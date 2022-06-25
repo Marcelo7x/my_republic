@@ -55,7 +55,6 @@ abstract class BalanceStoreBase with Store {
 
   @action
   calcTotal() async {
-    print('calc_total');
     totalInvoice = 0;
     totalInvoicePerson = 0;
     anyPayed = 0;

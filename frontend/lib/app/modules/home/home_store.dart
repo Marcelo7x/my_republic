@@ -30,9 +30,13 @@ abstract class HomeStoreBase with Store {
   PageController page_controller = PageController();
 
   @observable
-  PickerDateRange dateRange = PickerDateRange(
-      DateTime.utc(DateTime.now().year, DateTime.now().month - 1, 20),
-      DateTime.utc(DateTime.now().year, DateTime.now().month, 20));
+  PickerDateRange dateRange = DateTime.now().day < 20
+      ? PickerDateRange(
+          DateTime.utc(DateTime.now().year, DateTime.now().month - 1, 20),
+          DateTime.utc(DateTime.now().year, DateTime.now().month, 20))
+      : PickerDateRange(
+          DateTime.utc(DateTime.now().year, DateTime.now().month, 20),
+          DateTime.utc(DateTime.now().year, DateTime.now().month + 1, 20));
 
   @observable
   bool loading = false;
