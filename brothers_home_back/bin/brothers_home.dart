@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
 
-import 'package:postgres/postgres.dart';
 import 'package:brothers_home/DB.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
@@ -27,8 +26,8 @@ final _router = Router()
 
 Response _rootHandler(Request req) {
   Map<String, dynamic> data = {
-    "current_version": "0.0.4",
-    "force_update": "0.0.4",
+    "current_version": "0.0.5",
+    "force_update": "0.0.5",
   };
 
   return Response.ok(jsonEncode(data));
