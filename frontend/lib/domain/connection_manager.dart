@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:frontend/domain/category.dart';
 
 class ConnectionManager {
-  static const _url = 'http://100.65.24.153:3000/';
+  static const _url = 'http://192.168.1.9:3000/';
   static final Dio _conn = Dio();
 
   static Future<Map<String, dynamic>> login(

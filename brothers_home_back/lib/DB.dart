@@ -11,7 +11,7 @@ class DB {
   Future<PostgreSQLConnection> get database async {
     if (_database == null) {
       print("iniciando db..");
-      _database = PostgreSQLConnection("localhost", 5432, "brothers_home",
+      _database = PostgreSQLConnection("localhost", 5432, "postgres",
           username: "postgres", password: "kelum");
 
       await _database!.open();
