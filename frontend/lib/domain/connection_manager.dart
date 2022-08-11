@@ -15,9 +15,9 @@ class ConnectionManager {
           ));
 
       final data = jsonDecode(response.data);
-      if (data.length > 0 && data[0]['users']['userid'] != null) {
-        return data[0];
-      } else {}
+      if (data.length > 0 && data['userid'] != null) {
+        return data;
+      }
     } catch (e) {
       print(e);
     }
@@ -81,8 +81,8 @@ class ConnectionManager {
 
     for (var e in data) {
       categories.add(Category(
-          name: e['category']['name'], id: e['category']['categoryId']));
-      print(e['category']['name']);
+          name: e['name'], id: e['categoryid']));
+      print(e['name']);
     }
 
     return categories;
@@ -95,18 +95,18 @@ class ConnectionManager {
       required DateTime date,
       required int userId,
       required int homeId,
-      required bool? isPayed}) async {
+      required String? isPayed}) async {
     print('add_invoice');
     var result = await _conn.post(
       '${_url}add-invoice',
       data: jsonEncode(
         {
           "description": description,
-          "categoryId": categoryId.toString(),
+          "categoryid": categoryId.toString(),
           "price": price.toString(),
           "date": date.toIso8601String().toString(),
-          "userId": userId.toString(),
-          "homeId": homeId.toString(),
+          "userid": userId.toString(),
+          "homeid": homeId.toString(),
           "paid": isPayed
         }
       ),

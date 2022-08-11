@@ -36,9 +36,9 @@ abstract class BalanceStoreBase with Store {
       var data = await ConnectionManager.number_users(homeId: home.id);
 
       data.forEach((e) {
-        residents[e['users']['userid']] = {
+        residents[e['User']['userid']] = {
           'value': 0,
-          'name': e['users']['name'],
+          'name': e['User']['name'],
           'total': 0,
           'paid': 0,
           'r': Random().nextInt(255),

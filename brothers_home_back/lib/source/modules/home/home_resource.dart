@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:brothers_home/DB.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
+
+import '../../services/database/remote_database_interface.dart';
 
 class HomeResource extends Resource {
   @override
@@ -13,16 +14,15 @@ class HomeResource extends Resource {
         Route.get('/list-categories', _listCategory),
       ];
 
-  FutureOr<Response> _addHome(ModularArguments arguments) async {
+  FutureOr<Response> _addHome(ModularArguments arguments, Injector injector) async {
     var result = arguments.data;
 
-    var db = DB.instance;
-    var database = await db.database;
+    var database = injector.get<RemoteDatabase>();
 
     try {
       await database.query(
-          'INSERT INTO home(name,street,district,city,state,country,number,cep) VALUES (@name, @street, @district, @city, @state, @country, @number, @cep)',
-          substitutionValues: {
+          'INSERT INTO "Home" (name,street,district,city,state,country,number,cep) VALUES (@name, @street, @district, @city, @state, @country, @number, @cep)',
+          variables: {
             'name': result['name'],
             'street': result['street'],
             'district': result['district'],
@@ -41,13 +41,12 @@ class HomeResource extends Resource {
     return Response.ok('Home adicionado\n');
   }
 
-  FutureOr<Response> _listHome() async {
-    var db = DB.instance;
-    var database = await db.database;
+  FutureOr<Response> _listHome(Injector injector) async {
+    var database = injector.get<RemoteDatabase>();
 
     List<Map<String, Map<String, dynamic>>>? result;
     try {
-      result = await database.mappedResultsQuery("SELECT * FROM home");
+      result = await database.query('SELECT * FROM "Home"');
     } catch (e) {
       print(e);
     }
@@ -56,17 +55,16 @@ class HomeResource extends Resource {
   }
 
   FutureOr<Response> _number_of_users_for_home(
-      ModularArguments arguments) async {
+      ModularArguments arguments, Injector injector) async {
     var result = arguments.data;
 
-    var db = DB.instance;
-    var database = await db.database;
+    var database = injector.get<RemoteDatabase>();
 
     List<Map<String, Map<String, dynamic>>>? result_bd;
     try {
-      result_bd = await database.mappedResultsQuery(
-          "SELECT u.userid, u.name FROM users u INNER JOIN home h ON u.homeId = h.homeId WHERE h.homeId = @homeId ",
-          substitutionValues: {
+      result_bd = await database.query(
+          'SELECT u.userid, u.name FROM "User" u INNER JOIN "Home" h ON u.homeId = h.homeId WHERE h.homeId = @homeId',
+          variables: {
             "homeId": result['homeId'],
           });
 
@@ -81,18 +79,19 @@ class HomeResource extends Resource {
     return Response.ok(jsonEncode(result_bd));
   }
 
-  FutureOr<Response> _listCategory() async {
-  var db = DB.instance;
-  var database = await db.database;
+  FutureOr<Response> _listCategory(Injector injector) async {
+  var database = injector.get<RemoteDatabase>();
 
   List<Map<String, Map<String, dynamic>>>? result;
   try {
-    result = await database.mappedResultsQuery("SELECT * FROM category");
+    result = await database.query('SELECT * FROM "Category"');
   } catch (e) {
     print(e);
   }
 
-  return Response.ok(jsonEncode(result!));
+  final List<Map<String, dynamic>?> categories = result!.map((e) => e["Category"]).toList();
+
+  return Response.ok(jsonEncode(categories));
 }
 
 }

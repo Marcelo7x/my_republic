@@ -42,17 +42,17 @@ abstract class InvoiceStoreBase with Store {
     invoices.clear();
 
     for (var e in result) {
-      User u = User(e['invoice']['userid'], e['users']['name']);
+      User u = User(e['Invoice']['userid'], e['User']['name']);
       invoices.add(Invoice(
-          id: e['invoice']['invoiceid'],
+          id: e['Invoice']['invoiceid'],
           user: u,
           home: home,
           category: Category(
-              id: e['invoice']['categoryId'], name: e['category']['name']),
-          price: int.parse(e['invoice']['price']),
-          description: e['invoice']['description'],
-          date: DateTime.parse(e['invoice']['date']),
-          paid: e['invoice']['paid']));
+              id: e['Invoice']['categoryid'], name: e['Category']['name']),
+          price: e['Invoice']['price'],
+          description: e['Invoice']['description'],
+          date: DateTime.parse(e['Invoice']['date']),
+          paid: e['Invoice']['paid'] == 'unpaid'? null : e['Invoice']['paid'] == 'payed'? false : true )); //! to Enum 
     }
 
     loading = false;
@@ -134,7 +134,7 @@ abstract class InvoiceStoreBase with Store {
               date: date,
               userId: user.id,
               homeId: home.id,
-              isPayed: isPayed)
+              isPayed: isPayed == null? "unpaid" : isPayed == false? "payed" : "anypayed")
           .then((value) {
         clearInput();
       });

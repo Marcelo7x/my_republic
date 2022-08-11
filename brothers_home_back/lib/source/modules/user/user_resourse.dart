@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-
-import 'package:brothers_home/DB.dart';
+import 'package:brothers_home/source/services/database/remote_database_interface.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
 
@@ -15,16 +13,16 @@ class UserResource extends Resource {
         Route.post('/login', _login)
       ];
 
-  FutureOr<Response> _addUser(ModularArguments arguments) async {
+  FutureOr<Response> _addUser(
+      ModularArguments arguments, Injector injector) async {
     var result = arguments.data;
 
-    var db = DB.instance;
-    var database = await db.database;
+    var database = injector.get<RemoteDatabase>();
 
     try {
       await database.query(
-          'INSERT INTO users(name,password,email) VALUES (@name, @password, @email)',
-          substitutionValues: {
+          'INSERT INTO "User" (name,password,email) VALUES (@name, @password, @email)',
+          variables: {
             'name': result['name'],
             'password': result['password'],
             'email': result['email']
@@ -38,29 +36,31 @@ class UserResource extends Resource {
     return Response.ok('Usuário adicionado\n');
   }
 
-  FutureOr<Response> _listUsers() async {
-    var db = DB.instance;
-    var database = await db.database;
+  FutureOr<Response> _listUsers(Injector injector) async {
+    var database = injector.get<RemoteDatabase>();
 
     List<Map<String, Map<String, dynamic>>>? result;
     try {
-      result = await database.mappedResultsQuery("SELECT * FROM users");
+      result = await database.query('SELECT * FROM "User"');
     } catch (e) {
       print(e);
     }
 
-    return Response.ok(jsonEncode(result!));
+    final List<Map<String, dynamic>?> users =
+        result!.map((e) => e["User"]).toList();
+
+    return Response.ok(jsonEncode(users));
   }
 
-  FutureOr<Response> _removeUser(ModularArguments arguments) async {
+  FutureOr<Response> _removeUser(
+      ModularArguments arguments, Injector injector) async {
     var result = arguments.data;
 
-    var db = DB.instance;
-    var database = await db.database;
+    var database = injector.get<RemoteDatabase>();
 
     try {
-      await database.query('DELETE FROM users WHERE email = @email',
-          substitutionValues: {'email': result['email']});
+      await database.query('DELETE FROM "User" WHERE email = @email',
+          variables: {'email': result['email']});
     } catch (e) {
       print("funçao _removeUser");
       print(e);
@@ -70,17 +70,17 @@ class UserResource extends Resource {
     return Response.ok('Usuário removido\n');
   }
 
-  FutureOr<Response> _login(ModularArguments arguments) async {
+  FutureOr<Response> _login(
+      ModularArguments arguments, Injector injector) async {
     var result = await arguments.data;
 
-    var db = DB.instance;
-    var database = await db.database;
+    var database = injector.get<RemoteDatabase>();
 
     List<Map<String, Map<String, dynamic>>>? result_bd;
     try {
-      result_bd = await database.mappedResultsQuery(
-          "SELECT userId, homeid, name FROM users WHERE email = @email and password = @password",
-          substitutionValues: {
+      result_bd = await database.query(
+          'SELECT userId, homeid, name FROM "User" WHERE email = @email and password = @password',
+          variables: {
             "email": result['email'],
             "password": result['password'],
           });
@@ -91,6 +91,9 @@ class UserResource extends Resource {
       return Response.ok('Ops!!! Não conseguimos fazer login.\n');
     }
 
-    return Response.ok(jsonEncode(result_bd));
+    final Map<String, dynamic> user = result_bd[0]["User"]!;
+    print(user);
+
+    return Response.ok(jsonEncode(user));
   }
 }

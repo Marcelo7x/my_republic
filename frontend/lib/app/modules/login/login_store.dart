@@ -32,10 +32,10 @@ abstract class _LoginStoreBase with Store {
           emailController.text, passwordController.text);
 
       if (data.isNotEmpty) {
-        final home = Home(data['users']['homeid']);
+        final home = Home(data['homeid']);
 
         final user =
-            User(data['users']['userid'], 'a', home: home);
+            User(data['userid'], 'a', home: home);
 
         final StorageLocal conn = await StorageLocal.getInstance();
         await conn.salveCredentials(user_id: user.id, user_name: user.name, home_id: user.home_id);
