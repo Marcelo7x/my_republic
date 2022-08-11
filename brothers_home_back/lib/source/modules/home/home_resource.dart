@@ -67,7 +67,7 @@ class HomeResource extends Resource {
       result_bd = await database.mappedResultsQuery(
           "SELECT u.userid, u.name FROM users u INNER JOIN home h ON u.homeId = h.homeId WHERE h.homeId = @homeId ",
           substitutionValues: {
-            "homeId": ['homeId'],
+            "homeId": result['homeId'],
           });
 
       print(result_bd);

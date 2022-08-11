@@ -13,8 +13,7 @@ part 'splash_store.g.dart';
 class SplashStore = _SplashStoreBase with _$SplashStore;
 
 abstract class _SplashStoreBase with Store {
-  final String version = '0.0.6';
-  final String url = 'http://192.168.1.9:3000/';
+  final String version = '0.0.7';
 
   @observable
   bool error = false;
