@@ -3,16 +3,16 @@ import 'package:dio/dio.dart';
 import 'package:frontend/domain/category.dart';
 
 class ConnectionManager {
-  static const _url = 'http://192.168.1.9:3000/';
+  static const _url = 'http://192.168.1.9:3001/';
   static final Dio _conn = Dio();
 
   static Future<Map<String, dynamic>> login(
       final String email, final String password) async {
     try {
       var response = await _conn.post('${_url}login',
-          data: jsonEncode([
+          data: jsonEncode(
             {"email": email.replaceAll(RegExp(r' '), ''), "password": password}
-          ]));
+          ));
 
       final data = jsonDecode(response.data);
       if (data.length > 0 && data[0]['users']['userid'] != null) {
@@ -44,11 +44,11 @@ class ConnectionManager {
   static Future number_users({required homeId}) async {
     var result = await _conn.post(
         '${_url}number-users',
-        data: jsonEncode([
+        data: jsonEncode(
           {
             "homeId": homeId.toString(),
           }
-        ]),
+        ),
       );
 
     return jsonDecode(result.data);
@@ -60,13 +60,13 @@ class ConnectionManager {
       required int home_id}) async {
     var result = await _conn.post(
       '${_url}list-invoices-date-interval',
-      data: jsonEncode([
+      data: jsonEncode(
         {
           'first_date': start_date.toIso8601String().toString(),
           'last_date': end_date.toIso8601String().toString(),
           'homeid': home_id,
         }
-      ]),
+      ),
     );
 
     var data = jsonDecode(result.data);
@@ -99,7 +99,7 @@ class ConnectionManager {
     print('add_invoice');
     var result = await _conn.post(
       '${_url}add-invoice',
-      data: jsonEncode([
+      data: jsonEncode(
         {
           "description": description,
           "categoryId": categoryId.toString(),
@@ -109,7 +109,7 @@ class ConnectionManager {
           "homeId": homeId.toString(),
           "paid": isPayed
         }
-      ]),
+      ),
     );
 
     return jsonDecode(result.data);
@@ -124,9 +124,9 @@ class ConnectionManager {
       required int invoiceId,
       required bool? isPayed}) async {
     print('modify_invoice');
-    var result = await _conn.post(
+    var result = await _conn.put(
       '${_url}modify-invoice',
-      data: jsonEncode([
+      data: jsonEncode(
         {
           "description": description,
           "categoryId": categoryId.toString(),
@@ -136,7 +136,7 @@ class ConnectionManager {
           "invoiceId": invoiceId.toString(),
           "paid": isPayed
         }
-      ]),
+      ),
     );
 
     return jsonDecode(result.data);
@@ -146,14 +146,14 @@ class ConnectionManager {
     required int userId,
     required int invoiceId,
   }) async {
-    var result = await _conn.post(
+    var result = await _conn.delete(
       '${_url}remove-invoice',
-      data: jsonEncode([
+      data: jsonEncode(
         {
           "userId": userId.toString(),
           "invoiceId": invoiceId.toString(),
         }
-      ]),
+      ),
     );
 
     return jsonDecode(result.data);
