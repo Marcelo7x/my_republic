@@ -9,8 +9,8 @@ model User {
     email    String    @unique
     password String
     role     UserRole  @default(user)
-    home     Home      @relation(fields: [homeid], references: [homeid])
-    homeid   Int
+    home     Home?     @relation(fields: [homeid], references: [homeid])
+    homeid   Int?
     Invoice  Invoice[]
 }
 
@@ -22,7 +22,7 @@ enum UserRole {
 
 model Home {
     homeid   Int       @id @default(autoincrement())
-    name     String
+    name     String?
     street   String
     district String
     city     String
@@ -36,11 +36,11 @@ model Home {
 
 model Invoice {
     invoiceid   Int      @id @default(autoincrement())
-    description String
+    description String?
     price       Int
     date        DateTime @default(now())
-    image       Bytes
-    fixed       Boolean
+    image       Bytes?
+    fixed       Boolean  @default(false)
     paid        PaidRole @default(unpaid)
     category    Category @relation(fields: [categoryid], references: [categoryid])
     user        User     @relation(fields: [userid], references: [userid])
