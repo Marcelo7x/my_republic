@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
-
 import '../../services/database/remote_database_interface.dart';
 
 class InvoiceResource extends Resource {
@@ -160,10 +159,18 @@ class InvoiceResource extends Resource {
       print(e);
     }
 
-    // final List<Map<String, dynamic>?> invoices =
-    //     result!.map((e) => e["Invoice"]).toList();
+    // final List<Map<String, dynamic>?> invoices = result!.map((e) {
+    //   e["User"]!["name"] = {};
 
-    return Response.ok(jsonEncode(result!, toEncodable: (dynamic item) {
+    //   Map<String, dynamic> m = <String, dynamic>{};
+    //   m.addAll(e["Invoice"]!);
+    //   m.addAll(e["User"]!);
+    //   m.addAll(e["Category"]!);
+
+    //   return m;
+    // }).toList();
+
+    return Response.ok(jsonEncode(result, toEncodable: (dynamic item) {
       if (item is DateTime) {
         return item.toIso8601String();
       }

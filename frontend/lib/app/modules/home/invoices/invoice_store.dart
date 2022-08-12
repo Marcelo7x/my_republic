@@ -52,7 +52,11 @@ abstract class InvoiceStoreBase with Store {
           price: e['Invoice']['price'],
           description: e['Invoice']['description'],
           date: DateTime.parse(e['Invoice']['date']),
-          paid: e['Invoice']['paid'] == 'unpaid'? null : e['Invoice']['paid'] == 'payed'? false : true )); //! to Enum 
+          paid: e['Invoice']['paid'] == 'unpaid'
+              ? null
+              : e['Invoice']['paid'] == 'payed'
+                  ? false
+                  : true)); //! to Enum
     }
 
     loading = false;
@@ -134,7 +138,11 @@ abstract class InvoiceStoreBase with Store {
               date: date,
               userId: user.id,
               homeId: home.id,
-              isPayed: isPayed == null? "unpaid" : isPayed == false? "payed" : "anypayed")
+              isPayed: isPayed == null
+                  ? "unpaid"
+                  : isPayed == false
+                      ? "payed"
+                      : "anypayed")
           .then((value) {
         clearInput();
       });
