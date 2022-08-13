@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/domain/connection_manager.dart';
 import 'package:mobx/mobx.dart';
 
 part 'subscription_store.g.dart';
@@ -52,9 +53,23 @@ abstract class _SubscriptionStoreBase with Store {
       return null;
     }
   }
+  
+  @observable
+  bool subscriptionError = false;
 
   @action
   subscription() {
-    print("subscription");
+    loading = true;
+    try {
+      ConnectionManager.subscription(
+          name: nameController.text,
+          email: emailController.text,
+          password: passwordController.text);
+    } catch (e) {
+      print("erro ao adicionar usuario");
+      subscriptionError = true;
+    }
+
+    loading = false;
   }
 }

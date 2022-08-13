@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:frontend/app/modules/subscription/subscription_module.dart';
 import 'package:frontend/domain/category.dart';
 
 class ConnectionManager {
@@ -10,9 +11,10 @@ class ConnectionManager {
       final String email, final String password) async {
     try {
       var response = await _conn.post('${_url}login',
-          data: jsonEncode(
-            {"email": email.replaceAll(RegExp(r' '), ''), "password": password}
-          ));
+          data: jsonEncode({
+            "email": email.replaceAll(RegExp(r' '), ''),
+            "password": password
+          }));
 
       final data = jsonDecode(response.data);
       if (data.length > 0 && data['userid'] != null) {
@@ -43,13 +45,11 @@ class ConnectionManager {
 
   static Future number_users({required homeId}) async {
     var result = await _conn.post(
-        '${_url}number-users',
-        data: jsonEncode(
-          {
-            "homeId": homeId.toString(),
-          }
-        ),
-      );
+      '${_url}number-users',
+      data: jsonEncode({
+        "homeId": homeId.toString(),
+      }),
+    );
 
     return jsonDecode(result.data);
   }
@@ -60,13 +60,11 @@ class ConnectionManager {
       required int home_id}) async {
     var result = await _conn.post(
       '${_url}list-invoices-date-interval',
-      data: jsonEncode(
-        {
-          'first_date': start_date.toIso8601String().toString(),
-          'last_date': end_date.toIso8601String().toString(),
-          'homeid': home_id,
-        }
-      ),
+      data: jsonEncode({
+        'first_date': start_date.toIso8601String().toString(),
+        'last_date': end_date.toIso8601String().toString(),
+        'homeid': home_id,
+      }),
     );
 
     var data = jsonDecode(result.data);
@@ -80,8 +78,7 @@ class ConnectionManager {
     List<Category> categories = [];
 
     for (var e in data) {
-      categories.add(Category(
-          name: e['name'], id: e['categoryid']));
+      categories.add(Category(name: e['name'], id: e['categoryid']));
       print(e['name']);
     }
 
@@ -99,17 +96,15 @@ class ConnectionManager {
     print('add_invoice');
     var result = await _conn.post(
       '${_url}add-invoice',
-      data: jsonEncode(
-        {
-          "description": description,
-          "categoryid": categoryId.toString(),
-          "price": price.toString(),
-          "date": date.toIso8601String().toString(),
-          "userid": userId.toString(),
-          "homeid": homeId.toString(),
-          "paid": isPayed
-        }
-      ),
+      data: jsonEncode({
+        "description": description,
+        "categoryid": categoryId.toString(),
+        "price": price.toString(),
+        "date": date.toIso8601String().toString(),
+        "userid": userId.toString(),
+        "homeid": homeId.toString(),
+        "paid": isPayed
+      }),
     );
 
     return jsonDecode(result.data);
@@ -126,17 +121,15 @@ class ConnectionManager {
     print('modify_invoice');
     var result = await _conn.put(
       '${_url}modify-invoice',
-      data: jsonEncode(
-        {
-          "description": description,
-          "categoryId": categoryId.toString(),
-          "price": price.toString(),
-          "date": date.toIso8601String().toString(),
-          "userId": userId.toString(),
-          "invoiceId": invoiceId.toString(),
-          "paid": isPayed
-        }
-      ),
+      data: jsonEncode({
+        "description": description,
+        "categoryId": categoryId.toString(),
+        "price": price.toString(),
+        "date": date.toIso8601String().toString(),
+        "userId": userId.toString(),
+        "invoiceId": invoiceId.toString(),
+        "paid": isPayed
+      }),
     );
 
     return jsonDecode(result.data);
@@ -148,14 +141,26 @@ class ConnectionManager {
   }) async {
     var result = await _conn.delete(
       '${_url}remove-invoice',
-      data: jsonEncode(
-        {
-          "userId": userId.toString(),
-          "invoiceId": invoiceId.toString(),
-        }
-      ),
+      data: jsonEncode({
+        "userId": userId.toString(),
+        "invoiceId": invoiceId.toString(),
+      }),
     );
 
     return jsonDecode(result.data);
+  }
+
+  static Future subscription({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    print('subscription');
+    var result = await _conn.post(
+      '${_url}add-user',
+      data: jsonEncode({"name": name, "email": email, "password": password}),
+    );
+
+    return result;
   }
 }

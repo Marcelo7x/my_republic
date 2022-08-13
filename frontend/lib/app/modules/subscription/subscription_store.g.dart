@@ -73,6 +73,22 @@ mixin _$SubscriptionStore on _SubscriptionStoreBase, Store {
     });
   }
 
+  late final _$subscriptionErrorAtom =
+      Atom(name: '_SubscriptionStoreBase.subscriptionError', context: context);
+
+  @override
+  bool get subscriptionError {
+    _$subscriptionErrorAtom.reportRead();
+    return super.subscriptionError;
+  }
+
+  @override
+  set subscriptionError(bool value) {
+    _$subscriptionErrorAtom.reportWrite(value, super.subscriptionError, () {
+      super.subscriptionError = value;
+    });
+  }
+
   late final _$_SubscriptionStoreBaseActionController =
       ActionController(name: '_SubscriptionStoreBase', context: context);
 
@@ -93,7 +109,8 @@ mixin _$SubscriptionStore on _SubscriptionStoreBase, Store {
 nameController: ${nameController},
 emailController: ${emailController},
 passwordController: ${passwordController},
-loading: ${loading}
+loading: ${loading},
+subscriptionError: ${subscriptionError}
     ''';
   }
 }

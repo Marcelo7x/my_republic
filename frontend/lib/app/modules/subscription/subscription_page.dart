@@ -104,10 +104,27 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     ),
                   );
                   await subscriptionController.subscription();
+                  if (subscriptionController.subscriptionError) {
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: const Text('Erro de conexão...'),
+                      duration: const Duration(seconds: 5),
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                    ));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: const Text("Cadastrado com sucesso!"),
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      duration: const Duration(seconds: 2),
+                    ));
+                    await Future.delayed(Duration(seconds: 1));
+                    Modular.to.pop();
+                  }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Informações incorretas'),
+                      content: const Text('Informações incorretas'),
                       backgroundColor: Theme.of(context).colorScheme.error,
                     ),
                   );
