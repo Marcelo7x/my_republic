@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:bcrypt/bcrypt.dart';
 import 'package:brothers_home/source/services/database/remote_database_interface.dart';
+import 'package:brothers_home/source/services/encrypt/bcrypt_service_imp.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
 
@@ -15,7 +17,11 @@ class UserResource extends Resource {
 
   FutureOr<Response> _addUser(
       ModularArguments arguments, Injector injector) async {
-    var result = arguments.data;
+    final bcrypt = injector.get<BCryptServiceImp>();
+
+    final result = (arguments.data as Map).cast<String, dynamic>();
+
+    result['password'] = bcrypt.generatHash(result['password']); 
 
     var database = injector.get<RemoteDatabase>();
 

@@ -6,6 +6,8 @@ import 'package:brothers_home/source/modules/user/user_resourse.dart';
 import 'package:brothers_home/source/services/database/postgres_database.dart';
 import 'package:brothers_home/source/services/database/remote_database_interface.dart';
 import 'package:brothers_home/source/services/dot_env.dart';
+import 'package:brothers_home/source/services/encrypt/bcrypt_service_imp.dart';
+import 'package:brothers_home/source/services/encrypt/encrypt_service.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
 
@@ -14,6 +16,7 @@ class AppModule extends Module {
   List<Bind> get binds => [
     Bind.instance<DotEnvService>(DotEnvService.instance),
     Bind.singleton<RemoteDatabase>((i) => PostgresDatabase(i())),
+    Bind.singleton<EncryptService>((i) => BCryptServiceImp()),
   ];
 
   @override
