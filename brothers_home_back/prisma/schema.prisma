@@ -22,14 +22,14 @@ enum UserRole {
 
 model Home {
     homeid   Int       @id @default(autoincrement())
-    name     String?
-    street   String
-    district String
-    city     String
-    state    String
-    country  String
-    number   Int
-    cep      Int
+    name     String    @unique
+    street   String?
+    district String?
+    city     String?
+    state    String?
+    country  String?
+    number   Int?
+    cep      Int?
     user     User[]
     Invoice  Invoice[]
 }

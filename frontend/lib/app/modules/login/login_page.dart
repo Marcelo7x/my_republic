@@ -30,7 +30,11 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("images/logo.png", height: 200, width: 200),
+              // Image.asset("images/logo.png", height: 200, width: 200),
+              const Icon(
+                Icons.home_rounded,
+                size: 200,
+              ),
               SizedBox(
                 //input de email
                 width: width * .8,
@@ -53,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                 //input senha
                 width: width * .8,
                 height: 70,
-                margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                 child: TextField(
                   controller: loginController.passwordController,
                   obscureText: true,
@@ -67,6 +71,20 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+              ),
+              Container(
+                //margin: const EdgeInsets.only(bottom: 20),
+                padding: const EdgeInsets.only(top: 5, bottom: 20),
+                child: Observer(builder: (_) {
+                  return loginController.logginError
+                      ? Text(
+                          "O email ou senha está errado.",
+                          style: TextStyle(
+                            color: Theme.of(context).errorColor,
+                          ),
+                        )
+                      : const Text("");
+                }),
               ),
               SizedBox(
                 width: width * .8,
@@ -85,22 +103,9 @@ class _LoginPageState extends State<LoginPage> {
                   }),
                 ),
               ),
+
               Container(
-                //margin: const EdgeInsets.only(bottom: 20),
-                padding: const EdgeInsets.only(top: 20),
-                child: Observer(builder: (_) {
-                  return loginController.logginError
-                      ? Text(
-                          "Ô cabaço!! O email ou senha está errado.",
-                          style: TextStyle(
-                            color: Theme.of(context).errorColor,
-                          ),
-                        )
-                      : const Text("");
-                }),
-              ),
-              Container(
-                  //margin: const EdgeInsets.only(top: 0),
+                  margin: const EdgeInsets.only(top: 10),
                   child: ElevatedButton(
                       onPressed: () => Modular.to.pushNamed('/subscription'),
                       child: Text("Cadastre-se")))

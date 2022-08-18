@@ -163,4 +163,16 @@ class ConnectionManager {
 
     return result;
   }
+
+  static Future createHome({
+    required String name
+  }) async {
+    print('subscription');
+    var result = await _conn.post(
+      '${_url}add-home',
+      data: jsonEncode({"name": name}),
+    );
+
+    return result;
+  }
 }

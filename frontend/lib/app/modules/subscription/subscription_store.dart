@@ -72,4 +72,19 @@ abstract class _SubscriptionStoreBase with Store {
 
     loading = false;
   }
+
+  @action
+  createHome() {
+    loading = true;
+    try {
+      ConnectionManager.createHome(
+          name: nameController.text
+        );
+    } catch (e) {
+      print("erro ao criar ou entrar na republica");
+      subscriptionError = true;
+    }
+
+    loading = false;
+  }
 }
