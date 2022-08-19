@@ -11,6 +11,8 @@ tags:
   description: "Access to auth"
 - name: "user"
   description: "Access to User"
+- name: "invoice"
+  description: "Access to Invoice"
 
 paths:
   /auth/login:
@@ -317,7 +319,7 @@ paths:
               schema: 
                 $ref: '#/components/schemas/BackendException'
 
-  /invoice/{invoiceid}:
+  /invoice/invoiceid/{invoiceid}:
     get:
       tags:
         - 'invoice'
@@ -372,7 +374,7 @@ paths:
               schema: 
                 $ref: '#/components/schemas/BackendException'
      
-  /invoice/{start_date}-{end_date}:
+  /invoice/homeid/{homeid}/start/{start_date}/end/{end_date}:
     get:
       tags:
         - 'invoice'
@@ -380,6 +382,11 @@ paths:
       security: 
         - bearerAuth: []
       parameters: 
+        - in: path 
+          name: homeid
+          required: true
+          schema:
+            type: integer
         - in: path
           name: start_date
           required: true

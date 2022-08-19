@@ -9,9 +9,10 @@ class InvoiceResource extends Resource {
   List<Route> get routes => [
         Route.post('/invoice', _addInvoice),
         Route.put('/invoice', _updateInvoice),
-        Route.get('/invoice/:invoiceid', _listInvoices),
-        Route.post('/invoice/date_interval', _listInvoicesDateInterval),
-        Route.delete('/invoice/:invoiceid', _deleteInvoice),
+        Route.get('/invoice/invoiceid/:invoiceid', _listInvoices),
+        Route.get('/invoice/homeid/:homeid/start/:start_date/end/:end_date',
+            _listInvoicesDateInterval),
+        Route.delete('/invoice/invoiceid/:invoiceid', _deleteInvoice),
       ];
 
   FutureOr<Response> _addInvoice(
@@ -25,7 +26,8 @@ class InvoiceResource extends Resource {
           (key) => '$key',
         )
         .toList();
-    List<Map<String,Map<String,dynamic>>> result = <Map<String,Map<String,dynamic>>>[{}];
+    List<Map<String, Map<String, dynamic>>> result =
+        <Map<String, Map<String, dynamic>>>[{}];
     try {
       result = await database.query(
           'INSERT INTO "Invoice" (invoiceId,${columns.join(',')}) VALUES (DEFAULT, @${columns.join(',@')}) RETURNING invoiceid, description',
@@ -43,7 +45,7 @@ class InvoiceResource extends Resource {
     return Response.ok(jsonEncode(invoice));
   }
 
-FutureOr<Response> _updateInvoice(
+  FutureOr<Response> _updateInvoice(
       Injector injector, ModularArguments arguments) async {
     var database = injector.get<RemoteDatabase>();
     final userParams = (arguments.data as Map).cast<String, dynamic>();
@@ -55,7 +57,8 @@ FutureOr<Response> _updateInvoice(
         )
         .toList();
 
-    List<Map<String, Map<String, dynamic>>> result = <Map<String,Map<String,dynamic>>>[{}];
+    List<Map<String, Map<String, dynamic>>> result =
+        <Map<String, Map<String, dynamic>>>[{}];
     try {
       result = await database.query(
         'UPDATE "Invoice" SET ${columns.join(',')}  WHERE invoiceid = @invoiceid RETURNING invoiceid, description, paid, price',
@@ -119,7 +122,7 @@ FutureOr<Response> _updateInvoice(
 
   FutureOr<Response> _listInvoicesDateInterval(
       ModularArguments arguments, Injector injector) async {
-    var _result = arguments.data;
+    var userParams = (arguments.params).cast<String, dynamic>();
 
     var database = injector.get<RemoteDatabase>();
 
@@ -128,26 +131,23 @@ FutureOr<Response> _updateInvoice(
       result = await database.query(
           'SELECT i.invoiceid, i.userid, i.homeid, i.description, i.categoryid, i.price, i.date, i.image, i.fixed, i.paid, u.name, c.name FROM "Category" c INNER JOIN "Invoice" i ON c.categoryid = i.categoryid INNER JOIN "User" u ON i.homeid = u.homeid and @homeid = u.homeid and i.userid = u.userid  WHERE date >= @first_date and date <= @last_date ORDER BY i.date',
           variables: {
-            'homeid': _result['homeid'],
-            'first_date': _result['first_date'],
-            'last_date': _result['last_date']
+            'homeid': userParams['homeid'],
+            'first_date': userParams['start_date'],
+            'last_date': userParams['end_date']
           });
     } catch (e) {
       print(e);
     }
 
-    // final List<Map<String, dynamic>?> invoices = result!.map((e) {
-    //   e["User"]!["name"] = {};
+    final List<Map<String, dynamic>?> invoices = result!.map((e) {
+      Map<String, dynamic> l = {};
+      l.addEntries(e['Invoice']!.entries);
+      l.addEntries(e['Category']!.entries);
+      l.addEntries(e['User']!.entries);
+      return l;
+    }).toList();
 
-    //   Map<String, dynamic> m = <String, dynamic>{};
-    //   m.addAll(e["Invoice"]!);
-    //   m.addAll(e["User"]!);
-    //   m.addAll(e["Category"]!);
-
-    //   return m;
-    // }).toList();
-
-    return Response.ok(jsonEncode(result, toEncodable: (dynamic item) {
+    return Response.ok(jsonEncode(invoices, toEncodable: (dynamic item) {
       if (item is DateTime) {
         return item.toIso8601String();
       }
