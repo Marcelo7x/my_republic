@@ -300,7 +300,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/invoice'
+              $ref: '#/components/schemas/Invoice'
       responses:
         '200':
           description: ''
@@ -466,7 +466,7 @@ components:
       properties:
         invoiceid:
           type: integer
-        descripion:
+        description:
           type: string
         category:
           type: string
@@ -493,10 +493,10 @@ components:
     InvoiceCreate:
       type: object
       properties:
-        descripion:
+        description:
           type: string
         categoryid:
-          type: string
+          type: integer
         date:
           type: date
         price:

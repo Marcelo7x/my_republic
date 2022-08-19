@@ -8,123 +8,100 @@ class InvoiceResource extends Resource {
   @override
   List<Route> get routes => [
         Route.post('/invoice', _addInvoice),
-        Route.put('/invoice', _modifyInvoice),
+        Route.put('/invoice', _updateInvoice),
         Route.get('/invoice/:invoiceid', _listInvoices),
         Route.post('/invoice/date_interval', _listInvoicesDateInterval),
-        Route.delete('/invoice/:userid', _removeInvoice),
+        Route.delete('/invoice/:invoiceid', _deleteInvoice),
       ];
 
   FutureOr<Response> _addInvoice(
       ModularArguments arguments, Injector injector) async {
-    var result = arguments.data;
+    final userParams = (arguments.data as Map).cast<String, dynamic>();
 
     var database = injector.get<RemoteDatabase>();
 
-    var description = result['description'] ?? '-';
-    var categoryId = result['categoryid'] ?? '-';
-    var price = result['price'] ?? '-';
-    var date = result['date'] ?? '-';
-    var image = result['image'] ?? '-';
-    var userId = result['userid'] ?? '-';
-    var homeId = result['homeid'] ?? '-';
-    var paid = result['paid'];
-
-    if (price.toString().contains('.') || price.toString().contains(',')) {
-      return Response.ok('Ops!!! Não conseguimos adicionar a conta.\n');
-    }
-
+    final columns = userParams.keys
+        .map(
+          (key) => '$key',
+        )
+        .toList();
+    List<Map<String,Map<String,dynamic>>> result = <Map<String,Map<String,dynamic>>>[{}];
     try {
-      await database.query(
-          'INSERT INTO "Invoice" (invoiceId,description,categoryid,price,date,paid,image,userId,homeId) VALUES (DEFAULT, @description, @categoryid, @price, @date, @paid, @image, @userid, @homeid)',
-          variables: {
-            'description': description,
-            'categoryid': categoryId,
-            'price': price,
-            'date': date,
-            'image': image,
-            'userid': userId,
-            'homeid': homeId,
-            'paid': paid
-          });
+      result = await database.query(
+          'INSERT INTO "Invoice" (invoiceId,${columns.join(',')}) VALUES (DEFAULT, @${columns.join(',@')}) RETURNING invoiceid, description',
+          variables: userParams);
     } catch (e) {
       print("Erro: funçao _addInvoice");
       print(e);
-      return Response.ok('Ops!!! Não conseguimos adicionar a conta.\n');
+      return Response.notFound(
+          jsonEncode({'Ops!!! Não conseguimos adicionar a conta.'}));
     }
 
-    return Response.ok(jsonEncode('Conta adicionada\n'));
+    final List<Map<String, dynamic>?> invoice =
+        result.map((e) => e["Invoice"]).toList();
+
+    return Response.ok(jsonEncode(invoice));
   }
 
-  FutureOr<Response> _modifyInvoice(
-      ModularArguments arguments, Injector injector) async {
-    var result = arguments.data;
-
+FutureOr<Response> _updateInvoice(
+      Injector injector, ModularArguments arguments) async {
     var database = injector.get<RemoteDatabase>();
+    final userParams = (arguments.data as Map).cast<String, dynamic>();
 
-    var description = result['description'] ?? '-';
-    var categoryId = result['categoryId'] ?? '-';
-    var price = result['price'] ?? '-';
-    var date = result['date'] ?? '-';
-    var image = result['image'] ?? '-';
-    var userId = result['userId'] ?? '-';
-    var invoiceId = result['invoiceId'] ?? '-';
-    var paid = result['paid'];
+    final columns = userParams.keys
+        .where((key) => key != 'invoiceid')
+        .map(
+          (key) => '$key = @$key',
+        )
+        .toList();
 
-    if (price.toString().contains('.') || price.toString().contains(',')) {
-      return Response.ok('Ops!!! Não conseguimos modificar a conta.\n');
-    }
-
+    List<Map<String, Map<String, dynamic>>> result = <Map<String,Map<String,dynamic>>>[{}];
     try {
-      await database.query(
-          'UPDATE "Invoice" SET description = @description, \"categoryId\" = @categoryId, price = @price, date = @date, image = @image, paid = @paid WHERE invoiceId = @invoiceId and userId = @userId',
-          variables: {
-            'description': description,
-            'categoryId': categoryId,
-            'price': price,
-            'date': date,
-            'image': image,
-            'userId': userId,
-            'invoiceId': invoiceId,
-            'paid': paid
-          });
+      result = await database.query(
+        'UPDATE "Invoice" SET ${columns.join(',')}  WHERE invoiceid = @invoiceid RETURNING invoiceid, description, paid, price',
+        variables: userParams,
+      );
     } catch (e) {
-      print("Erro: funçao _modifyInvoice");
       print(e);
-      return Response.ok('Ops!!! Não conseguimos modificar a conta.\n');
     }
 
-    return Response.ok('Conta modificada\n');
+    final List<Map<String, dynamic>?> invoice =
+        result.map((e) => e["Invoice"]).toList();
+
+    return Response.ok(jsonEncode(invoice));
   }
 
-  FutureOr<Response> _removeInvoice(
+  FutureOr<Response> _deleteInvoice(
       ModularArguments arguments, Injector injector) async {
-    var result = arguments.data;
+    final userParams = (arguments.params as Map).cast<String, dynamic>();
 
     var database = injector.get<RemoteDatabase>();
 
     try {
-      await database.query(
-          'DELETE FROM "Invoice" WHERE invoiceId = @invoiceId and userId = @userId',
-          variables: {
-            'userId': result['userId'],
-            'invoiceId': result['invoiceId'],
-          });
+      await database.query('DELETE FROM "Invoice" WHERE invoiceid = @invoiceid',
+          variables: {'invoiceid': userParams['invoiceid']});
     } catch (e) {
       print("funçao _removeInvoice");
       print(e);
-      return Response.ok('Ops!!! Não conseguimos remover a conta.\n');
+      return Response.notFound(
+          jsonEncode({'erro': 'Ops!!! Não conseguimos remover a conta.'}));
     }
 
-    return Response.ok('Invoice removido\n');
+    return Response.ok(
+        jsonEncode(<String, String>{'message': 'Conta removida'}));
   }
 
   FutureOr<Response> _listInvoices(
       ModularArguments arguments, Injector injector) async {
     var database = injector.get<RemoteDatabase>();
+    final userParams = (arguments.params as Map).cast<String, dynamic>();
 
     List<Map<String, Map<String, dynamic>>>? result;
     try {
-      result = await database.query('SELECT * FROM "Invoice"');
+      result = await database.query(
+        'SELECT * FROM "Invoice" WHERE invoiceid = @invoiceid',
+        variables: {'invoiceid': userParams['invoiceid']},
+      );
     } catch (e) {
       print(e);
     }
