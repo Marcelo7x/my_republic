@@ -8,10 +8,10 @@ import '../../services/database/remote_database_interface.dart';
 class HomeResource extends Resource {
   @override
   List<Route> get routes => [
-        Route.get('/list-home', _listHome),
-        Route.post('/add-home', _addHome),
-        Route.post('/number-users', _number_of_users_for_home),
-        Route.get('/list-categories', _listCategory),
+        Route.get('/home', _listHome),
+        Route.post('/home', _addHome),
+        Route.get('/home/:id/number', _number_of_users_for_home),
+        Route.get('/category', _listCategory),
       ];
 
   FutureOr<Response> _addHome(ModularArguments arguments, Injector injector) async {

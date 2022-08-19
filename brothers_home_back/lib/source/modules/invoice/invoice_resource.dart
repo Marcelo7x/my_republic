@@ -7,11 +7,11 @@ import '../../services/database/remote_database_interface.dart';
 class InvoiceResource extends Resource {
   @override
   List<Route> get routes => [
-        Route.post('/add-invoice', _addInvoice),
-        Route.put('/modify-invoice', _modifyInvoice),
-        Route.get('/list-invoices', _listInvoices),
-        Route.post('/list-invoices-date-interval', _listInvoicesDateInterval),
-        Route.delete('/remove-invoice', _removeInvoice),
+        Route.post('/invoice', _addInvoice),
+        Route.put('/invoice', _modifyInvoice),
+        Route.get('/invoice/:id', _listInvoices),
+        Route.post('/invoice/date_interval', _listInvoicesDateInterval),
+        Route.delete('/invoice/:id', _removeInvoice),
       ];
 
   FutureOr<Response> _addInvoice(
