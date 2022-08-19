@@ -412,6 +412,108 @@ paths:
              application/json:
               schema: 
                 $ref: '#/components/schemas/BackendException'
+        
+  /home:
+    get:
+      tags:
+        - 'home'
+      summary: get all home
+      security: 
+        - bearerAuth: []
+      responses:
+        '200':
+          description: ''
+          content:
+             application/json:
+              schema: 
+                type: array 
+                items: 
+                  $ref: '#/components/schemas/Home'
+        '404':
+          description: ''
+          content:
+             application/json:
+              schema: 
+                $ref: '#/components/schemas/BackendException'
+    post:
+      tags:
+        - 'home'
+      summary: create new home
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HomeCreate'
+      responses:
+        '200':
+          description: ''
+          content:
+             application/json:
+              schema: 
+                type: array 
+                items: 
+                  $ref: '#/components/schemas/Home'
+        '404':
+          description: ''
+          content:
+             application/json:
+              schema: 
+                $ref: '#/components/schemas/BackendException'
+
+
+  /home/{id}/users:
+    get:
+      tags:
+        - 'home'
+      summary: get all home
+      security: 
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: ''
+          content:
+             application/json:
+              schema: 
+                type: array 
+                items: 
+                  $ref: '#/components/schemas/Home'
+        '404':
+          description: ''
+          content:
+             application/json:
+              schema: 
+                $ref: '#/components/schemas/BackendException'
+
+  /category:
+    get:
+      tags:
+        - 'category'
+      summary: get all category
+      security: 
+        - bearerAuth: []
+      responses:
+        '200':
+          description: ''
+          content:
+             application/json:
+              schema: 
+                type: array 
+                items: 
+                  $ref: '#/components/schemas/Category'
+        '404':
+          description: ''
+          content:
+             application/json:
+              schema: 
+                $ref: '#/components/schemas/BackendException'
+    
 
 components:
   securitySchemes:
@@ -436,6 +538,7 @@ components:
           type: string
         refresh_token:
           type: string
+
     User:
       type: object
       properties:
@@ -452,6 +555,7 @@ components:
             - "dev"
             - "admin"
             - "manager"
+
     UserCreate:
       type: object
       properties:
@@ -468,6 +572,7 @@ components:
             - "dev"
             - "admin"
             - "manager"
+
     Invoice:
       type: object
       properties:
@@ -478,13 +583,13 @@ components:
         category:
           type: string
         date:
-          type: date
+          type: string
         price:
           type: integer
         fixed:
           type: boolean
         image:
-          type: byte
+          type: string
         userid:
           type: integer
         homeid:
@@ -505,13 +610,13 @@ components:
         categoryid:
           type: integer
         date:
-          type: date
+          type: string
         price:
           type: integer
         fixed:
           type: boolean
         image:
-          type: byte
+          type: string
         userid:
           type: integer
         homeid:
@@ -523,6 +628,64 @@ components:
             - "unpaid"
             - "payed"
             - "anypayed"
+
+    Home:
+      type: object
+      properties:
+        homeid:
+          type: integer
+        name:
+          type: string
+        street:
+          type: string
+        district:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        number:
+          type: integer
+        cep:
+          type: integer
+    
+    HomeCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        street:
+          type: string
+        district:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        number:
+          type: integer
+        cep:
+          type: integer
+
+    UserHome:
+      type: object
+      properties:
+        userid:
+          type: integer
+        name:
+          type: string
+
+    Category:
+      type: object
+      properties:
+        categoryid:
+          type: integer
+        name:
+          type: string
 
     BackendException:
       type: object 

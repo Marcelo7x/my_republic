@@ -10,88 +10,95 @@ class HomeResource extends Resource {
   List<Route> get routes => [
         Route.get('/home', _listHome),
         Route.post('/home', _addHome),
-        Route.get('/home/:id/number', _number_of_users_for_home),
+        Route.get('/home/:id/users', _users_for_home),
         Route.get('/category', _listCategory),
       ];
 
-  FutureOr<Response> _addHome(ModularArguments arguments, Injector injector) async {
-    var result = arguments.data;
+  FutureOr<Response> _addHome(
+      ModularArguments arguments, Injector injector) async {
+    final userParams = (arguments.data).cast<String, dynamic>();
 
     var database = injector.get<RemoteDatabase>();
 
+    final columns = userParams.keys
+        .map(
+          (key) => '$key',
+        ) 
+        .toList();
+    List<Map<String, Map<String, dynamic>>> result =
+        <Map<String, Map<String, dynamic>>>[{}];
     try {
-      await database.query(
-          'INSERT INTO "Home" (name,street,district,city,state,country,number,cep) VALUES (@name, @street, @district, @city, @state, @country, @number, @cep)',
-          variables: {
-            'name': result['name'],
-            'street': result['street'],
-            'district': result['district'],
-            'city': result['city'],
-            'state': result['state'],
-            'country': result['country'],
-            'number': result['number'],
-            'cep': result['cep']
-          });
+      result = await database.query(
+          'INSERT INTO "Home" (homeid,${columns.join(',')}) VALUES (DEFAULT, @${columns.join(',@')}) RETURNING homeid, name',
+          variables: userParams);
     } catch (e) {
-      print("funçao _addHome");
+      print("Erro: funçao _addHOME");
       print(e);
-      return Response.ok('Ops!!! Não conseguimos adicionar home.\n');
+      return Response.notFound(
+          jsonEncode({'Ops!!! Não conseguimos adicionar a home.'}));
     }
 
-    return Response.ok('Home adicionado\n');
+    final List<Map<String, dynamic>?> home =
+        result.map((e) => e["Home"]).toList();
+
+    return Response.ok(jsonEncode(home));
   }
 
   FutureOr<Response> _listHome(Injector injector) async {
     var database = injector.get<RemoteDatabase>();
 
-    List<Map<String, Map<String, dynamic>>>? result;
+    List<Map<String, Map<String, dynamic>>> result = [{}];
     try {
       result = await database.query('SELECT * FROM "Home"');
     } catch (e) {
       print(e);
     }
 
-    return Response.ok(jsonEncode(result!));
+    final List<Map<String, dynamic>?> home =
+        result.map((e) => e["Home"]).toList();
+
+    return Response.ok(jsonEncode(home));
   }
 
-  FutureOr<Response> _number_of_users_for_home(
+  FutureOr<Response> _users_for_home(
       ModularArguments arguments, Injector injector) async {
-    var result = arguments.data;
+    var userParams = (arguments.params).cast<String, dynamic>();
 
     var database = injector.get<RemoteDatabase>();
 
-    List<Map<String, Map<String, dynamic>>>? result_bd;
+    List<Map<String, Map<String, dynamic>>> result = [{}];
     try {
-      result_bd = await database.query(
-          'SELECT u.userid, u.name FROM "User" u INNER JOIN "Home" h ON u.homeId = h.homeId WHERE h.homeId = @homeId',
+      result = await database.query(
+          'SELECT u.userid, u.name FROM "User" u INNER JOIN "Home" h ON u.homeid = h.homeid WHERE h.homeid = @homeid',
           variables: {
-            "homeId": result['homeId'],
+            "homeid": userParams['id'],
           });
-
-      print(result_bd);
     } catch (e) {
       print("Funçao _number_of_users_for_home");
       print(e);
+
       return Response.ok(
           'Ops!!! Não conseguimos recuperar o numero de users.\n');
     }
 
-    return Response.ok(jsonEncode(result_bd));
+    final List<Map<String, dynamic>?> home =
+        result.map((e) => e["User"]).toList();
+    return Response.ok(jsonEncode(home));
   }
 
   FutureOr<Response> _listCategory(Injector injector) async {
-  var database = injector.get<RemoteDatabase>();
+    var database = injector.get<RemoteDatabase>();
 
-  List<Map<String, Map<String, dynamic>>>? result;
-  try {
-    result = await database.query('SELECT * FROM "Category"');
-  } catch (e) {
-    print(e);
+    List<Map<String, Map<String, dynamic>>> result = [{}];
+    try {
+      result = await database.query('SELECT * FROM "Category"');
+    } catch (e) {
+      print(e);
+    }
+
+    final List<Map<String, dynamic>?> categories =
+        result.map((e) => e["Category"]).toList();
+
+    return Response.ok(jsonEncode(categories));
   }
-
-  final List<Map<String, dynamic>?> categories = result!.map((e) => e["Category"]).toList();
-
-  return Response.ok(jsonEncode(categories));
-}
-
 }
