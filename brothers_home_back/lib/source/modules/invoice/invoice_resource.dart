@@ -9,9 +9,9 @@ class InvoiceResource extends Resource {
   List<Route> get routes => [
         Route.post('/invoice', _addInvoice),
         Route.put('/invoice', _modifyInvoice),
-        Route.get('/invoice/:id', _listInvoices),
+        Route.get('/invoice/:invoiceid', _listInvoices),
         Route.post('/invoice/date_interval', _listInvoicesDateInterval),
-        Route.delete('/invoice/:id', _removeInvoice),
+        Route.delete('/invoice/:userid', _removeInvoice),
       ];
 
   FutureOr<Response> _addInvoice(
