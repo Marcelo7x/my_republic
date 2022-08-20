@@ -10,9 +10,9 @@ class UserResource extends Resource {
   @override
   List<Route> get routes => [
         Route.get('/user', _listUsers, middlewares: [AuthGuard(roles: ['admin'])]),
-        Route.get('/user/:userid', _getUser, middlewares: [AuthGuard()]),
+        Route.get('/user/:userid', _getUser, middlewares: [AuthGuard(roles: ['admin'])]),
         Route.post('/user', _addUser),
-        Route.put('/user', _updateUser, middlewares: [AuthGuard()]),
+        Route.put('/user', _updateUser, middlewares: [AuthGuard(roles: ['admin'])]),
         Route.delete('/user/:userid', _deleteUser, middlewares: [AuthGuard(roles: ['admin'])]),
       ];
 

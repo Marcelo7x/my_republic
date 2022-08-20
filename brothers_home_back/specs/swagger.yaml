@@ -98,7 +98,7 @@ paths:
              application/json:
               schema: 
                 $ref: '#/components/schemas/BackendException'
-                
+
   /auth/update_password:
     put:
       tags:
@@ -274,7 +274,8 @@ paths:
       tags:
         - 'invoice'
       summary: create new invoice
-
+      security: 
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -442,7 +443,8 @@ paths:
       tags:
         - 'home'
       summary: create new home
-
+      security: 
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
