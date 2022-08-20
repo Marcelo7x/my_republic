@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:brothers_home/source/modules/auth/guard/auth_guard.dart';
 import 'package:brothers_home/source/services/database/remote_database_interface.dart';
 import 'package:brothers_home/source/services/encrypt/encrypt_service.dart';
 import 'package:brothers_home/source/services/jwt/jwt_service.dart';
@@ -12,13 +13,14 @@ class AuthResource extends Resource {
   @override
   List<Route> get routes => [
         Route.get("/auth/login", _login),
-        Route.get("/auth/refresh-token", _login),
-        Route.get("/auth/check_token", _login),
-        Route.post("/auth/update_password", _login),
+        Route.get("/auth/refresh_token", _refreshToken,
+            middlewares: [AuthGuard(isRefreshToken: true)]),
+        Route.get("/auth/check_token", _checkToken, middlewares: [AuthGuard()]),
+        Route.post("/auth/update_password", _updatePassword, middlewares: [AuthGuard()]),
       ];
 
   FutureOr<Response> _login(Request request, Injector injector) async {
-   final extractor = injector.get<RequestExtractor>();
+    final extractor = injector.get<RequestExtractor>();
     final bcrypt = injector.get<EncryptService>();
     final jwt = injector.get<JwtService>();
     final database = injector.get<RemoteDatabase>();
@@ -33,13 +35,15 @@ class AuthResource extends Resource {
     );
 
     if (result.isEmpty) {
-      return Response.forbidden(jsonEncode({'error': 'Email ou senha invalida'}));
+      return Response.forbidden(
+          jsonEncode({'error': 'Email ou senha invalida'}));
     }
 
     final userMap = result.map((element) => element['User']).first!;
 
     if (!bcrypt.checkHash(credential.password, userMap['password'])) {
-      return Response.forbidden(jsonEncode({'error': 'Email ou senha invalida'}));
+      return Response.forbidden(
+          jsonEncode({'error': 'Email ou senha invalida'}));
     }
 
     final payload = userMap..remove('password');
@@ -59,12 +63,27 @@ class AuthResource extends Resource {
     };
   }
 
-  FutureOr<Response> _refreshToken() {
-    return Response.ok('');
+  FutureOr<Response> _refreshToken(Request request, Injector injector) async {
+    final extractor = injector.get<RequestExtractor>();
+    final jwt = injector.get<JwtService>();
+
+    final token = extractor.getAuthorizationBearer(request);
+    var payload = jwt.getPayload(token);
+
+    final database = injector.get<RemoteDatabase>();
+    final result = await database.query(
+      'SELECT userid, role FROM "User" WHERE userid = @userid;',
+      variables: {
+        'userid': payload['userid'],
+      },
+    );
+    payload = result.map((element) => element['User']).first!;
+
+    return Response.ok(jsonEncode(generateToken(payload, jwt)));
   }
 
   FutureOr<Response> _checkToken() {
-    return Response.ok('');
+    return Response.ok(jsonEncode({'message': 'ok'}));
   }
 
   FutureOr<Response> _updatePassword() {
