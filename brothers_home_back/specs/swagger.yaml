@@ -41,6 +41,7 @@ paths:
              application/json:
               schema: 
                 $ref: '#/components/schemas/BackendException'
+
   /auth/check_token:
     get:
       tags:
@@ -70,6 +71,7 @@ paths:
              application/json:
               schema: 
                 $ref: '#/components/schemas/BackendException'
+
   /auth/refresh_token:
     get:
       tags:
@@ -96,6 +98,7 @@ paths:
              application/json:
               schema: 
                 $ref: '#/components/schemas/BackendException'
+                
   /auth/update_password:
     put:
       tags:

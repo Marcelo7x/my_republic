@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:brothers_home/source/modules/auth/auth_resource.dart';
 import 'package:brothers_home/source/modules/home/home_resource.dart';
 import 'package:brothers_home/source/modules/invoice/invoice_resource.dart';
 import 'package:brothers_home/source/modules/swagger/swagger_handler.dart';
@@ -23,7 +24,7 @@ class AppModule extends Module {
     Bind.singleton<RemoteDatabase>((i) => PostgresDatabase(i())),
     Bind.singleton<EncryptService>((i) => BCryptServiceImp()),
     Bind.singleton<JwtService>((i) => JwtServiceImp(i())),
-    Bind.singleton((i) => RequestExtractor()),
+    Bind.singleton<RequestExtractor>((i) => RequestExtractor()),
   ];
 
   @override
@@ -33,6 +34,7 @@ class AppModule extends Module {
         Route.resource(UserResource()),
         Route.resource(HomeResource()),
         Route.resource(InvoiceResource()),
+        Route.resource(AuthResource()),
       ];
 
   Response _rootHandler() {

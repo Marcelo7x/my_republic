@@ -1,26 +1,29 @@
 import 'dart:convert';
+
 import 'package:shelf/shelf.dart';
 
 class RequestExtractor {
   String getAuthorizationBearer(Request request) {
-    var authorization = request.headers['autorization'] ?? '';
+    var authorization = request.headers['authorization'] ?? '';
     authorization = authorization.split(' ').last;
     return authorization;
   }
 
-  LoginCredentials getAuthorizationBasic(Request request) {
-    var authorization = request.headers['autorization'] ?? '';
+  LoginCredential getAuthorizationBasic(Request request) {
+    var authorization = request.headers['authorization'] ?? '';
     authorization = authorization.split(' ').last;
     authorization = String.fromCharCodes(base64Decode(authorization));
-
-    final credentials = authorization.split(':');
-    return LoginCredentials(email: credentials.first, password: credentials.last);
+    final credential = authorization.split(':');
+    return LoginCredential(
+      email: credential.first,
+      password: credential.last,
+    );
   }
 }
 
-class LoginCredentials {
+class LoginCredential {
   final String email;
   final String password;
 
-  LoginCredentials({required this.email, required this.password});
+  LoginCredential({required this.email, required this.password});
 }
