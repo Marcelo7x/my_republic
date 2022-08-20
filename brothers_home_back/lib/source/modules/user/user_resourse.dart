@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:brothers_home/source/modules/auth/guard/auth_guard.dart';
 import 'package:brothers_home/source/services/database/remote_database_interface.dart';
 import 'package:brothers_home/source/services/encrypt/bcrypt_service_imp.dart';
 import 'package:shelf/shelf.dart';
@@ -8,12 +9,11 @@ import 'package:shelf_modular/shelf_modular.dart';
 class UserResource extends Resource {
   @override
   List<Route> get routes => [
-        Route.get('/user', _listUsers),
-        Route.get('/user/:userid', _getUser),
+        Route.get('/user', _listUsers, middlewares: [AuthGuard(roles: ['admin'])]),
+        Route.get('/user/:userid', _getUser, middlewares: [AuthGuard()]),
         Route.post('/user', _addUser),
-        Route.put('/user', _updateUser),
-        Route.delete('/user/:userid', _deleteUser),
-        Route.post('/login', _login)
+        Route.put('/user', _updateUser, middlewares: [AuthGuard()]),
+        Route.delete('/user/:userid', _deleteUser, middlewares: [AuthGuard(roles: ['admin'])]),
       ];
 
   FutureOr<Response> _addUser(
@@ -133,32 +133,5 @@ class UserResource extends Resource {
 
     return Response.ok(
         jsonEncode(<String,String>{'message': 'Usuário removido'}));
-  }
-
-  FutureOr<Response> _login(
-      ModularArguments arguments, Injector injector) async {
-    var result = await arguments.data;
-
-    var database = injector.get<RemoteDatabase>();
-
-    List<Map<String, Map<String, dynamic>>>? result_bd;
-    try {
-      result_bd = await database.query(
-          'SELECT userId, homeid, name FROM "User" WHERE email = @email and password = @password',
-          variables: {
-            "email": result['email'],
-            "password": result['password'],
-          });
-      print(result_bd);
-    } catch (e) {
-      print("Funçao _login");
-      print(e);
-      return Response.ok('Ops!!! Não conseguimos fazer login.\n');
-    }
-
-    final Map<String, dynamic> user = result_bd[0]["User"]!;
-    print(user);
-
-    return Response.ok(jsonEncode(user));
   }
 }

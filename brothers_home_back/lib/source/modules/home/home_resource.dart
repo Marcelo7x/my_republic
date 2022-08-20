@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:brothers_home/source/modules/auth/guard/auth_guard.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
 
@@ -8,10 +9,10 @@ import '../../services/database/remote_database_interface.dart';
 class HomeResource extends Resource {
   @override
   List<Route> get routes => [
-        Route.get('/home', _listHome),
-        Route.post('/home', _addHome),
-        Route.get('/home/:id/users', _users_for_home),
-        Route.get('/category', _listCategory),
+        Route.get('/home', _listHome, middlewares: [AuthGuard(roles: ['admin'])]),
+        Route.post('/home', _addHome, middlewares: [AuthGuard()]),
+        Route.get('/home/:id/users', _users_for_home, middlewares: [AuthGuard()]),
+        Route.get('/category', _listCategory, middlewares: [AuthGuard()]),
       ];
 
   FutureOr<Response> _addHome(
