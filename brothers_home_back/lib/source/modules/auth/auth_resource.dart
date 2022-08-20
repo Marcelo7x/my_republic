@@ -16,7 +16,7 @@ class AuthResource extends Resource {
         Route.get("/auth/refresh_token", _refreshToken,
             middlewares: [AuthGuard(isRefreshToken: true)]),
         Route.get("/auth/check_token", _checkToken, middlewares: [AuthGuard()]),
-        Route.post("/auth/update_password", _updatePassword, middlewares: [AuthGuard()]),
+        Route.put("/auth/update_password", _updatePassword, middlewares: [AuthGuard()]),
       ];
 
   FutureOr<Response> _login(Request request, Injector injector) async {
@@ -86,9 +86,42 @@ class AuthResource extends Resource {
     return Response.ok(jsonEncode({'message': 'ok'}));
   }
 
-  FutureOr<Response> _updatePassword() {
-    return Response.ok('');
+  FutureOr<Response> _updatePassword(
+    Injector injector,
+    Request request,
+    ModularArguments arguments,
+  ) async {
+    final extractor = injector.get<RequestExtractor>();
+    final jwt = injector.get<JwtService>();
+    final database = injector.get<RemoteDatabase>();
+    final bcrypt = injector.get<EncryptService>();
+
+    final data = arguments.data as Map;
+
+    final token = extractor.getAuthorizationBearer(request);
+    var payload = jwt.getPayload(token);
+
+    final result = await database.query(
+      'SELECT password FROM "User" WHERE userid = @userid;',
+      variables: {
+        'userid': payload['userid'],
+      },
+    );
+    final password = result.map((element) => element['User']).first!['password'];
+
+    if (!bcrypt.checkHash(data['password'], password)) {
+      return Response.forbidden(jsonEncode({'error': 'senha invalida'}));
+    }
+
+    final queryUpdate = 'UPDATE "User" SET password=@password WHERE userid=@userid;';
+    await database.query(queryUpdate, variables: {
+      'userid': payload['userid'],
+      'password': bcrypt.generatHash(data['newPassword']),
+    });
+
+    return Response.ok(jsonEncode({'message': 'ok'}));
   }
+
 
   int _expiration(Duration duration) {
     final expiresDate = DateTime.now().add(duration);
