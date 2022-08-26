@@ -4,14 +4,17 @@ import 'package:brothers_home/source/modules/auth/guard/auth_guard.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
 
-import '../../services/database/remote_database_interface.dart';
+import '../../core/services/database/remote_database_interface.dart';
 
 class HomeResource extends Resource {
   @override
   List<Route> get routes => [
-        Route.get('/home', _listHome, middlewares: [AuthGuard(roles: ['admin'])]),
+        Route.get('/home', _listHome, middlewares: [
+          AuthGuard(roles: ['admin'])
+        ]),
         Route.post('/home', _addHome, middlewares: [AuthGuard()]),
-        Route.get('/home/:id/users', _users_for_home, middlewares: [AuthGuard()]),
+        Route.get('/home/:id/users', _users_for_home,
+            middlewares: [AuthGuard()]),
         Route.get('/category', _listCategory, middlewares: [AuthGuard()]),
       ];
 
@@ -24,7 +27,7 @@ class HomeResource extends Resource {
     final columns = userParams.keys
         .map(
           (key) => '$key',
-        ) 
+        )
         .toList();
     List<Map<String, Map<String, dynamic>>> result =
         <Map<String, Map<String, dynamic>>>[{}];

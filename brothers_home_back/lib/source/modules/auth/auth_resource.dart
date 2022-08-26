@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:brothers_home/source/modules/auth/guard/auth_guard.dart';
-import 'package:brothers_home/source/services/database/remote_database_interface.dart';
-import 'package:brothers_home/source/services/encrypt/encrypt_service.dart';
-import 'package:brothers_home/source/services/jwt/jwt_service.dart';
-import 'package:brothers_home/source/services/request_extractor/request_extractor.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
+
+import '../../core/services/database/remote_database_interface.dart';
+import '../../core/services/encrypt/encrypt_service.dart';
+import '../../core/services/jwt/jwt_service.dart';
+import '../../core/services/request_extractor/request_extractor.dart';
 
 class AuthResource extends Resource {
   @override
@@ -16,7 +16,8 @@ class AuthResource extends Resource {
         Route.get("/auth/refresh_token", _refreshToken,
             middlewares: [AuthGuard(isRefreshToken: true)]),
         Route.get("/auth/check_token", _checkToken, middlewares: [AuthGuard()]),
-        Route.put("/auth/update_password", _updatePassword, middlewares: [AuthGuard()]),
+        Route.put("/auth/update_password", _updatePassword,
+            middlewares: [AuthGuard()]),
       ];
 
   FutureOr<Response> _login(Request request, Injector injector) async {
@@ -107,13 +108,15 @@ class AuthResource extends Resource {
         'userid': payload['userid'],
       },
     );
-    final password = result.map((element) => element['User']).first!['password'];
+    final password =
+        result.map((element) => element['User']).first!['password'];
 
     if (!bcrypt.checkHash(data['password'], password)) {
       return Response.forbidden(jsonEncode({'error': 'senha invalida'}));
     }
 
-    final queryUpdate = 'UPDATE "User" SET password=@password WHERE userid=@userid;';
+    final queryUpdate =
+        'UPDATE "User" SET password=@password WHERE userid=@userid;';
     await database.query(queryUpdate, variables: {
       'userid': payload['userid'],
       'password': bcrypt.generatHash(data['newPassword']),
@@ -121,7 +124,6 @@ class AuthResource extends Resource {
 
     return Response.ok(jsonEncode({'message': 'ok'}));
   }
-
 
   int _expiration(Duration duration) {
     final expiresDate = DateTime.now().add(duration);

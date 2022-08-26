@@ -1,6 +1,8 @@
-import 'package:brothers_home/source/services/dot_env.dart';
-import 'package:brothers_home/source/services/jwt/jwt_service.dart';
+
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+
+import '../../dot_env.dart';
+import '../jwt_service.dart';
 
 class JwtServiceImp implements JwtService {
   final DotEnvService dotEnvService;

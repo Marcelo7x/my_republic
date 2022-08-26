@@ -3,17 +3,21 @@ import 'dart:convert';
 import 'package:brothers_home/source/modules/auth/guard/auth_guard.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
-import '../../services/database/remote_database_interface.dart';
+
+import '../../core/services/database/remote_database_interface.dart';
 
 class InvoiceResource extends Resource {
   @override
   List<Route> get routes => [
         Route.post('/invoice', _addInvoice, middlewares: [AuthGuard()]),
         Route.put('/invoice', _updateInvoice, middlewares: [AuthGuard()]),
-        Route.get('/invoice/invoiceid/:invoiceid', _listInvoices, middlewares: [AuthGuard()]),
+        Route.get('/invoice/invoiceid/:invoiceid', _listInvoices,
+            middlewares: [AuthGuard()]),
         Route.get('/invoice/homeid/:homeid/start/:start_date/end/:end_date',
-            _listInvoicesDateInterval, middlewares: [AuthGuard()]),
-        Route.delete('/invoice/invoiceid/:invoiceid', _deleteInvoice, middlewares: [AuthGuard()]),
+            _listInvoicesDateInterval,
+            middlewares: [AuthGuard()]),
+        Route.delete('/invoice/invoiceid/:invoiceid', _deleteInvoice,
+            middlewares: [AuthGuard()]),
       ];
 
   FutureOr<Response> _addInvoice(

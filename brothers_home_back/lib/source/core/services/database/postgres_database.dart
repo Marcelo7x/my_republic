@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:brothers_home/source/services/database/remote_database_interface.dart';
 import 'package:postgres/postgres.dart';
 import 'package:shelf_modular/shelf_modular.dart';
 import '../dot_env.dart';
+import 'remote_database_interface.dart';
 
 class PostgresDatabase implements RemoteDatabase, Disposable {
   final completer = Completer<PostgreSQLConnection>();

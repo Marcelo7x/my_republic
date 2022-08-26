@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import 'package:brothers_home/source/services/jwt/jwt_service.dart';
-import 'package:brothers_home/source/services/request_extractor/request_extractor.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
+
+import '../../../core/services/jwt/jwt_service.dart';
+import '../../../core/services/request_extractor/request_extractor.dart';
 
 class AuthGuard extends ModularMiddleware {
   final List<String> roles;

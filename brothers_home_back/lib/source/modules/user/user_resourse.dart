@@ -1,19 +1,28 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:brothers_home/source/modules/auth/guard/auth_guard.dart';
-import 'package:brothers_home/source/services/database/remote_database_interface.dart';
-import 'package:brothers_home/source/services/encrypt/bcrypt_service_imp.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
+
+import '../../core/services/database/remote_database_interface.dart';
+import '../../core/services/encrypt/bcrypt_service_imp.dart';
 
 class UserResource extends Resource {
   @override
   List<Route> get routes => [
-        Route.get('/user', _listUsers, middlewares: [AuthGuard(roles: ['admin'])]),
-        Route.get('/user/:userid', _getUser, middlewares: [AuthGuard(roles: ['admin'])]),
+        Route.get('/user', _listUsers, middlewares: [
+          AuthGuard(roles: ['admin'])
+        ]),
+        Route.get('/user/:userid', _getUser, middlewares: [
+          AuthGuard(roles: ['admin'])
+        ]),
         Route.post('/user', _addUser),
-        Route.put('/user', _updateUser, middlewares: [AuthGuard(roles: ['admin'])]),
-        Route.delete('/user/:userid', _deleteUser, middlewares: [AuthGuard(roles: ['admin'])]),
+        Route.put('/user', _updateUser, middlewares: [
+          AuthGuard(roles: ['admin'])
+        ]),
+        Route.delete('/user/:userid', _deleteUser, middlewares: [
+          AuthGuard(roles: ['admin'])
+        ]),
       ];
 
   FutureOr<Response> _addUser(
@@ -132,6 +141,6 @@ class UserResource extends Resource {
     }
 
     return Response.ok(
-        jsonEncode(<String,String>{'message': 'Usuário removido'}));
+        jsonEncode(<String, String>{'message': 'Usuário removido'}));
   }
 }

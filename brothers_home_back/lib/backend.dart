@@ -1,4 +1,4 @@
-import 'package:brothers_home/source/app/app_module.dart';
+import 'package:brothers_home/source/app_module.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
 
