@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:brothers_home/source/core/core_module.dart';
-import 'package:brothers_home/source/modules/auth/auth_resource.dart';
+import 'package:brothers_home/source/modules/auth/auth_module.dart';
 import 'package:brothers_home/source/modules/home/home_resource.dart';
 import 'package:brothers_home/source/modules/invoice/invoice_resource.dart';
 import 'package:brothers_home/source/modules/swagger/swagger_handler.dart';
@@ -22,7 +22,7 @@ class AppModule extends Module {
         Route.resource(UserResource()),
         Route.resource(HomeResource()),
         Route.resource(InvoiceResource()),
-        Route.resource(AuthResource()),
+        Route.module('/auth', module: AuthModule()),
       ];
 
   Response _rootHandler() {
