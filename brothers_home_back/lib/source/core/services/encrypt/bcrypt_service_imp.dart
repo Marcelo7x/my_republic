@@ -11,7 +11,7 @@ class BCryptServiceImp implements EncryptService {
   }
 
   @override
-  String generatHash(String password) {
+  String generateHash(String password) {
     final String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
 
     return hashed;

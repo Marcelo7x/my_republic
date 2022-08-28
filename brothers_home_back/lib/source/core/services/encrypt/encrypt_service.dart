@@ -1,4 +1,4 @@
 abstract class EncryptService {
-  String generatHash(String password);
+  String generateHash(String password);
   bool checkHash(String password, String hash);
 }

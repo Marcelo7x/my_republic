@@ -31,7 +31,7 @@ class UserResource extends Resource {
 
     final userParams = (arguments.data as Map).cast<String, dynamic>();
 
-    userParams['password'] = bcrypt.generatHash(userParams['password']);
+    userParams['password'] = bcrypt.generateHash(userParams['password']);
 
     var database = injector.get<RemoteDatabase>();
 
