@@ -4,14 +4,15 @@ datasource db {
 }
 
 model User {
-    userid   Int       @id @default(autoincrement())
-    name     String
-    email    String    @unique
-    password String
-    role     UserRole  @default(user)
-    home     Home?     @relation(fields: [homeid], references: [homeid])
-    homeid   Int?
-    Invoice  Invoice[]
+    user_id    Int       @id @default(autoincrement())
+    first_name String
+    last_name  String
+    email      String    @unique
+    password   String
+    role       UserRole  @default(user)
+    home       Home?     @relation(fields: [home_id], references: [home_id])
+    home_id    Int?
+    Invoice    Invoice[]
 }
 
 enum UserRole {
@@ -21,7 +22,7 @@ enum UserRole {
 }
 
 model Home {
-    homeid   Int       @id @default(autoincrement())
+    home_id  Int       @id @default(autoincrement())
     name     String    @unique
     street   String?
     district String?
@@ -35,19 +36,19 @@ model Home {
 }
 
 model Invoice {
-    invoiceid   Int      @id @default(autoincrement())
+    invoice_id  Int      @id @default(autoincrement())
     description String?
     price       Int
     date        DateTime @default(now())
     image       Bytes?
     fixed       Boolean  @default(false)
     paid        PaidRole @default(unpaid)
-    category    Category @relation(fields: [categoryid], references: [categoryid])
-    user        User     @relation(fields: [userid], references: [userid])
-    home        Home     @relation(fields: [homeid], references: [homeid])
-    categoryid  Int
-    userid      Int
-    homeid      Int
+    category    Category @relation(fields: [category_id], references: [category_id])
+    user        User     @relation(fields: [user_id], references: [user_id])
+    home        Home     @relation(fields: [home_id], references: [home_id])
+    category_id Int
+    user_id     Int
+    home_id     Int
 }
 
 enum PaidRole {
@@ -57,7 +58,7 @@ enum PaidRole {
 }
 
 model Category {
-    categoryid Int       @id @default(autoincrement())
-    name       String
-    Invoice    Invoice[]
+    category_id Int       @id @default(autoincrement())
+    name        String
+    Invoice     Invoice[]
 }
