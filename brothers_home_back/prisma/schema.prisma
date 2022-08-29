@@ -1,17 +1,18 @@
 datasource db {
     provider = "postgresql"
     url      = env("DATABASE_URL")
+
 }
 
 model User {
-    user_id    Int       @id @default(autoincrement())
-    first_name String
-    last_name  String
+    userid     Int       @id @default(autoincrement())
+    firstname String
+    lastname  String
     email      String    @unique
     password   String
     role       UserRole  @default(user)
-    home       Home?     @relation(fields: [home_id], references: [home_id])
-    home_id    Int?
+    home       Home?     @relation(fields: [homeid], references: [homeid])
+    homeid     Int?
     Invoice    Invoice[]
 }
 
@@ -22,7 +23,7 @@ enum UserRole {
 }
 
 model Home {
-    home_id  Int       @id @default(autoincrement())
+    homeid   Int       @id @default(autoincrement())
     name     String    @unique
     street   String?
     district String?
@@ -36,19 +37,19 @@ model Home {
 }
 
 model Invoice {
-    invoice_id  Int      @id @default(autoincrement())
+    invoiceid   Int      @id @default(autoincrement())
     description String?
     price       Int
     date        DateTime @default(now())
     image       Bytes?
     fixed       Boolean  @default(false)
     paid        PaidRole @default(unpaid)
-    category    Category @relation(fields: [category_id], references: [category_id])
-    user        User     @relation(fields: [user_id], references: [user_id])
-    home        Home     @relation(fields: [home_id], references: [home_id])
-    category_id Int
-    user_id     Int
-    home_id     Int
+    category    Category @relation(fields: [categoryid], references: [categoryid])
+    user        User     @relation(fields: [userid], references: [userid])
+    home        Home     @relation(fields: [homeid], references: [homeid])
+    categoryid  Int
+    userid      Int
+    homeid      Int
 }
 
 enum PaidRole {
@@ -58,7 +59,7 @@ enum PaidRole {
 }
 
 model Category {
-    category_id Int       @id @default(autoincrement())
-    name        String
-    Invoice     Invoice[]
+    categoryid Int       @id @default(autoincrement())
+    name       String
+    Invoice    Invoice[]
 }
