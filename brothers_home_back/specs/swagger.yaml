@@ -139,7 +139,7 @@ paths:
               schema: 
                 $ref: '#/components/schemas/BackendException'
 
-  /user/{id}:
+  /user/u/{id}:
     get:
       tags:
         - 'user'
@@ -194,7 +194,7 @@ paths:
               schema: 
                 $ref: '#/components/schemas/BackendException'
 
-  /user:
+  /user/u:
     get:
       tags:
         - 'user'

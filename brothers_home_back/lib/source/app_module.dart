@@ -5,7 +5,7 @@ import 'package:brothers_home/source/modules/auth/auth_module.dart';
 import 'package:brothers_home/source/modules/home/home_resource.dart';
 import 'package:brothers_home/source/modules/invoice/invoice_resource.dart';
 import 'package:brothers_home/source/modules/swagger/swagger_handler.dart';
-import 'package:brothers_home/source/modules/user/user_resourse.dart';
+import 'package:brothers_home/source/modules/user/user_module.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
 
@@ -19,7 +19,7 @@ class AppModule extends Module {
   List<ModularRoute> get routes => [
         Route.get('/', _rootHandler),
         Route.get('/documentation/**', swaggerHandler),
-        Route.resource(UserResource()),
+        Route.module('/user', module: UserModule()),
         Route.resource(HomeResource()),
         Route.resource(InvoiceResource()),
         Route.module('/auth', module: AuthModule()),
