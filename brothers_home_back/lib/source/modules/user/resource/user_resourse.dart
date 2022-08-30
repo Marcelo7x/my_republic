@@ -34,8 +34,11 @@ class UserResource extends Resource {
     final userParams = (arguments.data as Map).cast<String, dynamic>();
     final userRepository = injector.get<UserRepository>();
 
-    UserModel userInfo = UserModel(firstName: userParams['firstname'],
-        lastName: userParams['lastname'], email: userParams['email'], password: userParams['password']);
+    UserModel userInfo = UserModel(
+        firstName: userParams['firstname'],
+        lastName: userParams['lastname'],
+        email: userParams['email'],
+        password: userParams['password']);
     try {
       await userRepository.insertUser(userInfo);
       return Response.ok(userInfo.userInformaitionToJson());
@@ -46,18 +49,26 @@ class UserResource extends Resource {
 
   FutureOr<Response> _getAllUsers(Injector injector) async {
     final userRepository = injector.get<UserRepository>();
-    final result = await userRepository.getAllUsers();
-    return Response.ok(jsonEncode(result));
+    try {
+      final result = await userRepository.getAllUsers();
+      return Response.ok(jsonEncode(result));
+    } on UserException catch (e) {
+      return Response(e.statusCode, body: e.toJson());
+    }
   }
 
   FutureOr<Response> _getUser(
       Injector injector, ModularArguments arguments) async {
     var userRepository = injector.get<UserRepository>();
     var params = arguments.params;
-    List<Map<String, dynamic>> result =
-        await userRepository.getUser(int.parse(params['userid']));
 
-    return Response.ok(jsonEncode(result));
+    try {
+      List<Map<String, dynamic>> result =
+          await userRepository.getUser(int.parse(params['userid']));
+      return Response.ok(jsonEncode(result));
+    } on UserException catch (e) {
+      return Response(e.statusCode, body: e.toJson());
+    }
   }
 
   FutureOr<Response> _updateUser(
@@ -66,9 +77,13 @@ class UserResource extends Resource {
     final userParams = (arguments.data as Map).cast<String, dynamic>();
 
     UserModel userInfo = UserModel.fromMap(userParams);
-    await userRepository.updateUser(userInfo);
 
-    return Response.ok(jsonEncode('Updated user'));
+    try {
+      await userRepository.updateUser(userInfo);
+      return Response.ok(jsonEncode('Updated user'));
+    } on UserException catch (e) {
+      return Response(e.statusCode, body: e.toJson());
+    }
   }
 
   FutureOr<Response> _deleteUser(
@@ -76,9 +91,13 @@ class UserResource extends Resource {
     final userRepository = injector.get<UserRepository>();
     var userParams = arguments.params;
 
-    await userRepository.deleteUser(int.parse(userParams['userid']));
+    try {
+      await userRepository.deleteUser(int.parse(userParams['userid']));
 
-    return Response.ok(
-        jsonEncode(<String, String>{'message': 'Usuário removido'}));
+      return Response.ok(
+          jsonEncode(<String, String>{'message': 'Usuário removido'}));
+    } on UserException catch (e) {
+      return Response(e.statusCode, body: e.toJson());
+    }
   }
 }
