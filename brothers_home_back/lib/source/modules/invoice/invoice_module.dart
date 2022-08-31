@@ -7,7 +7,7 @@ class InvoiceModule extends Module {
   @override
   List<Bind> get binds => [
     Bind.singleton<InvoiceDatasource>((i) => InvoiceDatasourceImpl(i())),
-    Bind.factory<InvoiceRepository>((i) => InvoiceRepository(i())),
+    Bind.singleton<InvoiceRepository>((i) => InvoiceRepository(i())),
   ];
 
   @override
