@@ -38,7 +38,7 @@ class AuthRepository {
     final payload = jwt.getPayload(token);
     final role = await datasource.getRoleById(payload['userid']);
     return _generateToken({
-      'id': payload['id'],
+      'userid': payload['userid'],
       ' role': role,
     });
   }
@@ -61,7 +61,7 @@ class AuthRepository {
 
   Future<void> updatePassword(String token, String password, String newPassword) async {
     final payload = jwt.getPayload(token);
-    final hash = await datasource.getPasswordById(payload['id']);
+    final hash = await datasource.getPasswordById(payload['userid']);
 
     if (!bcrypt.checkHash(password, hash)) {
       throw AuthException(403, 'senha invalida');
@@ -69,6 +69,6 @@ class AuthRepository {
 
     newPassword = bcrypt.generatHash(newPassword);
 
-    await datasource.updatePasswordById(payload['id'], newPassword);
+    await datasource.updatePasswordById(payload['userid'], newPassword);
   }
 }

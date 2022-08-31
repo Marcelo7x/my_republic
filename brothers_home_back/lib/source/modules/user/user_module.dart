@@ -7,7 +7,7 @@ class UserModule extends Module {
   @override
   List<Bind> get binds => [
     Bind.singleton<UserDatasource>((i) => UserDatasourceImpl(i())),
-    Bind.singleton<UserRepository>((i) => UserRepository(i(), i()))
+    Bind.singleton<UserRepository>((i) => UserRepository(i(), i(), i()))
   ];
 
   @override

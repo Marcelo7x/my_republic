@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:brothers_home/source/core/services/request_extractor/request_extractor.dart';
 import 'package:brothers_home/source/modules/auth/guard/auth_guard.dart';
 import 'package:brothers_home/source/modules/user/erros/userException.dart';
 import 'package:brothers_home/source/modules/user/models/user_model.dart';
@@ -40,7 +41,7 @@ class UserResource extends Resource {
         password: userParams['password']);
     try {
       await userRepository.insertUser(userInfo);
-      return Response.ok(userInfo.userInformaitionToJson());
+      return Response.ok(jsonEncode({"message": "Sucessfully inserted"}));
     } on UserException catch (e) {
       return Response(e.statusCode, body: e.toJson());
     }
@@ -70,16 +71,17 @@ class UserResource extends Resource {
     }
   }
 
-  FutureOr<Response> _updateUser(
+  FutureOr<Response> _updateUser(Request request,
       Injector injector, ModularArguments arguments) async {
-    var userRepository = injector.get<UserRepository>();
+    final userRepository = injector.get<UserRepository>();
+    final extractor = injector.get<RequestExtractor>();
+
+    final token = extractor.getAuthorizationBearer(request);
     final userParams = (arguments.data as Map).cast<String, dynamic>();
 
-    UserModel userInfo = UserModel.fromMap(userParams);
-
     try {
-      await userRepository.updateUser(userInfo);
-      return Response.ok(jsonEncode('Updated user'));
+      await userRepository.updateUser(token, userParams);
+      return Response.ok(jsonEncode(jsonEncode({'message':'Updated user'})));
     } on UserException catch (e) {
       return Response(e.statusCode, body: e.toJson());
     }

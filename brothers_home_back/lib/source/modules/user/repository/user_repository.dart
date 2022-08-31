@@ -1,4 +1,5 @@
 import 'package:brothers_home/source/core/services/encrypt/encrypt_service.dart';
+import 'package:brothers_home/source/core/services/jwt/jwt_service.dart';
 import 'package:brothers_home/source/modules/user/erros/userException.dart';
 import 'package:brothers_home/source/modules/user/models/user_model.dart';
 
@@ -14,8 +15,9 @@ abstract class UserDatasource {
 class UserRepository {
   final EncryptService _bcrypt;
   final UserDatasource _datasource;
+  final JwtService _jwt;
 
-  UserRepository(this._datasource, this._bcrypt);
+  UserRepository(this._datasource, this._bcrypt, this._jwt);
 
   Future insertUser(UserModel userModel) async {
     if (userModel.firstName == null ||
@@ -58,10 +60,14 @@ class UserRepository {
     await _datasource.deleteUser(userid);
   }
 
-  Future<void> updateUser(UserModel userInfo) async {
-    if (userInfo.userid == null) {
+  Future<void> updateUser(token, userParams) async {
+    final payload = _jwt.getPayload(token);
+    if (payload['userid'] == null) {
       throw UserException(403, "Invalid userid");
     }
+
+    UserModel userInfo = UserModel.fromMap(userParams);
+    userInfo.userid = payload['userid'];
 
     if (userInfo.firstName == null &&
         userInfo.lastName == null &&

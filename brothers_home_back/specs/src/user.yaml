@@ -5,9 +5,9 @@ components:
       properties:
         userid:
           type: integer
-        first_name:
+        firstname:
           type: string
-        last_name:
+        lastname:
           type: string
         email:
           type: string
@@ -22,9 +22,9 @@ components:
     UserCreate:
       type: object
       properties:
-        first_name:
+        firstname:
           type: string
-        last_name:
+        lastname:
           type: string
         email:
           type: string
@@ -47,7 +47,7 @@ components:
       summary: get user by id
       parameters:
         - in: path
-          name: id
+          name: userid
           required: true
           schema:
             type: integer
