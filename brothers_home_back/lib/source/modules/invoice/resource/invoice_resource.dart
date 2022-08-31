@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:brothers_home/source/core/services/request_extractor/request_extractor.dart';
 import 'package:brothers_home/source/modules/auth/guard/auth_guard.dart';
 import 'package:brothers_home/source/modules/invoice/erros/invoice%20_exception.dart';
 import 'package:brothers_home/source/modules/invoice/repository/invoice_repository.dart';
@@ -21,12 +22,15 @@ class InvoiceResource extends Resource {
       ];
 
   FutureOr<Response> _insertInvoice(
-      ModularArguments arguments, Injector injector) async {
+      Request request, ModularArguments arguments, Injector injector) async {
     final invoiceParams = (arguments.data as Map).cast<String, dynamic>();
     final invoiceRepository = injector.get<InvoiceRepository>();
+    final extractor = injector.get<RequestExtractor>();
+
+    final token = extractor.getAuthorizationBearer(request);
 
     try {
-      await invoiceRepository.insertInvoice(invoiceParams);
+      await invoiceRepository.insertInvoice(token, invoiceParams);
     } on InvoiceException catch (e) {
       return Response(e.statusCode, body: e.message);
     }
@@ -35,12 +39,15 @@ class InvoiceResource extends Resource {
   }
 
   FutureOr<Response> _updateInvoice(
-      Injector injector, ModularArguments arguments) async {
+      Request request, Injector injector, ModularArguments arguments) async {
     final invoiceParams = (arguments.data as Map).cast<String, dynamic>();
     final invoiceRepository = injector.get<InvoiceRepository>();
+    final extractor = injector.get<RequestExtractor>();
 
+    final token = extractor.getAuthorizationBearer(request);
+    
     try {
-      await invoiceRepository.updateInvoice(invoiceParams);
+      await invoiceRepository.updateInvoice(token,invoiceParams);
     } on InvoiceException catch (e) {
       return Response(e.statusCode, body: e.message);
     }
@@ -49,13 +56,15 @@ class InvoiceResource extends Resource {
   }
 
   FutureOr<Response> _deleteInvoice(
-      ModularArguments arguments, Injector injector) async {
-    final invoiceParams = (arguments.params as Map).cast<String, dynamic>();
-
+      Request request, ModularArguments arguments, Injector injector) async {
+    final invoiceParams = (arguments.params).cast<String, dynamic>();
     final invoiceRepository = injector.get<InvoiceRepository>();
+    final extractor = injector.get<RequestExtractor>();
+
+    final token = extractor.getAuthorizationBearer(request);
 
     try {
-      await invoiceRepository.deleteInvoice(invoiceParams);
+      await invoiceRepository.deleteInvoice(token, invoiceParams);
     } on InvoiceException catch (e) {
       return Response(e.statusCode, body: e.message);
     }
@@ -65,14 +74,16 @@ class InvoiceResource extends Resource {
   }
 
   FutureOr<Response> _getInvoicesFromHomeid(
-      ModularArguments arguments, Injector injector) async {
+      Request request, ModularArguments arguments, Injector injector) async {
     final invoiceParams = (arguments.params).cast<String, dynamic>();
-
     final invoiceRepository = injector.get<InvoiceRepository>();
+    final extractor = injector.get<RequestExtractor>();
+
+    final token = extractor.getAuthorizationBearer(request);
 
     try {
       List<Map<String, dynamic>?> invoices =
-          await invoiceRepository.getInvoicesFromHomeid(invoiceParams);
+          await invoiceRepository.getInvoicesFromHomeid(token);
       return Response.ok(jsonEncode(invoices, toEncodable: (dynamic item) {
         if (item is DateTime) {
           return item.toIso8601String();
@@ -85,14 +96,16 @@ class InvoiceResource extends Resource {
   }
 
   FutureOr<Response> _getInvoicesFromHomeidByDateInterval(
-      ModularArguments arguments, Injector injector) async {
+      Request request, ModularArguments arguments, Injector injector) async {
     var invoiceParams = (arguments.params).cast<String, dynamic>();
-
     final invoiceRepository = injector.get<InvoiceRepository>();
+    final extractor = injector.get<RequestExtractor>();
+
+    final token = extractor.getAuthorizationBearer(request);
 
     try {
       List<Map<String, dynamic>?> invoices = await invoiceRepository
-          .getInvoicesFromHomeidByDateInterval(invoiceParams);
+          .getInvoicesFromHomeidByDateInterval(token, invoiceParams);
       return Response.ok(jsonEncode(invoices, toEncodable: (dynamic item) {
         if (item is DateTime) {
           return item.toIso8601String();

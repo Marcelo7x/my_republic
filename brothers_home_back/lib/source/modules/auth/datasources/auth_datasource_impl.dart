@@ -7,9 +7,9 @@ class AuthDatasourceImpl implements AuthDatasource {
   AuthDatasourceImpl(this.database);
 
   @override
-  Future<Map> getIdAndRoleByEmail(String email) async {
+  Future<Map> getCredentialsByEmail(String email) async {
     final result = await database.query(
-      'SELECT userid, role, password FROM "User" WHERE email = @email;',
+      'SELECT userid, homeid, role, password FROM "User" WHERE email = @email;',
       variables: {
         'email': email,
       },
@@ -23,15 +23,15 @@ class AuthDatasourceImpl implements AuthDatasource {
   }
 
   @override
-  Future<String> getRoleById(userid) async {
+  Future<Map<String, dynamic>> getRoleAndHoemidByUserid(userid) async {
     final result = await database.query(
-      'SELECT role FROM "User" WHERE userid = @userid;',
+      'SELECT role, homeid FROM "User" WHERE userid = @userid;',
       variables: {
         'userid': userid,
       },
     );
 
-    return result.map((element) => element['User']).first!['role'];
+    return result.map((element) => element['User']).first!;
   }
 
   @override

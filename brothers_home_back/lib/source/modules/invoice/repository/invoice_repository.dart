@@ -1,3 +1,4 @@
+import 'package:brothers_home/source/core/services/jwt/jwt_service.dart';
 import 'package:brothers_home/source/modules/invoice/erros/invoice%20_exception.dart';
 
 abstract class InvoiceDatasource {
@@ -6,15 +7,25 @@ abstract class InvoiceDatasource {
   Future<List<Map<String, dynamic>?>> getInvoicesFromHomeid(int homeid);
   Future<List<Map<String, dynamic>>> getInvoicesFromHomeidByDateInterval(
       int homeid, startDate, endDate);
-  Future<void> deleteInvoice(int invoiceid);
+  Future<void> deleteInvoice(int userid, int invoiceid);
 }
 
 class InvoiceRepository {
   final InvoiceDatasource _datasource;
+  final JwtService _jwt;
 
-  InvoiceRepository(this._datasource);
+  InvoiceRepository(this._datasource, this._jwt);
 
-  Future<void> insertInvoice(Map<String, dynamic> invoiceParams) async {
+  Future<void> insertInvoice(token, Map<String, dynamic> invoiceParams) async {
+    final payload = _jwt.getPayload(token);
+
+    if (payload['userid'] == null || payload['homeid'] == null) {
+      throw InvoiceException(403, "Invalid credetials");
+    }
+
+    invoiceParams['userid'] = payload['userid'];
+    invoiceParams['homeid'] = payload['homeid'];
+
     final columns = invoiceParams.keys
         .map(
           (key) => '$key',
@@ -24,7 +35,16 @@ class InvoiceRepository {
     await _datasource.insertInvoice(invoiceParams, columns);
   }
 
-  Future<void> updateInvoice(Map<String, dynamic> invoiceParams) async {
+  Future<void> updateInvoice(token, Map<String, dynamic> invoiceParams) async {
+     final payload = _jwt.getPayload(token);
+
+    if (payload['userid'] == null || payload['homeid'] == null) {
+      throw InvoiceException(403, "Invalid credetials");
+    }
+
+    invoiceParams['userid'] = payload['userid'];
+    invoiceParams['homeid'] = payload['homeid'];
+
     final columns = invoiceParams.keys
         .where((key) => key != 'invoiceid')
         .map(
@@ -39,15 +59,16 @@ class InvoiceRepository {
     }
   }
 
-  Future<List<Map<String, dynamic>?>> getInvoicesFromHomeid(
-      Map<String, dynamic> invoiceParams) async {
-    if (invoiceParams['homeid'] == null) {
+  Future<List<Map<String, dynamic>?>> getInvoicesFromHomeid(token) async {
+    final payload = _jwt.getPayload(token);
+
+    if (payload['homeid'] == null) {
       throw InvoiceException(403, "Invalid homeid");
     }
 
     try {
       List<Map<String, dynamic>?> result = await _datasource
-          .getInvoicesFromHomeid(int.parse(invoiceParams['homeid']));
+          .getInvoicesFromHomeid(int.parse(payload['homeid']));
 
       if (result == null) {
         throw InvoiceException(403, "Error");
@@ -60,17 +81,21 @@ class InvoiceRepository {
   }
 
   Future<List<Map<String, dynamic>?>> getInvoicesFromHomeidByDateInterval(
-      Map<String, dynamic> invoiceParams) async {
-    if (invoiceParams['homeid'] == null ||
-        invoiceParams['start_date'] == null ||
-        invoiceParams['end_date'] == null) {
+      token, Map<String, dynamic> invoiceParams) async {
+    final payload = _jwt.getPayload(token);
+
+    if (payload['homeid'] == null) {
+      throw InvoiceException(403, "Invalid credetials");
+    }
+
+    if (invoiceParams['start_date'] == null || invoiceParams['end_date'] == null) {
       throw InvoiceException(403, "invalid Credetials");
     }
 
     try {
       List<Map<String, dynamic>?> result =
           await _datasource.getInvoicesFromHomeidByDateInterval(
-              int.parse(invoiceParams['homeid']),
+              int.parse(payload['homeid']),
               invoiceParams['start_date'],
               invoiceParams['end_date']);
 
@@ -84,13 +109,19 @@ class InvoiceRepository {
     }
   }
 
-  Future<void> deleteInvoice(Map<String, dynamic> invoiceParams) async {
+  Future<void> deleteInvoice(token, Map<String, dynamic> invoiceParams) async {
+    final payload = _jwt.getPayload(token);
+
+    if (payload['userid'] == null) {
+      throw InvoiceException(403, "Invalid credetials");
+    }
+
     if (invoiceParams['invoiceid'] == null) {
       throw InvoiceException(403, "Invalid invoiceid");
     }
 
     try {
-      await _datasource.deleteInvoice(int.parse(invoiceParams['invoiceid']));
+      await _datasource.deleteInvoice(int.parse(payload['userid']), int.parse(invoiceParams['invoiceid']));
     } on Exception catch (e) {
       throw InvoiceException(403, 'Erro ao deletar');
     }

@@ -7,10 +7,10 @@ class InvoiceDatasourceImpl extends InvoiceDatasource {
   InvoiceDatasourceImpl(RemoteDatabase this._database);
 
   @override
-  Future<void> deleteInvoice(int invoiceid) async {
+  Future<void> deleteInvoice(int userid, int invoiceid) async {
     await _database.query(
-      'DELETE FROM "Invoice" WHERE invoiceid = @invoiceid',
-      variables: {'invoiceid': invoiceid},
+      'DELETE FROM "Invoice" WHERE invoiceid = @invoiceid and userid = @userid',
+      variables: {'invoiceid': invoiceid, 'userid': userid},
     );
   }
 

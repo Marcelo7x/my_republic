@@ -5,8 +5,8 @@ import '../errors/errors.dart';
 import '../models/tokenization.dart';
 
 abstract class AuthDatasource {
-  Future<Map> getIdAndRoleByEmail(String email);
-  Future<String> getRoleById(id);
+  Future<Map> getCredentialsByEmail(String email);
+  Future<Map<String, dynamic>> getRoleAndHoemidByUserid(id);
   Future<String> getPasswordById(id);
   Future<void> updatePasswordById(id, String password);
 }
@@ -19,7 +19,7 @@ class AuthRepository {
   AuthRepository(this.datasource, this.bcrypt, this.jwt);
 
   Future<Tokenization> login(LoginCredential credential) async {
-    final userMap = await datasource.getIdAndRoleByEmail(credential.email);
+    final userMap = await datasource.getCredentialsByEmail(credential.email);
 
     if (userMap.isEmpty) {
       throw AuthException(403, 'Email ou senha invalida');
@@ -36,10 +36,13 @@ class AuthRepository {
 
   Future<Tokenization> refreshToken(String token) async {
     final payload = jwt.getPayload(token);
-    final role = await datasource.getRoleById(payload['userid']);
+    final roleAndHomeid =
+        await datasource.getRoleAndHoemidByUserid(payload['userid']);
+
     return _generateToken({
       'userid': payload['userid'],
-      ' role': role,
+      'role': roleAndHomeid['role'],
+      'homeid': roleAndHomeid['homeid'],
     });
   }
 
@@ -55,11 +58,13 @@ class AuthRepository {
 
   int _determineExpiration(Duration duration) {
     final expiresDate = DateTime.now().add(duration);
-    final expiresIn = Duration(milliseconds: expiresDate.millisecondsSinceEpoch);
+    final expiresIn =
+        Duration(milliseconds: expiresDate.millisecondsSinceEpoch);
     return expiresIn.inSeconds;
   }
 
-  Future<void> updatePassword(String token, String password, String newPassword) async {
+  Future<void> updatePassword(
+      String token, String password, String newPassword) async {
     final payload = jwt.getPayload(token);
     final hash = await datasource.getPasswordById(payload['userid']);
 
