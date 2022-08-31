@@ -36,7 +36,7 @@ class AuthRepository {
 
   Future<Tokenization> refreshToken(String token) async {
     final payload = jwt.getPayload(token);
-    final role = await datasource.getRoleById(payload['id']);
+    final role = await datasource.getRoleById(payload['userid']);
     return _generateToken({
       'id': payload['id'],
       ' role': role,

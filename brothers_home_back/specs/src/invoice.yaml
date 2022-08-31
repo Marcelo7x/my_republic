@@ -1,0 +1,209 @@
+components:
+  schemas:
+    InvoiceCreate:
+      type: object
+      properties:
+        description:
+          type: string
+        categoryid:
+          type: integer
+        date:
+          type: string
+        price:
+          type: integer
+        fixed:
+          type: boolean
+        image:
+          type: string
+        userid:
+          type: integer
+        homeid:
+          type: integer
+        paid:
+          type: string
+          default: unpaid
+          enum:
+            - "unpaid"
+            - "payed"
+            - "anypayed"
+
+    Invoice:
+      type: object
+      properties:
+        invoiceid:
+          type: integer
+        description:
+          type: string
+        category:
+          type: string
+        date:
+          type: string
+        price:
+          type: integer
+        fixed:
+          type: boolean
+        image:
+          type: string
+        userid:
+          type: integer
+        homeid:
+          type: integer
+        paid:
+          type: string
+          default: unpaid
+          enum:
+            - "unpaid"
+            - "payed"
+            - "anypayed"
+
+  Invoice:
+    post:
+      tags:
+        - "invoice"
+      summary: create new invoice
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvoiceCreate"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "404":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '../swagger.yaml#/components/schemas/BackendException'
+    put:
+      tags:
+        - "invoice"
+      summary: Update invoice
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Invoice"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "404":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '../swagger.yaml#/components/schemas/BackendException'
+
+  InvoiceByHomeid:
+    get:
+      tags:
+        - "invoice"
+      security:
+        - bearerAuth: []
+      summary: get invoice by homeid
+      parameters:
+        - in: path
+          name: homeid
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
+        "404":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '../swagger.yaml#/components/schemas/BackendException'
+  
+  InvoiceByInvoiceid:
+    delete:
+      tags:
+        - "invoice"
+      summary: delete invoice by invoiceid
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: invoiceid
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "404":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '../swagger.yaml#/components/schemas/BackendException'
+
+  InvoiceHomeidDate:
+    get:
+      tags:
+        - "invoice"
+      summary: get all invoice from interval date
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: homeid
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: start_date
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: end_date
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Invoice"
+        "404":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '../swagger.yaml#/components/schemas/BackendException'

@@ -47,7 +47,8 @@ class AuthDatasourceImpl implements AuthDatasource {
 
   @override
   Future<void> updatePasswordById(userid, String password) async {
-    final queryUpdate = 'UPDATE "User" SET password=@password WHERE userid = @userid;';
+    final queryUpdate =
+        'UPDATE "User" SET password=@password WHERE userid = @userid;';
 
     await database.query(queryUpdate, variables: {
       'userid': userid,

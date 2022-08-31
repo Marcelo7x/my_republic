@@ -7,7 +7,6 @@ import 'package:brothers_home/source/modules/user/repository/user_repository.dar
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
 
-import '../../../core/services/database/remote_database_interface.dart';
 import '../../../core/services/encrypt/bcrypt_service_imp.dart';
 
 class UserResource extends Resource {
