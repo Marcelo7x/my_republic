@@ -44,11 +44,11 @@ class AuthRepository {
   }
 
   Tokenization _generateToken(Map payload) {
-    payload['exp'] = _determineExpiration(Duration(minutes: 10));
+    payload['exp'] = _determineExpiration(Duration(days: 3));
 
     final accessToken = jwt.generateToken(payload, 'accessToken');
 
-    payload['exp'] = _determineExpiration(Duration(days: 3));
+    payload['exp'] = _determineExpiration(Duration(days: 7));
     final refreshToken = jwt.generateToken(payload, 'refreshToken');
     return Tokenization(accessToken: accessToken, refreshToken: refreshToken);
   }
