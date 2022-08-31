@@ -27,20 +27,23 @@ paths:
   /auth/update_password:
     $ref: "src/auth.yaml#/components/UpdatePassword"
 
+  #user
   /user/u:
     $ref: "src/user.yaml#/components/User"
   /user/u/{userid}:
-    $ref: "src/user.yaml#/components/UserById"
+    $ref: "src/user.yaml#/components/GetDeleteUser"
 
+  #invoice
   /invoice/i:
     $ref: "src/invoice.yaml#/components/Invoice"
   /invoice/homeid/{homeid}:
-    $ref: "src/invoice.yaml#/components/InvoiceByHomeid"
+    $ref: "src/invoice.yaml#/components/GetInvoiceByHomeid"
   /invoice/i/homeid/{homeid}/start/{start_date}/end/{end_date}:
-    $ref: "src/invoice.yaml#/components/InvoiceHomeidDate" 
+    $ref: "src/invoice.yaml#/components/GetInvoiceIntervalDate" 
   /invoice/i/invoiceid/{invoiceid}:
-    $ref: "src/invoice.yaml#/components/InvoiceByInvoiceid"
+    $ref: "src/invoice.yaml#/components/DeleteInvoice"
 
+  #home
   /home/h:
     $ref: "src/home.yaml#/components/Home"
   /home/h/{homeid}/users:

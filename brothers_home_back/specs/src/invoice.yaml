@@ -112,7 +112,7 @@ components:
               schema:
                 $ref: '../swagger.yaml#/components/schemas/BackendException'
 
-  InvoiceByHomeid:
+  GetInvoiceByHomeid:
     get:
       tags:
         - "invoice"
@@ -139,7 +139,7 @@ components:
               schema:
                 $ref: '../swagger.yaml#/components/schemas/BackendException'
   
-  InvoiceByInvoiceid:
+  DeleteInvoice:
     delete:
       tags:
         - "invoice"
@@ -169,7 +169,7 @@ components:
               schema:
                 $ref: '../swagger.yaml#/components/schemas/BackendException'
 
-  InvoiceHomeidDate:
+  GetInvoiceIntervalDate:
     get:
       tags:
         - "invoice"

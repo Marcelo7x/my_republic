@@ -38,7 +38,7 @@ components:
             - "admin"
             - "manager"
 
-  UserById:
+  GetDeleteUser:
     get:
       tags:
         - "user"
