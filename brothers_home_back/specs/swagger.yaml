@@ -1,0 +1,82 @@
+openapi: 3.0.0
+info:
+  description: "API Brohers Home"
+  version: "1.0.0"
+  title: "Brohers Home"
+servers:
+  - url: http://localhost:3001
+    description: Local server
+tags:
+  - name: "auth"
+    description: "Access to auth"
+  - name: "user"
+    description: "Access to User"
+  - name: "invoice"
+    description: "Access to Invoice"
+  - name: "home"
+    description: "Access to Home"
+
+paths:
+  # auth
+  /auth/login:
+    $ref: "src/auth.yaml#/components/Login"
+  /auth/check_token:
+    $ref: "src/auth.yaml#/components/CheckToken"
+  /auth/refresh_token:
+    $ref: "src/auth.yaml#/components/RefreshToken"
+  /auth/update_password:
+    $ref: "src/auth.yaml#/components/UpdatePassword"
+
+  #user
+  /user/u:
+    $ref: "src/user.yaml#/components/User"
+  /user/u/{userid}:
+    $ref: "src/user.yaml#/components/GetDeleteUser"
+
+  #invoice
+  /invoice/i:
+    $ref: "src/invoice.yaml#/components/Invoice"
+  /invoice/i/homeid/{homeid}:
+    $ref: "src/invoice.yaml#/components/GetInvoiceByHomeid"
+  /invoice/i/homeid/{homeid}/start/{start_date}/end/{end_date}:
+    $ref: "src/invoice.yaml#/components/GetInvoiceIntervalDate" 
+  /invoice/i/invoiceid/{invoiceid}:
+    $ref: "src/invoice.yaml#/components/DeleteInvoice"
+
+  #home
+  /home/h:
+    $ref: "src/home.yaml#/components/Home"
+  /home/h/users:
+    $ref: "src/home.yaml#/components/GetUsersByHomeid"
+  /home/h/category:
+    $ref: "src/home.yaml#/components/GetCategory"
+  
+
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "Auth header (Authorization) Access Token"
+    bearerRefreshAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "RefreshToken"
+  schemas:
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+
+    BackendException:
+      type: object
+      properties:
+        error:
+          type: string

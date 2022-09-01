@@ -1,0 +1,65 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+
+}
+
+model User {
+    userid     Int       @id @default(autoincrement())
+    firstname String
+    lastname  String
+    email      String    @unique
+    password   String
+    role       UserRole  @default(user)
+    home       Home?     @relation(fields: [homeid], references: [homeid])
+    homeid     Int?
+    Invoice    Invoice[]
+}
+
+enum UserRole {
+    admin
+    user
+    manager
+}
+
+model Home {
+    homeid   Int       @id @default(autoincrement())
+    name     String    @unique
+    street   String?
+    district String?
+    city     String?
+    state    String?
+    country  String?
+    number   Int?
+    cep      Int?
+    user     User[]
+    Invoice  Invoice[]
+}
+
+model Invoice {
+    invoiceid   Int      @id @default(autoincrement())
+    description String?
+    price       Int
+    date        DateTime @default(now())
+    image       Bytes?
+    fixed       Boolean  @default(false)
+    paid        PaidRole @default(unpaid)
+    category    Category @relation(fields: [categoryid], references: [categoryid])
+    user        User     @relation(fields: [userid], references: [userid])
+    home        Home     @relation(fields: [homeid], references: [homeid])
+    categoryid  Int
+    userid      Int
+    homeid      Int
+}
+
+enum PaidRole {
+    unpaid
+    payed
+    anypayed
+}
+
+model Category {
+    categoryid Int       @id @default(autoincrement())
+    name       String
+    Invoice    Invoice[]
+}
