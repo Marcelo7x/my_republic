@@ -36,7 +36,7 @@ class InvoiceRepository {
   }
 
   Future<void> updateInvoice(token, Map<String, dynamic> invoiceParams) async {
-     final payload = _jwt.getPayload(token);
+    final payload = _jwt.getPayload(token);
 
     if (payload['userid'] == null || payload['homeid'] == null) {
       throw InvoiceException(403, "Invalid credetials");
@@ -68,7 +68,7 @@ class InvoiceRepository {
 
     try {
       List<Map<String, dynamic>?> result = await _datasource
-          .getInvoicesFromHomeid(int.parse(payload['homeid']));
+          .getInvoicesFromHomeid(payload['homeid']);
 
       if (result == null) {
         throw InvoiceException(403, "Error");
@@ -95,7 +95,7 @@ class InvoiceRepository {
     try {
       List<Map<String, dynamic>?> result =
           await _datasource.getInvoicesFromHomeidByDateInterval(
-              int.parse(payload['homeid']),
+              payload['homeid'],
               invoiceParams['start_date'],
               invoiceParams['end_date']);
 

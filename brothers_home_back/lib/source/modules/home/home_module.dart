@@ -7,7 +7,7 @@ class HomeModule extends Module {
   @override
   List<Bind> get binds => [
     Bind.singleton<HomeDatasource>((i) => HomeDatasourceImpl(i())),
-    Bind.singleton((i) => HomeRepository(i())),
+    Bind.singleton((i) => HomeRepository(i(), i())),
   ];
 
   @override

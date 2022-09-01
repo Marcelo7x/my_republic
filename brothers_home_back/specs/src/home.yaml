@@ -134,49 +134,12 @@ components:
             application/json:
               schema:
                 $ref: '../swagger.yaml#/components/schemas/BackendException'
-
-  GetUsersByHomeid:
-    get:
-      tags:
-        - "home"
-      summary: get all home
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Home"
-        "404":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: '../swagger.yaml#/components/schemas/BackendException'
-
-  DeleteHome:
     delete:
       tags:
         - "home"
       summary: delete home by homeid
       security:
         - bearerAuth: []
-      parameters:
-        - in: path
-          name: homeid
-          required: true
-          schema:
-            type: integer
       responses:
         "200":
           description: ""
@@ -187,6 +150,29 @@ components:
                 properties:
                   message:
                     type: string
+        "404":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '../swagger.yaml#/components/schemas/BackendException'
+
+  GetUsersByHomeid:
+    get:
+      tags:
+        - "home"
+      summary: get all home
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Home"
         "404":
           description: ""
           content:

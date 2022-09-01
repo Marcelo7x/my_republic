@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:brothers_home/source/core/services/request_extractor/request_extractor.dart';
 import 'package:brothers_home/source/modules/auth/guard/auth_guard.dart';
 import 'package:brothers_home/source/modules/home/erros/home%20_exception.dart';
 import 'package:brothers_home/source/modules/home/repository/home_repository.dart';
@@ -13,10 +14,13 @@ class HomeResource extends Resource {
           AuthGuard(roles: ['admin'])
         ]),
         Route.post('/h', _insertHome, middlewares: [AuthGuard()]),
-        Route.delete('/h/:homeid', _deleteHome, middlewares: [AuthGuard()]),
+        Route.delete('/h', _deleteHome, middlewares: [
+          AuthGuard(roles: ['admin'])
+        ]),
         Route.put('/h', _updateHome, middlewares: [AuthGuard()]),
-        Route.get('/h/:homeid/users', _getUsersHome, middlewares: [AuthGuard()]),
-        Route.get('/category', _getCategory, middlewares: [AuthGuard()]),
+        Route.get('/h/users', _getUsersHome,
+            middlewares: [AuthGuard()]),
+        Route.get('/h/category', _getCategory, middlewares: [AuthGuard()]),
       ];
 
   FutureOr<Response> _insertHome(
@@ -50,14 +54,15 @@ class HomeResource extends Resource {
   }
 
   FutureOr<Response> _getUsersHome(
-      ModularArguments arguments, Injector injector) async {
-    var homeParams = (arguments.params).cast<String, dynamic>();
-
+      ModularArguments arguments, Injector injector, Request request) async {
     final homeRepository = injector.get<HomeRepository>();
+    final extractor = injector.get<RequestExtractor>();
+
+    final token = extractor.getAuthorizationBearer(request);
 
     try {
       List<Map<String, dynamic>> result =
-          await homeRepository.getUsersHome(homeParams);
+          await homeRepository.getUsersHome(token);
 
       return Response.ok(jsonEncode(result));
     } on HomeException catch (e) {
@@ -66,12 +71,15 @@ class HomeResource extends Resource {
   }
 
   FutureOr<Response> _updateHome(
-      ModularArguments arguments, Injector injector) async {
+      ModularArguments arguments, Injector injector, Request request) async {
     final homeParams = (arguments.data).cast<String, dynamic>();
     final homeRepository = injector.get<HomeRepository>();
+    final extractor = injector.get<RequestExtractor>();
+
+    final token = extractor.getAuthorizationBearer(request);
 
     try {
-      await homeRepository.updateHome(homeParams);
+      await homeRepository.updateHome(token, homeParams);
     } on HomeException catch (e) {
       return Response(e.statusCode, body: e.message);
     }
@@ -79,14 +87,14 @@ class HomeResource extends Resource {
     return Response.ok(jsonEncode({"menssage": "Ok"}));
   }
 
-  FutureOr<Response> _deleteHome(
-      ModularArguments arguments, Injector injector) async {
-    final homeParams = (arguments.params).cast<String, dynamic>();
-
+  FutureOr<Response> _deleteHome(Injector injector, Request request) async {
     final homeRepository = injector.get<HomeRepository>();
+    final extractor = injector.get<RequestExtractor>();
+
+    final token = extractor.getAuthorizationBearer(request);
 
     try {
-      await homeRepository.deleteHome(homeParams);
+      await homeRepository.deleteHome(token);
     } on HomeException catch (e) {
       return Response(e.statusCode, body: e.message);
     }
@@ -102,7 +110,7 @@ class HomeResource extends Resource {
 
     try {
       List<Map<String, dynamic>> result = await homeRepository.getCategory();
-    
+
       return Response.ok(jsonEncode(result));
     } on HomeException catch (e) {
       return Response(e.statusCode, body: e.message);

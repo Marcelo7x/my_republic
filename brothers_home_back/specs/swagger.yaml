@@ -36,7 +36,7 @@ paths:
   #invoice
   /invoice/i:
     $ref: "src/invoice.yaml#/components/Invoice"
-  /invoice/homeid/{homeid}:
+  /invoice/i/homeid/{homeid}:
     $ref: "src/invoice.yaml#/components/GetInvoiceByHomeid"
   /invoice/i/homeid/{homeid}/start/{start_date}/end/{end_date}:
     $ref: "src/invoice.yaml#/components/GetInvoiceIntervalDate" 
@@ -46,10 +46,8 @@ paths:
   #home
   /home/h:
     $ref: "src/home.yaml#/components/Home"
-  /home/h/{homeid}/users:
+  /home/h/users:
     $ref: "src/home.yaml#/components/GetUsersByHomeid"
-  /home/h/{homeid}:
-    $ref: "src/home.yaml#/components/DeleteHome"
   /home/h/category:
     $ref: "src/home.yaml#/components/GetCategory"
   

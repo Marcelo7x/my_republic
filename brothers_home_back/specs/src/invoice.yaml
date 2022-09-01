@@ -15,10 +15,6 @@ components:
           type: boolean
         image:
           type: string
-        userid:
-          type: integer
-        homeid:
-          type: integer
         paid:
           type: string
           default: unpaid

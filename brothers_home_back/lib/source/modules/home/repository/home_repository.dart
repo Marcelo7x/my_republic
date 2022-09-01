@@ -1,3 +1,4 @@
+import 'package:brothers_home/source/core/services/jwt/jwt_service.dart';
 import 'package:brothers_home/source/modules/home/erros/home%20_exception.dart';
 
 abstract class HomeDatasource {
@@ -11,8 +12,9 @@ abstract class HomeDatasource {
 
 class HomeRepository {
   final HomeDatasource _datasource;
+  final JwtService _jwt;
 
-  HomeRepository(this._datasource);
+  HomeRepository(this._datasource, this._jwt);
 
   Future<void> insertHome(Map<String, dynamic> homeParams) async {
     final columns = homeParams.keys
@@ -24,8 +26,10 @@ class HomeRepository {
     await _datasource.insertHome(homeParams, columns);
   }
 
-  Future<void> updateHome(Map<String, dynamic> homeParams) async {
-    if (homeParams['homeid'] == null) {
+  Future<void> updateHome(token, Map<String, dynamic> homeParams) async {
+    final payload = _jwt.getPayload(token);
+
+    if (payload['homeid'] == null) {
       throw HomeException(403, "Invalid homeid");
     }
 
@@ -36,6 +40,8 @@ class HomeRepository {
         )
         .toList();
 
+    homeParams['homeid'] = payload['homeid'];
+
     try {
       await _datasource.updateHome(homeParams, columns);
     } catch (e) {
@@ -43,15 +49,16 @@ class HomeRepository {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getUsersHome(
-      Map<String, dynamic> homeParams) async {
-    if (homeParams['homeid'] == null) {
+  Future<List<Map<String, dynamic>>> getUsersHome(token) async {
+    final payload = _jwt.getPayload(token);
+
+    if (payload['homeid'] == null) {
       throw HomeException(403, "Invalid homeid");
     }
 
     try {
       List<Map<String, dynamic>> result =
-          await _datasource.getUsersHome(int.parse(homeParams['homeid']));
+          await _datasource.getUsersHome(payload['homeid']);
 
       if (result == null) {
         throw HomeException(403, "Error");
@@ -91,13 +98,15 @@ class HomeRepository {
     }
   }
 
-  Future<void> deleteHome(Map<String, dynamic> homeParams) async {
-    if (homeParams['homeid'] == null) {
+  Future<void> deleteHome(token) async {
+    final payload = _jwt.getPayload(token);
+
+    if (payload['homeid'] == null) {
       throw HomeException(403, "Invalid homeid");
     }
 
     try {
-      await _datasource.deleteHome(int.parse(homeParams['homeid']));
+      await _datasource.deleteHome(payload['homeid']);
     } on Exception catch (e) {
       throw HomeException(403, 'Erro ao deletar');
     }
