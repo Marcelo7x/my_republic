@@ -62,13 +62,26 @@ abstract class _SplashStoreBase with Store {
 
     if (!error) {
       final StorageLocal conn = await StorageLocal.getInstance();
-      Map<String, dynamic> data = await conn.verifyCredentials();
+      final String? accessToken = await conn.getString('access_token');
 
-      if (data.isNotEmpty) {
-        Home home = Home(data['home_id']);
-        User user = User(data['user_id'], data['user_name'], home: home);
+      bool logged = false;
+      if (accessToken != null) {
+        logged = await ConnectionManager.checkToken(accessToken);
 
-        Modular.to.navigate('/home', arguments: {'user': user, 'home': home});
+        if (!logged) {
+          final String? refreshToken = await conn.getString('refresh_token');
+          final result = await ConnectionManager.refreshToken(refreshToken!);
+          if (result['accessToken'] != null &&
+              (result['accessToken'] as String).isNotEmpty) {
+            await conn.setString('accessToken', result['accessToken']);
+            await conn.setString('refreshToken', result['refreshToken']);
+            logged = true;
+          }
+        }
+      }
+
+      if (logged) {
+        Modular.to.navigate('/home', arguments: accessToken);
       } else {
         Modular.to.navigate('/login');
       }

@@ -1,23 +1,43 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:frontend/app/modules/subscription/subscription_module.dart';
 import 'package:frontend/domain/category.dart';
+import 'package:uno/uno.dart';
 
 class ConnectionManager {
-  static const _url = 'http://10.0.0.180:3001/';
-  static final Dio _conn = Dio();
+  static const _url = 'http://localhost:4466/';
+  static final Uno _conn = Uno();
+
+  static Future<bool> checkToken(String token) async {
+    final result = await _conn.get(
+      '${_url}/auth/check_token',
+      headers: {"Authorization": "Bearer YUBhLmNvbToxMjM0NQ=="},
+    );
+
+    return result.data['message'] ?? '' == 'ok';
+  }
+
+  static Future<Map<String, dynamic>> refreshToken(String token) async {
+    final result = await _conn.get('${_url}/auth/refresh_token',
+        headers: {"authorization": "Bearer YUBhLmNvbToxMjM0NQ=="});
+
+    return result.data;
+  }
 
   static Future<Map<String, dynamic>> login(
       final String email, final String password) async {
+    String basicAuth =
+        'basic ${base64Encode(('${email}:${password}').codeUnits)}';
+    print(basicAuth);
+
     try {
-      var response = await _conn.post('${_url}login',
-          data: jsonEncode({
-            "email": email.replaceAll(RegExp(r' '), ''),
-            "password": password
-          }));
+      var response = await _conn.get('${_url}login', headers: {
+        'authorization': basicAuth,
+        'Access-Control-Allow-Origin': '*',
+        'Accept':'*'
+      });
 
       final data = jsonDecode(response.data);
-      if (data.length > 0 && data['userid'] != null) {
+      if (data.length > 0 && data['access_token'] != null) {
         return data;
       }
     } catch (e) {
@@ -35,12 +55,11 @@ class ConnectionManager {
         throw Exception();
       });
 
-      data = jsonDecode(result.data);
+      return result.data;
     } on Exception catch (e) {
+      print(e);
       throw Exception("O servidor está desligado, tente voltar daqui a pouco");
     }
-
-    return data;
   }
 
   static Future number_users({required homeId}) async {
@@ -164,9 +183,7 @@ class ConnectionManager {
     return result;
   }
 
-  static Future createHome({
-    required String name
-  }) async {
+  static Future createHome({required String name}) async {
     print('subscription');
     var result = await _conn.post(
       '${_url}add-home',

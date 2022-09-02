@@ -26,21 +26,18 @@ abstract class _LoginStoreBase with Store {
   loggin() async {
     loading = true;
 
-    if (emailController.text.isNotEmpty &&
-        passwordController.text.isNotEmpty) {
+    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
       final data = await ConnectionManager.login(
           emailController.text, passwordController.text);
 
-      if (data.isNotEmpty) {
-        final home = Home(data['homeid']);
-
-        final user =
-            User(data['userid'], 'a', home: home);
+      if (data.isNotEmpty && data['access_token'] != null) {
+        final accessToken = data['access_token'];
 
         final StorageLocal conn = await StorageLocal.getInstance();
-        await conn.salveCredentials(user_id: user.id, user_name: user.name, home_id: user.home_id);
+        await conn.setString('access_token', accessToken);
 
-        Modular.to.navigate('/home/', arguments: {'user':user,'home':home});
+        Modular.to.navigate('/home/', arguments: accessToken);
+        
       } else {
         logginError = true;
       }

@@ -104,6 +104,17 @@ mixin _$SubscriptionStore on _SubscriptionStoreBase, Store {
   }
 
   @override
+  dynamic createHome() {
+    final _$actionInfo = _$_SubscriptionStoreBaseActionController.startAction(
+        name: '_SubscriptionStoreBase.createHome');
+    try {
+      return super.createHome();
+    } finally {
+      _$_SubscriptionStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 nameController: ${nameController},
