@@ -20,10 +20,15 @@ class StorageLocal {
   }
 
   Future<String?> getString(String key) async {
-    return await  _connection.getString(key);
+    return await _connection.getString(key);
+  }
+
+  Future<bool> remove(String key) async {
+    return await _connection.remove(key);
   }
 
   Future removeCredentials() async {
-    await setString('access_token', '');
+    await remove('access_token');
+    await remove('refresh_token');
   }
 }

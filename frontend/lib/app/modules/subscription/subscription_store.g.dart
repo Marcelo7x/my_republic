@@ -9,19 +9,51 @@ part of 'subscription_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$SubscriptionStore on _SubscriptionStoreBase, Store {
-  late final _$nameControllerAtom =
-      Atom(name: '_SubscriptionStoreBase.nameController', context: context);
+  late final _$firstNameControllerAtom = Atom(
+      name: '_SubscriptionStoreBase.firstNameController', context: context);
 
   @override
-  TextEditingController get nameController {
-    _$nameControllerAtom.reportRead();
-    return super.nameController;
+  TextEditingController get firstNameController {
+    _$firstNameControllerAtom.reportRead();
+    return super.firstNameController;
   }
 
   @override
-  set nameController(TextEditingController value) {
-    _$nameControllerAtom.reportWrite(value, super.nameController, () {
-      super.nameController = value;
+  set firstNameController(TextEditingController value) {
+    _$firstNameControllerAtom.reportWrite(value, super.firstNameController, () {
+      super.firstNameController = value;
+    });
+  }
+
+  late final _$lastNameControllerAtom =
+      Atom(name: '_SubscriptionStoreBase.lastNameController', context: context);
+
+  @override
+  TextEditingController get lastNameController {
+    _$lastNameControllerAtom.reportRead();
+    return super.lastNameController;
+  }
+
+  @override
+  set lastNameController(TextEditingController value) {
+    _$lastNameControllerAtom.reportWrite(value, super.lastNameController, () {
+      super.lastNameController = value;
+    });
+  }
+
+  late final _$homeNameControllerAtom =
+      Atom(name: '_SubscriptionStoreBase.homeNameController', context: context);
+
+  @override
+  TextEditingController get homeNameController {
+    _$homeNameControllerAtom.reportRead();
+    return super.homeNameController;
+  }
+
+  @override
+  set homeNameController(TextEditingController value) {
+    _$homeNameControllerAtom.reportWrite(value, super.homeNameController, () {
+      super.homeNameController = value;
     });
   }
 
@@ -117,7 +149,9 @@ mixin _$SubscriptionStore on _SubscriptionStoreBase, Store {
   @override
   String toString() {
     return '''
-nameController: ${nameController},
+firstNameController: ${firstNameController},
+lastNameController: ${lastNameController},
+homeNameController: ${homeNameController},
 emailController: ${emailController},
 passwordController: ${passwordController},
 loading: ${loading},

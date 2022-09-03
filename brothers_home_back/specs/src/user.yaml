@@ -30,13 +30,7 @@ components:
           type: string
         password:
           type: string
-        role:
-          type: string
-          default: user
-          enum:
-            - "dev"
-            - "admin"
-            - "manager"
+
 
   GetDeleteUser:
     get:

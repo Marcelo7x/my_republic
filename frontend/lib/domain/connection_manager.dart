@@ -180,7 +180,8 @@ class ConnectionManager {
   }
 
   static Future subscription({
-    required String name,
+    required String firstName,
+    required String lastName,
     required String email,
     required String password,
   }) async {
@@ -188,7 +189,7 @@ class ConnectionManager {
     var result = await _conn.post(
       '$_url/user/u',
       data:
-          jsonEncode({"firstname": name, "email": email, "password": password}),
+          jsonEncode({"firstname": firstName, 'lastname': lastName,  "email": email, "password": password}),
     );
 
     return result;

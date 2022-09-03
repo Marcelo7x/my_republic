@@ -8,7 +8,11 @@ class SubscriptionStore = _SubscriptionStoreBase with _$SubscriptionStore;
 
 abstract class _SubscriptionStoreBase with Store {
   @observable
-  TextEditingController nameController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  @observable
+  TextEditingController lastNameController = TextEditingController();
+  @observable
+  TextEditingController homeNameController = TextEditingController();
   @observable
   TextEditingController emailController = TextEditingController();
   @observable
@@ -62,7 +66,8 @@ abstract class _SubscriptionStoreBase with Store {
     loading = true;
     try {
       ConnectionManager.subscription(
-          name: nameController.text,
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
           email: emailController.text,
           password: passwordController.text);
     } catch (e) {
@@ -78,7 +83,7 @@ abstract class _SubscriptionStoreBase with Store {
     loading = true;
     try {
       ConnectionManager.createHome(
-          name: nameController.text
+          name: homeNameController.text
         );
     } catch (e) {
       print("erro ao criar ou entrar na republica");

@@ -46,9 +46,24 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
           ),
         ),
         TextFormField(
-          controller: subscriptionController.nameController,
+          controller: subscriptionController.firstNameController,
           decoration: const InputDecoration(
             label: Text("Nome"),
+            prefixIcon: Icon(Icons.person),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(18),
+              ),
+            ),
+          ),
+          keyboardType: TextInputType.name,
+          maxLength: 40,
+          validator: (value) => subscriptionController.nameValidate(value),
+        ),
+        TextFormField(
+          controller: subscriptionController.lastNameController,
+          decoration: const InputDecoration(
+            label: Text("Sobrenome"),
             prefixIcon: Icon(Icons.person),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(
