@@ -4,10 +4,10 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
 import 'package:frontend/domain/category.dart';
 import 'package:frontend/domain/connection_manager.dart';
+import 'package:frontend/domain/enum_paid.dart';
 import 'package:frontend/domain/home.dart';
 import 'package:frontend/domain/invoice.dart';
 import 'package:frontend/domain/jwt/jwt_decode_impl.dart';
-import 'package:frontend/domain/jwt/jwt_decode_service.dart';
 import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
 
@@ -16,17 +16,8 @@ part 'invoice_store.g.dart';
 class InvoiceStore = InvoiceStoreBase with _$InvoiceStore;
 
 abstract class InvoiceStoreBase with Store {
-  InvoiceStoreBase() {
-    final token = Modular.args.data;
-    JwtDecodeService jwt = Modular.get<JwtDecodeServiceImpl>();
-    Map<String, dynamic> payload = jwt.getPayload(token);
-
-    this.home = Home(payload['homeid']);
-    this.user = User(payload['userid'], home: this.home);
-  }
-
-  late User user;
-  late Home home;
+  User user = User.fromMap(Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data));
+  Home home = Home(Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data)['homeid']);
 
   @observable
   bool loading = false;
@@ -58,16 +49,15 @@ abstract class InvoiceStoreBase with Store {
           id: e['invoiceid'],
           user: u,
           home: home,
-          category: Category(
-              id: e['categoryid'], name: e['name']),
+          category: Category(id: e['categoryid'], name: e['name']),
           price: e['price'],
           description: e['description'],
           date: DateTime.parse(e['date']),
           paid: e['paid'] == 'unpaid'
-              ? null
+              ? Paid.unpaid
               : e['paid'] == 'payed'
-                  ? false
-                  : true)); //! to Enum
+                  ? Paid.payed
+                  : Paid.anypayed));
     }
 
     loading = false;
@@ -88,11 +78,11 @@ abstract class InvoiceStoreBase with Store {
   bool isModify = false;
 
   @observable
-  bool? isPayed;
+  Paid isPayed = Paid.unpaid;
 
   @action
-  setPaid(bool? e) {
-    isPayed = e;
+  setPaid(Paid? e) {
+    if (e != null) isPayed = e;
     print(isPayed);
   }
 
@@ -135,7 +125,7 @@ abstract class InvoiceStoreBase with Store {
     price!.updateValue(0.00);
     date = DateTime.now();
     isModify = false;
-    isPayed = null;
+    isPayed = Paid.unpaid;
   }
 
   @action
@@ -149,11 +139,7 @@ abstract class InvoiceStoreBase with Store {
               date: date,
               userId: user.id,
               homeId: home.id,
-              isPayed: isPayed == null
-                  ? "unpaid"
-                  : isPayed == false
-                      ? "payed"
-                      : "anypayed")
+              isPayed: isPayed)
           .then((value) {
         clearInput();
       });

@@ -5,6 +5,7 @@ import 'package:frontend/app/modules/home/home_store.dart';
 import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 import 'package:frontend/app/modules/home/widget/select_date_popup.dart';
 import 'package:frontend/domain/category.dart';
+import 'package:frontend/domain/enum_paid.dart';
 import 'package:intl/intl.dart';
 
 class AddInvoicePopup extends StatefulWidget {
@@ -103,11 +104,11 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                     )),
                 Observer(builder: (_) {
-                  return DropdownButton<bool?>(
+                  return DropdownButton<Paid?>(
                     borderRadius: BorderRadius.circular(18),
-                    hint: invoicesController.isPayed == null
+                    hint: invoicesController.isPayed == Paid.unpaid
                         ? const Text("Em aberto")
-                        : invoicesController.isPayed == false
+                        : invoicesController.isPayed == Paid.payed
                             ? const Text("Pago por mim")
                             : Text(
                                 "pago por todos",
@@ -121,20 +122,20 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
                     ),
                     value: invoicesController.isPayed,
                     items: const [
-                      DropdownMenuItem<bool?>(
-                        value: null,
+                      DropdownMenuItem<Paid?>(
+                        value: Paid.unpaid,
                         child: Text("Em aberto"),
                       ),
-                      DropdownMenuItem<bool?>(
-                        value: true,
+                      DropdownMenuItem<Paid?>(
+                        value: Paid.payed,
                         child: Text("Pago por mim"),
                       ),
-                      DropdownMenuItem<bool?>(
-                        value: false,
+                      DropdownMenuItem<Paid?>(
+                        value: Paid.anypayed,
                         child: Text("Pago por todos"),
                       ),
                     ],
-                    onChanged: (bool? e) {
+                    onChanged: (Paid? e) {
                       invoicesController.setPaid(e);
                     },
                   );

@@ -36,11 +36,9 @@ paths:
   #invoice
   /invoice/i:
     $ref: "src/invoice.yaml#/components/Invoice"
-  /invoice/i/homeid/{homeid}:
-    $ref: "src/invoice.yaml#/components/GetInvoiceByHomeid"
-  /invoice/i/homeid/{homeid}/start/{start_date}/end/{end_date}:
+  /invoice/i/start/{start_date}/end/{end_date}:
     $ref: "src/invoice.yaml#/components/GetInvoiceIntervalDate" 
-  /invoice/i/invoiceid/{invoiceid}:
+  /invoice/i/{invoiceid}:
     $ref: "src/invoice.yaml#/components/DeleteInvoice"
 
   #home

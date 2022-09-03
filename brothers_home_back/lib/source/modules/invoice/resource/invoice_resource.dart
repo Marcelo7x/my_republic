@@ -12,12 +12,11 @@ class InvoiceResource extends Resource {
   List<Route> get routes => [
         Route.post('/i', _insertInvoice, middlewares: [AuthGuard()]),
         Route.put('/i', _updateInvoice, middlewares: [AuthGuard()]),
-        Route.get('/i/homeid/:homeid', _getInvoicesFromHomeid,
-            middlewares: [AuthGuard()]),
-        Route.get('/i/homeid/:homeid/start/:start_date/end/:end_date',
+        Route.get('/i', _getInvoicesFromHomeid, middlewares: [AuthGuard()]),
+        Route.get('/i/start/:start_date/end/:end_date',
             _getInvoicesFromHomeidByDateInterval,
             middlewares: [AuthGuard()]),
-        Route.delete('/i/invoiceid/:invoiceid', _deleteInvoice,
+        Route.delete('/i/:invoiceid', _deleteInvoice,
             middlewares: [AuthGuard()]),
       ];
 
@@ -45,9 +44,9 @@ class InvoiceResource extends Resource {
     final extractor = injector.get<RequestExtractor>();
 
     final token = extractor.getAuthorizationBearer(request);
-    
+
     try {
-      await invoiceRepository.updateInvoice(token,invoiceParams);
+      await invoiceRepository.updateInvoice(token, invoiceParams);
     } on InvoiceException catch (e) {
       return Response(e.statusCode, body: e.message);
     }

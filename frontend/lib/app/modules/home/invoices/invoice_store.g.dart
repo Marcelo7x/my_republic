@@ -93,13 +93,13 @@ mixin _$InvoiceStore on InvoiceStoreBase, Store {
       Atom(name: 'InvoiceStoreBase.isPayed', context: context);
 
   @override
-  bool? get isPayed {
+  Paid get isPayed {
     _$isPayedAtom.reportRead();
     return super.isPayed;
   }
 
   @override
-  set isPayed(bool? value) {
+  set isPayed(Paid value) {
     _$isPayedAtom.reportWrite(value, super.isPayed, () {
       super.isPayed = value;
     });
@@ -239,7 +239,7 @@ mixin _$InvoiceStore on InvoiceStoreBase, Store {
   }
 
   @override
-  dynamic setPaid(bool? e) {
+  dynamic setPaid(Paid? e) {
     final _$actionInfo = _$InvoiceStoreBaseActionController.startAction(
         name: 'InvoiceStoreBase.setPaid');
     try {

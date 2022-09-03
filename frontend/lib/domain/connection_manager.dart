@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:frontend/app/modules/auth/models/auth_models.dart';
 import 'package:frontend/domain/category.dart';
+import 'package:frontend/domain/enum_paid.dart';
 import 'package:frontend/domain/storage_local.dart';
 import 'package:uno/uno.dart';
 
@@ -91,8 +92,7 @@ class ConnectionManager {
   }
 
   static Future number_users({required homeId}) async {
-    var result = await _conn.get(
-      '$_url/home/h/users');
+    var result = await _conn.get('$_url/home/h/users');
 
     return result.data;
   }
@@ -102,7 +102,7 @@ class ConnectionManager {
       required DateTime end_date,
       required int home_id}) async {
     var result = await _conn.get(
-        '$_url/invoice/i/homeid/$home_id/start/${start_date.toIso8601String()}/end/${end_date.toIso8601String()}');
+        '$_url/invoice/i/start/${start_date.toIso8601String()}/end/${end_date.toIso8601String()}');
 
     var data = result.data;
     return data;
@@ -128,7 +128,7 @@ class ConnectionManager {
       required DateTime date,
       required int userId,
       required int homeId,
-      required String? isPayed}) async {
+      required Paid isPayed}) async {
     print('add_invoice');
     var result = await _conn.post(
       '$_url/invoice/i',
@@ -139,7 +139,7 @@ class ConnectionManager {
         "date": date.toIso8601String().toString(),
         "userid": userId.toString(),
         "homeid": homeId.toString(),
-        "paid": isPayed
+        "paid": Paid.values[isPayed.index].name
       }),
     );
 
@@ -153,7 +153,7 @@ class ConnectionManager {
       required DateTime date,
       required int userId,
       required int invoiceId,
-      required bool? isPayed}) async {
+      required Paid isPayed}) async {
     print('modify_invoice');
     var result = await _conn.put(
       '$_url/invoice/i',
@@ -164,7 +164,7 @@ class ConnectionManager {
         "date": date.toIso8601String().toString(),
         "userid": userId.toString(),
         "invoiceid": invoiceId.toString(),
-        "paid": isPayed
+        "paid": Paid.values[isPayed.index].name
       }),
     );
 
@@ -174,7 +174,7 @@ class ConnectionManager {
   static Future remove_invoice({
     required int invoiceid,
   }) async {
-    var result = await _conn.delete('$_url/invoice/i/invoiceid/$invoiceid');
+    var result = await _conn.delete('$_url/invoice/i/$invoiceid');
 
     return jsonDecode(result.data);
   }

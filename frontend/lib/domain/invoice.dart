@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:frontend/domain/category.dart';
+import 'package:frontend/domain/enum_paid.dart';
 import 'package:frontend/domain/home.dart';
 import 'package:frontend/domain/user.dart';
 
@@ -12,7 +13,7 @@ class Invoice {
   late String _description;
   late DateTime _date;
   late ByteData _image;
-  late bool? _paid;
+  late Paid? _paid;
 
   // static int _total_sum_price = 0;
 
@@ -23,7 +24,7 @@ class Invoice {
       required Category category,
       required int price,
       required DateTime date,
-      required bool? paid,
+      required Paid paid,
       required String description,
       image}) {
     _id = id;

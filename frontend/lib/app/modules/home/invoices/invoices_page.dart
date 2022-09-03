@@ -5,6 +5,7 @@ import 'package:frontend/app/modules/home/home_store.dart';
 import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 import 'package:frontend/app/modules/home/invoices/show_information_popup.dart';
 import 'package:frontend/app/modules/home/widget/selectRageDate_popup.dart';
+import 'package:frontend/domain/enum_paid.dart';
 import 'package:intl/intl.dart';
 
 class InvoicesPage extends StatefulWidget {
@@ -170,7 +171,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
                                                                               fontWeight: FontWeight.bold,
                                                                             ),
                                                                           ),
-                                                                          e.paid == true
+                                                                          e.paid == Paid.payed
                                                                               ? Container(
                                                                                   width: 54,
                                                                                   height: 20,
@@ -182,7 +183,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
                                                                                     ],
                                                                                   ),
                                                                                 )
-                                                                              : e.paid == false
+                                                                              : e.paid == Paid.anypayed
                                                                                   ? Container(
                                                                                       width: 54,
                                                                                       height: 20,

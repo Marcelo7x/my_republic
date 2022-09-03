@@ -107,20 +107,12 @@ components:
             application/json:
               schema:
                 $ref: '../swagger.yaml#/components/schemas/BackendException'
-
-  GetInvoiceByHomeid:
     get:
       tags:
         - "invoice"
       security:
         - bearerAuth: []
       summary: get invoice by homeid
-      parameters:
-        - in: path
-          name: homeid
-          required: true
-          schema:
-            type: integer
       responses:
         "200":
           description: ""
@@ -172,12 +164,6 @@ components:
       summary: get all invoice from interval date
       security:
         - bearerAuth: []
-      parameters:
-        - in: path
-          name: homeid
-          required: true
-          schema:
-            type: integer
         - in: path
           name: start_date
           required: true
