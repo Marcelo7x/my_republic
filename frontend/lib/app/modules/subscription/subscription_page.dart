@@ -17,6 +17,17 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton:  Padding(
+        padding: const EdgeInsets.only(top: 30),
+        child: GestureDetector(
+          onTap: () => Modular.to.pop(),
+          child: const Icon(
+            Icons.arrow_back_rounded,
+            size: 40,
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Container(
@@ -36,7 +47,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     return Column(
       children: [
         const Padding(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.only(top: 20, bottom: 40),
           child: Text(
             "Cadastro",
             style: TextStyle(
@@ -133,7 +144,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       backgroundColor: Theme.of(context).colorScheme.secondary,
                       duration: const Duration(seconds: 2),
                     ));
-                    await Future.delayed(Duration(seconds: 1));
+                    await Future.delayed(const Duration(seconds: 1));
                     Modular.to.pop();
                   }
                 } else {

@@ -25,90 +25,99 @@ class _LoginPageState extends State<LoginPage> {
       //backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
         //color: Theme.of(context).backgroundColor,
-        child: SizedBox(
+        child: Container(
           width: width,
+          height: height,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // Image.asset("images/logo.png", height: 200, width: 200),
-              const Icon(
-                Icons.home_rounded,
-                size: 200,
-              ),
-              SizedBox(
-                //input de email
-                width: width * .8,
-                height: 70,
-                child: TextField(
-                  controller: loginController.emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    label: Text("Email"),
-                    prefixIcon: Icon(Icons.email),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(18),
-                      ),
-                    ),
-                  ),
+              const Padding(
+                padding: EdgeInsets.only(top: 80, bottom: 30),
+                child: Icon(
+                  Icons.home_rounded,
+                  size: 200,
                 ),
               ),
-              Container(
-                //input senha
-                width: width * .8,
-                height: 70,
-                margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                child: TextField(
-                  controller: loginController.passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    label: Text("Senha"),
-                    prefixIcon: Icon(Icons.password),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(18),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                //margin: const EdgeInsets.only(bottom: 20),
-                padding: const EdgeInsets.only(top: 5, bottom: 20),
-                child: Observer(builder: (_) {
-                  return loginController.logginError
-                      ? Text(
-                          "O email ou senha está errado.",
-                          style: TextStyle(
-                            color: Theme.of(context).errorColor,
+              Column(
+                children: [
+                  SizedBox(
+                    //input de email
+                    width: width * .8,
+                    height: 70,
+                    child: TextField(
+                      controller: loginController.emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        label: Text("Email"),
+                        prefixIcon: Icon(Icons.email),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(18),
                           ),
-                        )
-                      : const Text("");
-                }),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    //input senha
+                    width: width * .8,
+                    height: 70,
+                    margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                    child: TextField(
+                      controller: loginController.passwordController,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        label: Text("Senha"),
+                        prefixIcon: Icon(Icons.password),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(18),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    //margin: const EdgeInsets.only(bottom: 20),
+                    padding: const EdgeInsets.only(top: 5, bottom: 20),
+                    child: Observer(builder: (_) {
+                      return loginController.logginError
+                          ? Text(
+                              "O email ou senha está errado.",
+                              style: TextStyle(
+                                color: Theme.of(context).errorColor,
+                              ),
+                            )
+                          : const Text("");
+                    }),
+                  ),
+                  SizedBox(
+                    width: width * .8,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        loginController.loggin();
+                      },
+                      child: Observer(builder: (_) {
+                        return !loginController.loading
+                            ? const Text(
+                                "Entrar",
+                              )
+                            : const CircularProgressIndicator(
+                                color: Colors.white);
+                      }),
+                    ),
+                  ),
+                  Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      child: ElevatedButton(
+                          onPressed: () =>
+                              Modular.to.pushNamed('/subscription/'),
+                          child: const Text("Cadastre-se")))
+                ],
               ),
-              SizedBox(
-                width: width * .8,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    loginController.loggin();
-                  },
-                  child: Observer(builder: (_) {
-                    return !loginController.loading
-                        ? const Text(
-                            "Entrar",
-                          )
-                        : const CircularProgressIndicator(color: Colors.white);
-                  }),
-                ),
-              ),
-
-              Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  child: ElevatedButton(
-                      onPressed: () => Modular.to.pushNamed('/subscription'),
-                      child: Text("Cadastre-se")))
             ],
           ),
         ),

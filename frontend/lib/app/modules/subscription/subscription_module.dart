@@ -11,7 +11,7 @@ class SubscriptionModule extends Module {
 
   @override
   final List<ModularRoute> routes = [
-    ChildRoute(Modular.initialRoute, child: (_, args) =>  SubscriptionPage()),
+    ChildRoute(Modular.initialRoute, child: (_, args) =>  const SubscriptionPage()),
 
   ];
 
