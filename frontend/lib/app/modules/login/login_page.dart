@@ -25,15 +25,18 @@ class _LoginPageState extends State<LoginPage> {
         //color: Theme.of(context).backgroundColor,
         child: Stack(
           children: [
-            RotatedBox(
-              quarterTurns: 45,
-              child: SvgPicture.asset(
-                'images/wave.svg',
-                alignment: Alignment.center,
-                width: height,
-                height: width,
-              ),
-            ),
+            // SizedBox(
+            //   height: height,
+            //   width: width,
+            //   child: RotatedBox(
+            //     quarterTurns: 45,
+            //     child: SvgPicture.asset(
+            //       'images/wave.svg',
+            //       alignment: Alignment.topRight,
+            //       fit: BoxFit.fitWidth,
+            //     ),
+            //   ),
+            // ),
             SizedBox(
               width: width,
               height: height,
@@ -131,6 +134,18 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ],
+              ),
+            ),
+            SizedBox(
+              height: height,
+              width: width,
+              child: RotatedBox(
+                quarterTurns: 45,
+                child: SvgPicture.asset(
+                  'images/wave.svg',
+                  alignment: Alignment.topRight,
+                  fit: BoxFit.fitWidth,
+                ),
               ),
             ),
           ],

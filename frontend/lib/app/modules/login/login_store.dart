@@ -27,20 +27,26 @@ abstract class _LoginStoreBase with Store {
     loading = true;
 
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-      final data = await ConnectionManager.login(
-          emailController.text, passwordController.text);
+      try {
+        final data = await ConnectionManager.login(
+            emailController.text, passwordController.text);
+      
+        if (data.isNotEmpty && data['access_token'] != null) {
+          final accessToken = data['access_token'];
 
-      if (data.isNotEmpty && data['access_token'] != null) {
-        final accessToken = data['access_token'];
+          final StorageLocal conn = await StorageLocal.getInstance();
+          await conn.setString('access_token', accessToken);
 
-        final StorageLocal conn = await StorageLocal.getInstance();
-        await conn.setString('access_token', accessToken);
+          Modular.to.navigate('/home/', arguments: accessToken);
 
-        Modular.to.navigate('/home/', arguments: accessToken);
-        
-      } else {
-        logginError = true;
+        } else {
+          logginError = true;
+        }
+      
+      } on ConnectionManagerError catch (e) {
+        if (e.statusCode == 403) logginError = true;
       }
+      
     } else {
       logginError = true;
       print("Nao acessou");

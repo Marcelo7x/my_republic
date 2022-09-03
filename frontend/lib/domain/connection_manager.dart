@@ -5,6 +5,22 @@ import 'package:frontend/domain/enum_paid.dart';
 import 'package:frontend/domain/storage_local.dart';
 import 'package:uno/uno.dart';
 
+class ConnectionManagerError implements Exception {
+  final String message;
+  final StackTrace? stackTrace;
+  final int statusCode;
+
+  ConnectionManagerError(this.statusCode, this.message, [this.stackTrace]);
+
+  String toJson() {
+    return jsonEncode({'error': message});
+  }
+
+  @override
+  String toString() =>
+      'UserException(message: $message, stackTrace: $stackTrace, statusCode: $statusCode)';
+}
+
 class ConnectionManager {
   static const _url = 'http://192.168.1.9:3001';
   static final Uno _conn = Uno();
@@ -63,15 +79,20 @@ class ConnectionManager {
       final String email, final String password) async {
     String basicAuth = 'basic ${base64Encode(('$email:$password').codeUnits)}';
 
-    var response = await _conn.get('$_url/auth/login', headers: {
-      'authorization': basicAuth,
-    });
+    try {
+      var response = await _conn.get('$_url/auth/login', headers: {
+        'authorization': basicAuth,
+      });
 
-    final data = response.data;
-    if (data.length > 0 && data['access_token'] != null) {
-      return data;
+      final data = response.data;
+      if (data.length > 0 && data['access_token'] != null) {
+        return data;
+      }
+    } on UnoError catch (e) {
+      if (e.response?.status == 403) {
+        throw ConnectionManagerError(e.response!.status, 'invalid credentials');
+      }
     }
-
     return {};
   }
 
@@ -188,8 +209,12 @@ class ConnectionManager {
     print('subscription');
     var result = await _conn.post(
       '$_url/user/u',
-      data:
-          jsonEncode({"firstname": firstName, 'lastname': lastName,  "email": email, "password": password}),
+      data: jsonEncode({
+        "firstname": firstName,
+        'lastname': lastName,
+        "email": email,
+        "password": password
+      }),
     );
 
     return result;

@@ -31,151 +31,192 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      body: Stack(
-        children: [
-          RotatedBox(
-            quarterTurns: 135,
-            child: SvgPicture.asset(
-              'images/wave2.svg',
-              alignment: Alignment.topLeft,
-              width: height,
-              height: width,
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            RotatedBox(
+              quarterTurns: -45,
+              child: SizedBox(
+                // width: 100,
+                width: height,
+                height: width * .35,
+                child: SvgPicture.asset(
+                  'images/wave2.svg',
+                  alignment: Alignment.topRight,
+                  fit: BoxFit.fill,
+                ),
+              ),
             ),
-          ),
-          SingleChildScrollView(
-            child: SafeArea(
+            SafeArea(
               child: Container(
                 margin: const EdgeInsets.all(15.0),
                 child: Form(
                   key: _formKey,
                   autovalidateMode: AutovalidateMode.always,
-                  child: _formUI(),
+                  child: _formUI(context),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget _formUI() {
+  Widget _formUI(context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(top: 20, bottom: 40),
-          child: Text(
-            "Cadastro",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w500,
-            ),
+        SizedBox(
+          width: width * .7,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Padding(
+                padding: EdgeInsets.only(top: 80, bottom: 90),
+                child: Text(
+                  "Cadastro",
+                  style: TextStyle(
+                    fontSize: 45,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        TextFormField(
-          controller: subscriptionController.firstNameController,
-          decoration: const InputDecoration(
-            label: Text("Nome"),
-            prefixIcon: Icon(Icons.person),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(18),
+        Container(
+          width: width * .8,
+          padding: const EdgeInsets.only(bottom: 15),
+          child: TextFormField(
+            controller: subscriptionController.firstNameController,
+            decoration: const InputDecoration(
+              label: Text(
+                "Nome",
+              ),
+              prefixIcon: Icon(Icons.person),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(18),
+                ),
               ),
             ),
+            keyboardType: TextInputType.name,
+            maxLength: 40,
+            validator: (value) => subscriptionController.nameValidate(value),
           ),
-          keyboardType: TextInputType.name,
-          maxLength: 40,
-          validator: (value) => subscriptionController.nameValidate(value),
         ),
-        TextFormField(
-          controller: subscriptionController.lastNameController,
-          decoration: const InputDecoration(
-            label: Text("Sobrenome"),
-            prefixIcon: Icon(Icons.person),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(18),
+        Container(
+          width: width * .8,
+          padding: const EdgeInsets.only(bottom: 15),
+          child: TextFormField(
+            controller: subscriptionController.lastNameController,
+            decoration: const InputDecoration(
+              label: Text("Sobrenome"),
+              prefixIcon: Icon(Icons.person),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(18),
+                ),
               ),
             ),
+            keyboardType: TextInputType.name,
+            maxLength: 40,
+            validator: (value) => subscriptionController.nameValidate(value),
           ),
-          keyboardType: TextInputType.name,
-          maxLength: 40,
-          validator: (value) => subscriptionController.nameValidate(value),
         ),
-        TextFormField(
-          controller: subscriptionController.emailController,
-          decoration: const InputDecoration(
-            label: Text("Email"),
-            prefixIcon: Icon(Icons.email),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(18),
+        Container(
+          width: width * .8,
+          padding: const EdgeInsets.only(bottom: 15),
+          child: TextFormField(
+            controller: subscriptionController.emailController,
+            decoration: const InputDecoration(
+              label: Text("Email"),
+              prefixIcon: Icon(Icons.email),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(18),
+                ),
               ),
             ),
+            keyboardType: TextInputType.emailAddress,
+            maxLength: 40,
+            validator: (value) => subscriptionController.emailValidate(value),
           ),
-          keyboardType: TextInputType.emailAddress,
-          maxLength: 40,
-          validator: (value) => subscriptionController.emailValidate(value),
         ),
-        const SizedBox(height: 15.0),
-        TextFormField(
-          controller: subscriptionController.passwordController,
-          decoration: const InputDecoration(
-            label: Text("Senha"),
-            prefixIcon: Icon(Icons.password),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(18),
+        Container(
+          width: width * .8,
+          padding: const EdgeInsets.only(bottom: 15),
+          child: TextFormField(
+            controller: subscriptionController.passwordController,
+            decoration: const InputDecoration(
+              label: Text("Senha"),
+              prefixIcon: Icon(Icons.password),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(18),
+                ),
               ),
             ),
+            keyboardType: TextInputType.visiblePassword,
+            maxLength: 100,
+            validator: (value) =>
+                subscriptionController.passwordValidate(value),
           ),
-          keyboardType: TextInputType.visiblePassword,
-          maxLength: 100,
-          validator: (value) => subscriptionController.passwordValidate(value),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 15),
-          child: Observer(builder: (_) {
-            return ElevatedButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Carregando...'),
-                      duration: Duration(seconds: 90),
-                    ),
-                  );
-                  await subscriptionController.subscription();
-                  if (subscriptionController.subscriptionError) {
-                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 150,
+              height: 70,
+              padding: const EdgeInsets.only(top: 15),
+              child: Observer(builder: (_) {
+                return ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Carregando...'),
+                          duration: Duration(seconds: 90),
+                        ),
+                      );
+                      await subscriptionController.subscription();
+                      if (subscriptionController.subscriptionError) {
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: const Text('Erro de conexão...'),
-                      duration: const Duration(seconds: 5),
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                    ));
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: const Text("Cadastrado com sucesso!"),
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
-                      duration: const Duration(seconds: 2),
-                    ));
-                    await Future.delayed(const Duration(seconds: 1));
-                    Modular.to.pop();
-                  }
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Informações incorretas'),
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                    ),
-                  );
-                }
-                ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              },
-              child: const Text('Cadastrar'),
-            );
-          }),
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: const Text('Erro de conexão...'),
+                          duration: const Duration(seconds: 5),
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                        ));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: const Text("Cadastrado com sucesso!"),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondary,
+                          duration: const Duration(seconds: 2),
+                        ));
+                        await Future.delayed(const Duration(seconds: 1));
+                        Modular.to.pop();
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text('Informações incorretas'),
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                        ),
+                      );
+                    }
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                  },
+                  child: const Text('Cadastrar'),
+                );
+              }),
+            ),
+          ],
         )
       ],
     );

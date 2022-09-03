@@ -62,10 +62,10 @@ abstract class _SubscriptionStoreBase with Store {
   bool subscriptionError = false;
 
   @action
-  subscription() {
+  subscription() async {
     loading = true;
     try {
-      ConnectionManager.subscription(
+      await ConnectionManager.subscription(
           firstName: firstNameController.text,
           lastName: lastNameController.text,
           email: emailController.text,
