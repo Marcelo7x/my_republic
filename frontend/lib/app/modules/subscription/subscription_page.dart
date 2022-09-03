@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/app/modules/subscription/subscription_store.dart';
 
 class SubscriptionPage extends StatefulWidget {
@@ -16,8 +17,10 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
-      floatingActionButton:  Padding(
+      floatingActionButton: Padding(
         padding: const EdgeInsets.only(top: 30),
         child: GestureDetector(
           onTap: () => Modular.to.pop(),
@@ -28,17 +31,30 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Container(
-            margin: const EdgeInsets.all(15.0),
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.always,
-              child: _formUI(),
+      body: Stack(
+        children: [
+          RotatedBox(
+            quarterTurns: 135,
+            child: SvgPicture.asset(
+              'images/wave2.svg',
+              alignment: Alignment.topLeft,
+              width: height,
+              height: width,
             ),
           ),
-        ),
+          SingleChildScrollView(
+            child: SafeArea(
+              child: Container(
+                margin: const EdgeInsets.all(15.0),
+                child: Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.always,
+                  child: _formUI(),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

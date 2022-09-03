@@ -6,13 +6,12 @@ class LoginModule extends Module {
   @override
   final List<Bind> binds = [
     Bind.lazySingleton((i) => LoginStore()),
-
   ];
 
   @override
   final List<ModularRoute> routes = [
-    ChildRoute(Modular.initialRoute, child: (_, args) =>  const LoginPage()),
-
+    ChildRoute(Modular.initialRoute,
+        child: (_, args) => const LoginPage(),
+        transition: TransitionType.rightToLeft),
   ];
-
 }
