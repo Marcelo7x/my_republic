@@ -44,6 +44,7 @@ dependencies:
   flutter_masked_text2: ^0.9.1
   permission_handler: ^9.2.0
   uno: any
+  jwt_decode: ^0.3.1
 
 dev_dependencies:
   build_runner: ^2.1.8

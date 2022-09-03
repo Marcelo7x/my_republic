@@ -3,6 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 import 'package:frontend/domain/connection_manager.dart';
 import 'package:frontend/domain/home.dart';
+import 'package:frontend/domain/jwt/jwt_decode_impl.dart';
 import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
 
@@ -11,8 +12,9 @@ part 'balance_store.g.dart';
 class BalanceStore = BalanceStoreBase with _$BalanceStore;
 
 abstract class BalanceStoreBase with Store {
-  User user = Modular.args.data['user'];
-  Home home = Modular.args.data['home'];
+  User user = User.fromMap(Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data));
+  Home home = Home(Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data)['homeid']);
+
   InvoiceStore invoicesController = Modular.get<InvoiceStore>();
 
   @observable
@@ -36,9 +38,9 @@ abstract class BalanceStoreBase with Store {
       var data = await ConnectionManager.number_users(homeId: home.id);
 
       data.forEach((e) {
-        residents[e['User']['userid']] = {
+        residents[e['userid']] = {
           'value': 0,
-          'name': e['User']['name'],
+          'name': e['firstname'],
           'total': 0,
           'paid': 0,
           'r': Random().nextInt(255),

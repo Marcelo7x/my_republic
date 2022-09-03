@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -8,6 +6,8 @@ import 'package:frontend/domain/category.dart';
 import 'package:frontend/domain/connection_manager.dart';
 import 'package:frontend/domain/home.dart';
 import 'package:frontend/domain/invoice.dart';
+import 'package:frontend/domain/jwt/jwt_decode_impl.dart';
+import 'package:frontend/domain/jwt/jwt_decode_service.dart';
 import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
 
@@ -16,8 +16,17 @@ part 'invoice_store.g.dart';
 class InvoiceStore = InvoiceStoreBase with _$InvoiceStore;
 
 abstract class InvoiceStoreBase with Store {
-  User user = Modular.args.data['user'];
-  Home home = Modular.args.data['home'];
+  InvoiceStoreBase() {
+    final token = Modular.args.data;
+    JwtDecodeService jwt = Modular.get<JwtDecodeServiceImpl>();
+    Map<String, dynamic> payload = jwt.getPayload(token);
+
+    this.home = Home(payload['homeid']);
+    this.user = User(payload['userid'], home: this.home);
+  }
+
+  late User user;
+  late Home home;
 
   @observable
   bool loading = false;
@@ -34,6 +43,8 @@ abstract class InvoiceStoreBase with Store {
 
     loading = true;
 
+    await ConnectionManager.initApiClient();
+
     var result = await ConnectionManager.get_invoices(
         start_date: dateRange.startDate!,
         end_date: dateRange.endDate!,
@@ -42,19 +53,19 @@ abstract class InvoiceStoreBase with Store {
     invoices.clear();
 
     for (var e in result) {
-      User u = User(e['Invoice']['userid'], e['User']['name']);
+      User u = User(e['userid'], name: e['firstname']);
       invoices.add(Invoice(
-          id: e['Invoice']['invoiceid'],
+          id: e['invoiceid'],
           user: u,
           home: home,
           category: Category(
-              id: e['Invoice']['categoryid'], name: e['Category']['name']),
-          price: e['Invoice']['price'],
-          description: e['Invoice']['description'],
-          date: DateTime.parse(e['Invoice']['date']),
-          paid: e['Invoice']['paid'] == 'unpaid'
+              id: e['categoryid'], name: e['name']),
+          price: e['price'],
+          description: e['description'],
+          date: DateTime.parse(e['date']),
+          paid: e['paid'] == 'unpaid'
               ? null
-              : e['Invoice']['paid'] == 'payed'
+              : e['paid'] == 'payed'
                   ? false
                   : true)); //! to Enum
     }
@@ -183,8 +194,7 @@ abstract class InvoiceStoreBase with Store {
     loading = true;
     try {
       var result = await ConnectionManager.remove_invoice(
-        userId: selectedInvoice!.user.id,
-        invoiceId: selectedInvoice!.id,
+        invoiceid: selectedInvoice!.id,
       );
     } on Exception catch (e) {
       print('remove_invoice:  nao conseguiu remover invoice');

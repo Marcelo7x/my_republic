@@ -4,6 +4,8 @@ import 'package:frontend/app/modules/home/balance/balance_store.dart';
 import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 
 import 'package:frontend/domain/home.dart';
+import 'package:frontend/domain/jwt/jwt_decode_impl.dart';
+import 'package:frontend/domain/jwt/jwt_decode_service.dart';
 import 'package:frontend/domain/storage_local.dart';
 import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
@@ -15,8 +17,10 @@ part 'home_store.g.dart';
 class HomeStore = HomeStoreBase with _$HomeStore;
 
 abstract class HomeStoreBase with Store {
-  User user = Modular.args.data['user'];
-  Home home = Modular.args.data['home'];
+  
+
+  User user = User.fromMap(Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data));
+  Home home = Home(Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data)['homeid']);
 
   @observable
   int selectedIndex = 0;

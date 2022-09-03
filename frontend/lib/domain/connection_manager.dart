@@ -1,48 +1,76 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
+import 'package:frontend/app/modules/auth/models/auth_models.dart';
 import 'package:frontend/domain/category.dart';
+import 'package:frontend/domain/storage_local.dart';
 import 'package:uno/uno.dart';
 
 class ConnectionManager {
-  static const _url = 'http://localhost:4466/';
+  static const _url = 'http://192.168.1.9:3001';
   static final Uno _conn = Uno();
+
+  static Future<void> initApiClient() async {
+    StorageLocal st = await StorageLocal.getInstance();
+    Tokenization tokenization = Tokenization(
+        accessToken: await st.getString('access_token') ?? '-',
+        refreshToken: await st.getString('refresh_token') ?? '-');
+
+    _conn.interceptors.request.use((request) async {
+      request.headers['authorization'] = "Bearer " + tokenization.accessToken;
+      return request;
+    }, onError: (UnoError error) async {
+      var origin = error.response?.request;
+      if (error.response?.status == 403) {
+        try {
+          var data = await _conn.get("/auth/refresh_token", headers: {
+            "authorization": "Bearer ${tokenization.refreshToken}"
+          });
+
+          tokenization = Tokenization.fromJson(data.data);
+
+          await st.setString('access_token', data.data['newToken']);
+          await st.setString('refresh_token', data.data['newToken']);
+
+          origin?.headers["authorization"] =
+              'Bearer ${tokenization.accessToken}';
+
+          return _conn.request(origin!);
+        } catch (err) {
+          return err;
+        }
+      }
+      return error;
+    });
+  }
 
   static Future<bool> checkToken(String token) async {
     final result = await _conn.get(
-      '${_url}/auth/check_token',
-      headers: {"Authorization": "Bearer YUBhLmNvbToxMjM0NQ=="},
+      '$_url/auth/check_token',
+      headers: {"authorization": "Bearer $token"},
     );
 
-    return result.data['message'] ?? '' == 'ok';
+    return (result.data['message'] ?? '') == 'ok';
   }
 
   static Future<Map<String, dynamic>> refreshToken(String token) async {
-    final result = await _conn.get('${_url}/auth/refresh_token',
-        headers: {"authorization": "Bearer YUBhLmNvbToxMjM0NQ=="});
+    final result = await _conn.get('$_url/auth/refresh_token',
+        headers: {"authorization": "Bearer $token"});
 
     return result.data;
   }
 
   static Future<Map<String, dynamic>> login(
       final String email, final String password) async {
-    String basicAuth =
-        'basic ${base64Encode(('${email}:${password}').codeUnits)}';
-    print(basicAuth);
+    String basicAuth = 'basic ${base64Encode(('$email:$password').codeUnits)}';
 
-    try {
-      var response = await _conn.get('${_url}login', headers: {
-        'authorization': basicAuth,
-        'Access-Control-Allow-Origin': '*',
-        'Accept':'*'
-      });
+    var response = await _conn.get('$_url/auth/login', headers: {
+      'authorization': basicAuth,
+    });
 
-      final data = jsonDecode(response.data);
-      if (data.length > 0 && data['access_token'] != null) {
-        return data;
-      }
-    } catch (e) {
-      print(e);
+    final data = response.data;
+    if (data.length > 0 && data['access_token'] != null) {
+      return data;
     }
+
     return {};
   }
 
@@ -63,37 +91,26 @@ class ConnectionManager {
   }
 
   static Future number_users({required homeId}) async {
-    var result = await _conn.post(
-      '${_url}number-users',
-      data: jsonEncode({
-        "homeId": homeId.toString(),
-      }),
-    );
+    var result = await _conn.get(
+      '$_url/home/h/users');
 
-    return jsonDecode(result.data);
+    return result.data;
   }
 
   static Future<dynamic> get_invoices(
       {required DateTime start_date,
       required DateTime end_date,
       required int home_id}) async {
-    var result = await _conn.post(
-      '${_url}list-invoices-date-interval',
-      data: jsonEncode({
-        'first_date': start_date.toIso8601String().toString(),
-        'last_date': end_date.toIso8601String().toString(),
-        'homeid': home_id,
-      }),
-    );
+    var result = await _conn.get(
+        '$_url/invoice/i/homeid/$home_id/start/${start_date.toIso8601String()}/end/${end_date.toIso8601String()}');
 
-    var data = jsonDecode(result.data);
-
+    var data = result.data;
     return data;
   }
 
   static Future<List<Category>> get_categories() async {
-    var result = await _conn.get('${_url}list-categories');
-    var data = jsonDecode(result.data);
+    var result = await _conn.get('$_url/home/h/category');
+    var data = result.data;
     List<Category> categories = [];
 
     for (var e in data) {
@@ -114,7 +131,7 @@ class ConnectionManager {
       required String? isPayed}) async {
     print('add_invoice');
     var result = await _conn.post(
-      '${_url}add-invoice',
+      '$_url/invoice/i',
       data: jsonEncode({
         "description": description,
         "categoryid": categoryId.toString(),
@@ -126,7 +143,7 @@ class ConnectionManager {
       }),
     );
 
-    return jsonDecode(result.data);
+    return result.data;
   }
 
   static Future modify_invoice(
@@ -139,32 +156,25 @@ class ConnectionManager {
       required bool? isPayed}) async {
     print('modify_invoice');
     var result = await _conn.put(
-      '${_url}modify-invoice',
+      '$_url/invoice/i',
       data: jsonEncode({
         "description": description,
-        "categoryId": categoryId.toString(),
+        "categoryid": categoryId.toString(),
         "price": price.toString(),
         "date": date.toIso8601String().toString(),
-        "userId": userId.toString(),
-        "invoiceId": invoiceId.toString(),
+        "userid": userId.toString(),
+        "invoiceid": invoiceId.toString(),
         "paid": isPayed
       }),
     );
 
-    return jsonDecode(result.data);
+    return result.data;
   }
 
   static Future remove_invoice({
-    required int userId,
-    required int invoiceId,
+    required int invoiceid,
   }) async {
-    var result = await _conn.delete(
-      '${_url}remove-invoice',
-      data: jsonEncode({
-        "userId": userId.toString(),
-        "invoiceId": invoiceId.toString(),
-      }),
-    );
+    var result = await _conn.delete('$_url/invoice/i/invoiceid/$invoiceid');
 
     return jsonDecode(result.data);
   }
@@ -176,8 +186,9 @@ class ConnectionManager {
   }) async {
     print('subscription');
     var result = await _conn.post(
-      '${_url}add-user',
-      data: jsonEncode({"name": name, "email": email, "password": password}),
+      '$_url/user/u',
+      data:
+          jsonEncode({"firstname": name, "email": email, "password": password}),
     );
 
     return result;
@@ -186,7 +197,7 @@ class ConnectionManager {
   static Future createHome({required String name}) async {
     print('subscription');
     var result = await _conn.post(
-      '${_url}add-home',
+      '$_url/home/h',
       data: jsonEncode({"name": name}),
     );
 
