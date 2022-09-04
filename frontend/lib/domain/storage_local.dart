@@ -31,4 +31,9 @@ class StorageLocal {
     await remove('access_token');
     await remove('refresh_token');
   }
+
+  Future saveCredentials(accessToken, refreshToken) async {
+    await setString('access_token', accessToken);
+    await setString('refresh_token', refreshToken);
+  }
 }

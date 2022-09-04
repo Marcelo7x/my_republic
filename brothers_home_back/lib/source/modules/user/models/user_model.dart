@@ -5,6 +5,7 @@ class UserModel {
   String? lastName;
   String? password;
   String? email;
+  int? homeid;
   int? userid;
 
   UserModel(
@@ -12,12 +13,14 @@ class UserModel {
       String? firstName,
       String? lastName,
       String? email,
-      String? password}) {
+      String? password,
+      int? homeid}) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.password = password;
     this.userid = userid;
+    this.homeid = homeid;
   }
 
   Map<String, dynamic> userInformaitionToMap() {
@@ -26,6 +29,7 @@ class UserModel {
       "firstname": firstName,
       "lastname": lastName,
       "email": email,
+      "homeid": homeid,
     };
   }
 
@@ -38,6 +42,7 @@ class UserModel {
       password: map['password'],
       email: map['email'],
       userid: map['userid'],
+      homeid: map['homeid'],
     );
   }
 }

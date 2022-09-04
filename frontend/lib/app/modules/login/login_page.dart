@@ -129,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                           margin: const EdgeInsets.only(top: 10),
                           child: ElevatedButton(
                               onPressed: () =>
-                                  Modular.to.pushNamed('/subscription/'),
+                                  Modular.to.pushNamed('/user_registration/'),
                               child: const Text("Cadastre-se")))
                     ],
                   ),

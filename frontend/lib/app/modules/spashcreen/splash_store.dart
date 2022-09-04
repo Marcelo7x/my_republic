@@ -3,6 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/app_widget.dart';
 import 'package:frontend/domain/connection_manager.dart';
 import 'package:frontend/domain/home.dart';
+import 'package:frontend/domain/jwt/jwt_decode_service.dart';
 import 'package:frontend/domain/storage_local.dart';
 import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
@@ -69,6 +70,7 @@ abstract class _SplashStoreBase with Store {
         logged = await ConnectionManager.checkToken(accessToken);
 
         if (!logged) {
+          await ConnectionManager.initApiClient();
           final String? refreshToken = await conn.getString('refresh_token');
           final result = await ConnectionManager.refreshToken(refreshToken!);
           if (result['accessToken'] != null &&
@@ -79,9 +81,16 @@ abstract class _SplashStoreBase with Store {
           }
         }
       }
-
+      
       if (logged) {
-        Modular.to.navigate('/home', arguments: accessToken);
+        JwtDecodeService jwt = Modular.get<JwtDecodeService>();
+        final payload = jwt.getPayload(accessToken!);
+
+        if (payload['homeid'].runtimeType == Null) {
+          Modular.to.navigate('/home_registration', arguments: accessToken);
+        } else {
+          Modular.to.navigate('/home/', arguments: accessToken);
+        }
       } else {
         Modular.to.navigate('/login');
       }

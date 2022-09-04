@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:frontend/domain/connection_manager.dart';
 import 'package:mobx/mobx.dart';
 
-part 'subscription_store.g.dart';
+part 'user_registration_store.g.dart';
 
-class SubscriptionStore = _SubscriptionStoreBase with _$SubscriptionStore;
+class UserRegistrationStore = _UserRegistrationStoreBase
+    with _$UserRegistrationStore;
 
-abstract class _SubscriptionStoreBase with Store {
+abstract class _UserRegistrationStoreBase with Store {
   @observable
   TextEditingController firstNameController = TextEditingController();
   @observable
@@ -57,37 +58,22 @@ abstract class _SubscriptionStoreBase with Store {
       return null;
     }
   }
-  
+
   @observable
-  bool subscriptionError = false;
+  bool userRegistrarionError = false;
 
   @action
-  subscription() async {
+  userRegistrarion() async {
     loading = true;
     try {
-      await ConnectionManager.subscription(
+      await ConnectionManager.userRegistration(
           firstName: firstNameController.text,
           lastName: lastNameController.text,
           email: emailController.text,
           password: passwordController.text);
     } catch (e) {
       print("erro ao adicionar usuario");
-      subscriptionError = true;
-    }
-
-    loading = false;
-  }
-
-  @action
-  createHome() {
-    loading = true;
-    try {
-      ConnectionManager.createHome(
-          name: homeNameController.text
-        );
-    } catch (e) {
-      print("erro ao criar ou entrar na republica");
-      subscriptionError = true;
+      userRegistrarionError = true;
     }
 
     loading = false;

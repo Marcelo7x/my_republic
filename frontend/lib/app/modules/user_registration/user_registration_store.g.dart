@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'subscription_store.dart';
+part of 'user_registration_store.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,9 +8,9 @@ part of 'subscription_store.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$SubscriptionStore on _SubscriptionStoreBase, Store {
+mixin _$UserRegistrationStore on _UserRegistrationStoreBase, Store {
   late final _$firstNameControllerAtom = Atom(
-      name: '_SubscriptionStoreBase.firstNameController', context: context);
+      name: '_UserRegistrationStoreBase.firstNameController', context: context);
 
   @override
   TextEditingController get firstNameController {
@@ -25,8 +25,8 @@ mixin _$SubscriptionStore on _SubscriptionStoreBase, Store {
     });
   }
 
-  late final _$lastNameControllerAtom =
-      Atom(name: '_SubscriptionStoreBase.lastNameController', context: context);
+  late final _$lastNameControllerAtom = Atom(
+      name: '_UserRegistrationStoreBase.lastNameController', context: context);
 
   @override
   TextEditingController get lastNameController {
@@ -41,8 +41,8 @@ mixin _$SubscriptionStore on _SubscriptionStoreBase, Store {
     });
   }
 
-  late final _$homeNameControllerAtom =
-      Atom(name: '_SubscriptionStoreBase.homeNameController', context: context);
+  late final _$homeNameControllerAtom = Atom(
+      name: '_UserRegistrationStoreBase.homeNameController', context: context);
 
   @override
   TextEditingController get homeNameController {
@@ -57,8 +57,8 @@ mixin _$SubscriptionStore on _SubscriptionStoreBase, Store {
     });
   }
 
-  late final _$emailControllerAtom =
-      Atom(name: '_SubscriptionStoreBase.emailController', context: context);
+  late final _$emailControllerAtom = Atom(
+      name: '_UserRegistrationStoreBase.emailController', context: context);
 
   @override
   TextEditingController get emailController {
@@ -73,8 +73,8 @@ mixin _$SubscriptionStore on _SubscriptionStoreBase, Store {
     });
   }
 
-  late final _$passwordControllerAtom =
-      Atom(name: '_SubscriptionStoreBase.passwordController', context: context);
+  late final _$passwordControllerAtom = Atom(
+      name: '_UserRegistrationStoreBase.passwordController', context: context);
 
   @override
   TextEditingController get passwordController {
@@ -90,7 +90,7 @@ mixin _$SubscriptionStore on _SubscriptionStoreBase, Store {
   }
 
   late final _$loadingAtom =
-      Atom(name: '_SubscriptionStoreBase.loading', context: context);
+      Atom(name: '_UserRegistrationStoreBase.loading', context: context);
 
   @override
   bool get loading {
@@ -105,45 +105,31 @@ mixin _$SubscriptionStore on _SubscriptionStoreBase, Store {
     });
   }
 
-  late final _$subscriptionErrorAtom =
-      Atom(name: '_SubscriptionStoreBase.subscriptionError', context: context);
+  late final _$userRegistrarionErrorAtom = Atom(
+      name: '_UserRegistrationStoreBase.userRegistrarionError',
+      context: context);
 
   @override
-  bool get subscriptionError {
-    _$subscriptionErrorAtom.reportRead();
-    return super.subscriptionError;
+  bool get userRegistrarionError {
+    _$userRegistrarionErrorAtom.reportRead();
+    return super.userRegistrarionError;
   }
 
   @override
-  set subscriptionError(bool value) {
-    _$subscriptionErrorAtom.reportWrite(value, super.subscriptionError, () {
-      super.subscriptionError = value;
+  set userRegistrarionError(bool value) {
+    _$userRegistrarionErrorAtom.reportWrite(value, super.userRegistrarionError,
+        () {
+      super.userRegistrarionError = value;
     });
   }
 
-  late final _$_SubscriptionStoreBaseActionController =
-      ActionController(name: '_SubscriptionStoreBase', context: context);
+  late final _$userRegistrarionAsyncAction = AsyncAction(
+      '_UserRegistrationStoreBase.userRegistrarion',
+      context: context);
 
   @override
-  dynamic subscription() {
-    final _$actionInfo = _$_SubscriptionStoreBaseActionController.startAction(
-        name: '_SubscriptionStoreBase.subscription');
-    try {
-      return super.subscription();
-    } finally {
-      _$_SubscriptionStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic createHome() {
-    final _$actionInfo = _$_SubscriptionStoreBaseActionController.startAction(
-        name: '_SubscriptionStoreBase.createHome');
-    try {
-      return super.createHome();
-    } finally {
-      _$_SubscriptionStoreBaseActionController.endAction(_$actionInfo);
-    }
+  Future userRegistrarion() {
+    return _$userRegistrarionAsyncAction.run(() => super.userRegistrarion());
   }
 
   @override
@@ -155,7 +141,7 @@ homeNameController: ${homeNameController},
 emailController: ${emailController},
 passwordController: ${passwordController},
 loading: ${loading},
-subscriptionError: ${subscriptionError}
+userRegistrarionError: ${userRegistrarionError}
     ''';
   }
 }

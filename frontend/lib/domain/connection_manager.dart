@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:frontend/app/modules/auth/models/auth_models.dart';
+import 'package:frontend/app/modules/user_registration/user_registration_page.dart';
 import 'package:frontend/domain/category.dart';
 import 'package:frontend/domain/enum_paid.dart';
 import 'package:frontend/domain/storage_local.dart';
@@ -59,6 +60,11 @@ class ConnectionManager {
     });
   }
 
+  static removeInterceptors() {
+    final myInterceptor = _conn.interceptors.request.use((request) => request);
+    _conn.interceptors.request.eject(myInterceptor);
+  }
+
   static Future<bool> checkToken(String token) async {
     final result = await _conn.get(
       '$_url/auth/check_token',
@@ -69,7 +75,7 @@ class ConnectionManager {
   }
 
   static Future<Map<String, dynamic>> refreshToken(String token) async {
-    final result = await _conn.get('$_url/auth/refresh_token',
+    final result = await Uno().get('$_url/auth/refresh_token',
         headers: {"authorization": "Bearer $token"});
 
     return result.data;
@@ -80,7 +86,7 @@ class ConnectionManager {
     String basicAuth = 'basic ${base64Encode(('$email:$password').codeUnits)}';
 
     try {
-      var response = await _conn.get('$_url/auth/login', headers: {
+      var response = await Uno().get('$_url/auth/login', headers: {
         'authorization': basicAuth,
       });
 
@@ -200,13 +206,12 @@ class ConnectionManager {
     return jsonDecode(result.data);
   }
 
-  static Future subscription({
+  static Future userRegistration({
     required String firstName,
     required String lastName,
     required String email,
     required String password,
   }) async {
-    print('subscription');
     var result = await _conn.post(
       '$_url/user/u',
       data: jsonEncode({
@@ -220,13 +225,79 @@ class ConnectionManager {
     return result;
   }
 
-  static Future createHome({required String name}) async {
-    print('subscription');
-    var result = await _conn.post(
-      '$_url/home/h',
-      data: jsonEncode({"name": name}),
-    );
+  static Future userUpadate({
+    String? firstName,
+    String? lastName,
+    String? email,
+    int? homeid,
+  }) async {
+    Map<String, dynamic> info = {};
 
-    return result;
+    if (firstName != null) info['firstName'] = firstName;
+    if (lastName != null) info['lastName'] = lastName;
+    if (email != null) info['email'] = email;
+    if (homeid != null) info['homeid'] = homeid;
+
+    if (info.isNotEmpty) {
+      try {
+        var result = await _conn.put(
+          '$_url/user/u',
+          data: jsonEncode(info),
+        );
+      } on UnoError catch (e) {
+        if (e.response?.status == 403) {
+          throw ConnectionManagerError(e.response!.status, 'error userUpadate');
+        }
+      }
+    }
+  }
+
+  static Future homeRegistration({
+    required String homename,
+    String? street,
+    String? district,
+    String? city,
+    String? state,
+    String? country,
+    int? number,
+    int? cep,
+  }) async {
+    Map<String, dynamic> info = {};
+    info['name'] = homename;
+
+    if (street != null) info['street'] = street;
+    if (district != null) info['street'] = street;
+    if (city != null) info['street'] = street;
+    if (state != null) info['street'] = street;
+    if (country != null) info['street'] = street;
+    if (number != null) info['street'] = street;
+    if (cep != null) info['street'] = street;
+
+    try {
+      var result = await _conn.post(
+        '$_url/home/h',
+        data: jsonEncode(info),
+      );
+      return result.data;
+    } on UnoError catch (e) {
+      if (e.response?.status == 403) {
+        throw ConnectionManagerError(
+            e.response!.status, 'error create home by name');
+      }
+    }
+  }
+
+  static Future<Map> homeSearch(String homename) async {
+    print('home search');
+    try {
+      var result = await _conn.get('$_url/home/h/homename/$homename');
+      return result.data;
+    } on UnoError catch (e) {
+      if (e.response?.status == 403) {
+        throw ConnectionManagerError(
+            e.response!.status, 'erro search home by name');
+      }
+    }
+    return {};
   }
 }

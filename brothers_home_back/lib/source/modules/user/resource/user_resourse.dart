@@ -21,7 +21,7 @@ class UserResource extends Resource {
         ]),
         Route.post('/u', _insertUser),
         Route.put('/u', _updateUser, middlewares: [
-          AuthGuard(roles: ['admin'])
+          AuthGuard()
         ]),
         Route.delete('/u/:userid', _deleteUser, middlewares: [
           AuthGuard(roles: ['admin'])

@@ -72,7 +72,8 @@ class UserRepository {
     if (userInfo.firstName == null &&
         userInfo.lastName == null &&
         userInfo.email == null &&
-        userInfo.password == null) {
+        userInfo.password == null &&
+        userInfo.homeid == null) {
       throw UserException(403, "Invalid parameters");
     }
 

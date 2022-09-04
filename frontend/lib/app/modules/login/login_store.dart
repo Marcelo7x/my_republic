@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/domain/connection_manager.dart';
 import 'package:frontend/domain/home.dart';
+import 'package:frontend/domain/jwt/jwt_decode_service.dart';
 import 'package:frontend/domain/storage_local.dart';
 import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
@@ -30,23 +31,28 @@ abstract class _LoginStoreBase with Store {
       try {
         final data = await ConnectionManager.login(
             emailController.text, passwordController.text);
-      
+
         if (data.isNotEmpty && data['access_token'] != null) {
           final accessToken = data['access_token'];
+          final refreshToken = data['refresh_token'];
 
           final StorageLocal conn = await StorageLocal.getInstance();
-          await conn.setString('access_token', accessToken);
+          conn.saveCredentials(accessToken, refreshToken);
 
-          Modular.to.navigate('/home/', arguments: accessToken);
+          JwtDecodeService jwt = Modular.get<JwtDecodeService>();
+          final payload = jwt.getPayload(accessToken);
 
+          if (payload['homeid'].runtimeType == Null) {
+            Modular.to.navigate('/home_registration', arguments: accessToken);
+          } else {
+            Modular.to.navigate('/home/', arguments: accessToken);
+          }
         } else {
           logginError = true;
         }
-      
       } on ConnectionManagerError catch (e) {
         if (e.statusCode == 403) logginError = true;
       }
-      
     } else {
       logginError = true;
       print("Nao acessou");

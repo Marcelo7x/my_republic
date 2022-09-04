@@ -11,31 +11,30 @@ class HomeResource extends Resource {
   @override
   List<Route> get routes => [
         Route.get('/h', _getHome, middlewares: [
-          AuthGuard(roles: ['admin'])
+          AuthGuard()
         ]),
         Route.post('/h', _insertHome, middlewares: [AuthGuard()]),
         Route.delete('/h', _deleteHome, middlewares: [
           AuthGuard(roles: ['admin'])
         ]),
         Route.put('/h', _updateHome, middlewares: [AuthGuard()]),
-        Route.get('/h/users', _getUsersHome,
-            middlewares: [AuthGuard()]),
+        Route.get('/h/users', _getUsersHome, middlewares: [AuthGuard()]),
         Route.get('/h/category', _getCategory, middlewares: [AuthGuard()]),
+        Route.get('/h/homename/:name', _getHomeByName, middlewares: [AuthGuard()]),
       ];
 
   FutureOr<Response> _insertHome(
       ModularArguments arguments, Injector injector) async {
     final homeParams = (arguments.data).cast<String, dynamic>();
-
     final homeRepository = injector.get<HomeRepository>();
 
     try {
-      await homeRepository.insertHome(homeParams);
+      Map<String, dynamic> result  = await homeRepository.insertHome(homeParams);
+      return Response.ok(jsonEncode(result));
+
     } on HomeException catch (e) {
       return Response(e.statusCode, body: e.message);
     }
-
-    return Response.ok(jsonEncode({"menssage": "Ok"}));
   }
 
   FutureOr<Response> _getHome(Injector injector) async {
@@ -110,6 +109,21 @@ class HomeResource extends Resource {
 
     try {
       List<Map<String, dynamic>> result = await homeRepository.getCategory();
+
+      return Response.ok(jsonEncode(result));
+    } on HomeException catch (e) {
+      return Response(e.statusCode, body: e.message);
+    }
+  }
+
+  FutureOr<Response> _getHomeByName(
+      ModularArguments arguments, Injector injector, Request request) async {
+    final homeParams = (arguments.params).cast<String, dynamic>();
+
+    final homeRepository = injector.get<HomeRepository>();
+
+    try {
+      Map<String, dynamic> result = await homeRepository.getHomeByName(homeParams);
 
       return Response.ok(jsonEncode(result));
     } on HomeException catch (e) {

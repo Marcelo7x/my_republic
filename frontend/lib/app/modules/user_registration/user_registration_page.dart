@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend/app/modules/subscription/subscription_store.dart';
+import 'package:frontend/app/modules/user_registration/user_registration_store.dart';
 
-class SubscriptionPage extends StatefulWidget {
-  const SubscriptionPage({Key? key}) : super(key: key);
+class UserRegistrationPage extends StatefulWidget {
+  const UserRegistrationPage({Key? key}) : super(key: key);
 
   @override
-  _SubscriptionPageState createState() => _SubscriptionPageState();
+  _UserRegistrationPageState createState() => _UserRegistrationPageState();
 }
 
-class _SubscriptionPageState extends State<SubscriptionPage> {
-  final subscriptionController = Modular.get<SubscriptionStore>();
+class _UserRegistrationPageState extends State<UserRegistrationPage> {
+  final userRegistrarionController = Modular.get<UserRegistrationStore>();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -91,7 +91,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
           width: width * .8,
           padding: const EdgeInsets.only(bottom: 15),
           child: TextFormField(
-            controller: subscriptionController.firstNameController,
+            controller: userRegistrarionController.firstNameController,
             decoration: const InputDecoration(
               label: Text(
                 "Nome",
@@ -105,14 +105,15 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             ),
             keyboardType: TextInputType.name,
             maxLength: 40,
-            validator: (value) => subscriptionController.nameValidate(value),
+            validator: (value) =>
+                userRegistrarionController.nameValidate(value),
           ),
         ),
         Container(
           width: width * .8,
           padding: const EdgeInsets.only(bottom: 15),
           child: TextFormField(
-            controller: subscriptionController.lastNameController,
+            controller: userRegistrarionController.lastNameController,
             decoration: const InputDecoration(
               label: Text("Sobrenome"),
               prefixIcon: Icon(Icons.person),
@@ -124,14 +125,15 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             ),
             keyboardType: TextInputType.name,
             maxLength: 40,
-            validator: (value) => subscriptionController.nameValidate(value),
+            validator: (value) =>
+                userRegistrarionController.nameValidate(value),
           ),
         ),
         Container(
           width: width * .8,
           padding: const EdgeInsets.only(bottom: 15),
           child: TextFormField(
-            controller: subscriptionController.emailController,
+            controller: userRegistrarionController.emailController,
             decoration: const InputDecoration(
               label: Text("Email"),
               prefixIcon: Icon(Icons.email),
@@ -143,14 +145,15 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             ),
             keyboardType: TextInputType.emailAddress,
             maxLength: 40,
-            validator: (value) => subscriptionController.emailValidate(value),
+            validator: (value) =>
+                userRegistrarionController.emailValidate(value),
           ),
         ),
         Container(
           width: width * .8,
           padding: const EdgeInsets.only(bottom: 15),
           child: TextFormField(
-            controller: subscriptionController.passwordController,
+            controller: userRegistrarionController.passwordController,
             decoration: const InputDecoration(
               label: Text("Senha"),
               prefixIcon: Icon(Icons.password),
@@ -163,7 +166,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             keyboardType: TextInputType.visiblePassword,
             maxLength: 100,
             validator: (value) =>
-                subscriptionController.passwordValidate(value),
+                userRegistrarionController.passwordValidate(value),
           ),
         ),
         Row(
@@ -183,8 +186,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                           duration: Duration(seconds: 90),
                         ),
                       );
-                      await subscriptionController.subscription();
-                      if (subscriptionController.subscriptionError) {
+                      await userRegistrarionController.userRegistrarion();
+                      if (userRegistrarionController.userRegistrarionError) {
                         ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

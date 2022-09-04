@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/balance/balance_store.dart';
 import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
+import 'package:frontend/domain/connection_manager.dart';
 
 import 'package:frontend/domain/home.dart';
 import 'package:frontend/domain/jwt/jwt_decode_impl.dart';
-import 'package:frontend/domain/jwt/jwt_decode_service.dart';
 import 'package:frontend/domain/storage_local.dart';
 import 'package:frontend/domain/user.dart';
 import 'package:mobx/mobx.dart';
@@ -17,10 +17,10 @@ part 'home_store.g.dart';
 class HomeStore = HomeStoreBase with _$HomeStore;
 
 abstract class HomeStoreBase with Store {
-  
-
-  User user = User.fromMap(Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data));
-  Home home = Home(Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data)['homeid']);
+  User user = User.fromMap(
+      Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data));
+  Home home = Home(Modular.get<JwtDecodeServiceImpl>()
+      .getPayload(Modular.args.data)['homeid']);
 
   @observable
   int selectedIndex = 0;
@@ -66,6 +66,7 @@ abstract class HomeStoreBase with Store {
 
     loading = false;
 
+    // ConnectionManager.removeInterceptors();
     Modular.to.navigate('/login/');
   }
 

@@ -39,11 +39,14 @@ class HomeDatasourceImpl extends HomeDatasource {
   }
 
   @override
-  Future<void> insertHome(Map<String, dynamic> homeParams, List columns) async {
+  Future<Map<String, dynamic>> insertHome(
+      Map<String, dynamic> homeParams, List columns) async {
     await _database.query(
       'INSERT INTO "Home" (homeid,${columns.join(',')}) VALUES (DEFAULT, @${columns.join(',@')})',
-      variables: homeParams.cast<String, dynamic>(),
+      variables: homeParams,
     );
+
+    return getHomeByName(homeParams['name']);
   }
 
   @override
@@ -63,5 +66,18 @@ class HomeDatasourceImpl extends HomeDatasource {
         result.map((e) => e["Category"] ?? {}).toList();
 
     return categories;
+  }
+
+  @override
+  Future<Map<String, dynamic>> getHomeByName(String homename) async {
+    List<Map<String, Map<String, dynamic>>> result = await _database.query(
+      'SELECT homeid FROM "Home" WHERE name = @homename',
+      variables: {'homename': homename},
+    );
+
+    final List<Map<String, dynamic>> home =
+        result.map((e) => e["Home"] ?? {}).toList();
+
+    return home.length > 0 ? home.first : {};
   }
 }
