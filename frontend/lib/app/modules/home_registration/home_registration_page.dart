@@ -23,7 +23,9 @@ class _HomeRegistrationPageState extends State<HomeRegistrationPage> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(top: 30),
         child: GestureDetector(
-          onTap: () => Modular.to.navigate('/home/'),
+          onTap: () {
+            Modular.to.navigate('/login/');
+          },
           child: const Icon(
             Icons.arrow_back_rounded,
             size: 40,

@@ -107,32 +107,43 @@ class _LoginPageState extends State<LoginPage> {
                               : const Text("");
                         }),
                       ),
-                      Container(
-                        width: width * .5,
-                        height: 50,
-                        margin: const EdgeInsets.only(right: 70),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            loginController.loggin();
-                          },
-                          child: Observer(builder: (_) {
-                            return !loginController.loading
-                                ? const Text(
-                                    "Entrar",
-                                    style: TextStyle(fontSize: 20),
-                                  )
-                                : const CircularProgressIndicator(
-                                    color: Colors.white);
-                          }),
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: width * .5,
+                            height: 50,
+                            margin: const EdgeInsets.only(right: 70),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
+                                loginController.loggin();
+                              },
+                              child: Observer(builder: (_) {
+                                return !loginController.loading
+                                    ? const Text(
+                                        "Entrar",
+                                        style: TextStyle(fontSize: 20),
+                                      )
+                                    : const CircularProgressIndicator(
+                                        color: Colors.white);
+                              }),
+                            ),
+                          ),
+                        ],
                       ),
-                      Container(
-                          margin: const EdgeInsets.only(top: 10, right: 20),
-                          child: ElevatedButton(
-                              onPressed: () =>
-                                  Modular.to.pushNamed('/user_registration/'),
-                              child: const Text("Cadastre-se")))
+                      Row(
+                        children: [
+                          Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              width: width * .82,
+                              child: TextButton(
+                                  onPressed: () => Modular.to
+                                      .pushNamed('/user_registration/'),
+                                  child: const Text("Cadastre-se"))),
+                        ],
+                      )
                     ],
                   ),
                 ],

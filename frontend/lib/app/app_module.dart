@@ -1,5 +1,6 @@
 import 'package:frontend/app/modules/auth/auth_module.dart';
 import 'package:frontend/app/modules/home_registration/home_registration_module.dart';
+import 'package:frontend/app/modules/home_registration/home_registration_store.dart';
 import 'package:frontend/app/modules/spashcreen/splash_module.dart';
 import 'package:frontend/app/modules/login/login_store.dart';
 
@@ -20,6 +21,7 @@ class AppModule extends Module {
     Bind.lazySingleton((i) => LoginStore()),
     Bind.lazySingleton((i) => HomeStore()),
     Bind.lazySingleton((i) => UserRegistrationStore()),
+    Bind.lazySingleton((i) => HomeRegistrationStore()),
     Bind.singleton((i) => AuthModule()),
     Bind.singleton<JwtDecodeService>((i) => JwtDecodeServiceImpl()),
   ];
