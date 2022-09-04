@@ -62,7 +62,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
                             invoicesController.invoices.isNotEmpty
                         ? RefreshIndicator(
                             onRefresh: () async =>
-                                await invoicesController.getInvoices(),
+                                await homeController.reload(),
                             child: Observer(
                                 builder: (_) => ListView(
                                       children: invoicesController.invoices
@@ -223,12 +223,30 @@ class _InvoicesPageState extends State<InvoicesPage> {
                                     )),
                           )
                         : invoicesController.invoices.isEmpty
-                            ? RefreshIndicator(
-                                onRefresh: () async =>
-                                    await homeController.reload(),
-                                child: const Center(
-                                    child: Text("Ainda não há contas")))
-                            : const CircularProgressIndicator(),
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("Ainda não há contas"),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await homeController.reload();
+                                    },
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Icon(
+                                        Icons.replay_outlined,
+                                        color: Colors.blueAccent,
+                                        size: 40,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : const SizedBox(
+                                height: 80,
+                                width: 80,
+                                child: Center(
+                                    child: CircularProgressIndicator())),
               ),
             );
           })

@@ -121,7 +121,7 @@ class InvoiceRepository {
     }
 
     try {
-      await _datasource.deleteInvoice(int.parse(payload['userid']), int.parse(invoiceParams['invoiceid']));
+      await _datasource.deleteInvoice(payload['userid'], int.parse(invoiceParams['invoiceid']));
     } on Exception catch (e) {
       throw InvoiceException(403, 'Erro ao deletar');
     }

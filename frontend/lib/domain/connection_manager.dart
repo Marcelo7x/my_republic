@@ -203,7 +203,7 @@ class ConnectionManager {
   }) async {
     var result = await _conn.delete('$_url/invoice/i/$invoiceid');
 
-    return jsonDecode(result.data);
+    return result.data;
   }
 
   static Future userRegistration({

@@ -16,8 +16,10 @@ part 'invoice_store.g.dart';
 class InvoiceStore = InvoiceStoreBase with _$InvoiceStore;
 
 abstract class InvoiceStoreBase with Store {
-  User user = User.fromMap(Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data));
-  Home home = Home(Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data)['homeid']);
+  User user = User.fromMap(
+      Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data));
+  Home home = Home(Modular.get<JwtDecodeServiceImpl>()
+      .getPayload(Modular.args.data)['homeid']);
 
   @observable
   bool loading = false;
@@ -116,6 +118,9 @@ abstract class InvoiceStoreBase with Store {
     date = selectedInvoice!.date;
     invoiceId = selectedInvoice!.id;
     isPayed = selectedInvoice!.paid;
+    for (var element in categories) {
+      if (element.name == selectedInvoice!.category.name) setCategory(element);
+    }
   }
 
   @action

@@ -15,7 +15,7 @@ class HomeResource extends Resource {
         ]),
         Route.post('/h', _insertHome, middlewares: [AuthGuard()]),
         Route.delete('/h', _deleteHome, middlewares: [
-          AuthGuard(roles: ['admin'])
+          AuthGuard()
         ]),
         Route.put('/h', _updateHome, middlewares: [AuthGuard()]),
         Route.get('/h/users', _getUsersHome, middlewares: [AuthGuard()]),

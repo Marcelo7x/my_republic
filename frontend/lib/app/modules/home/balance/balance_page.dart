@@ -13,6 +13,7 @@ Widget BalancePage(
   final width = MediaQuery.of(context).size.width;
   var numberFormat = NumberFormat('##0.00');
   final BalanceStore balanceController = Modular.get<BalanceStore>();
+  final HomeStore homeController = Modular.get<HomeStore>();
 
   return SafeArea(
     child: SingleChildScrollView(
@@ -49,7 +50,7 @@ Widget BalancePage(
                 child: invoicesController.invoices.isEmpty
                     ? RefreshIndicator(
                         onRefresh: () async =>
-                            await invoicesController.getInvoices(),
+                            await homeController.reload(),
                         child: const Center(child: Text("Ainda não há contas")))
                     : SingleChildScrollView(
                         child: Column(
