@@ -24,7 +24,7 @@ class HomeRepository {
       throw HomeException(403, 'nao contem o name');
     }
 
-    if (homeParams['name'].toString().split('').length > 1) {
+    if (homeParams['name'].toString().split(' ').length > 1) {
       throw HomeException(403, 'o nome deve conter apenas uma palavra');
     }
 

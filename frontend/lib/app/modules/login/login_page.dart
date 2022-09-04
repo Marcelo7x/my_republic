@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       SizedBox(
                         //input de email
-                        width: width * .8,
+                        width: width * .95,
                         height: 70,
                         child: TextField(
                           controller: loginController.emailController,
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       Container(
                         //input senha
-                        width: width * .8,
+                        width: width * .88,
                         height: 70,
                         margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                         child: TextField(
@@ -94,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Container(
-                        //margin: const EdgeInsets.only(bottom: 20),
+                        margin: const EdgeInsets.only(right: 100),
                         padding: const EdgeInsets.only(top: 5, bottom: 20),
                         child: Observer(builder: (_) {
                           return loginController.logginError
@@ -107,9 +107,10 @@ class _LoginPageState extends State<LoginPage> {
                               : const Text("");
                         }),
                       ),
-                      SizedBox(
-                        width: width * .8,
+                      Container(
+                        width: width * .5,
                         height: 50,
+                        margin: const EdgeInsets.only(right: 70),
                         child: ElevatedButton(
                           onPressed: () {
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -119,6 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                             return !loginController.loading
                                 ? const Text(
                                     "Entrar",
+                                    style: TextStyle(fontSize: 20),
                                   )
                                 : const CircularProgressIndicator(
                                     color: Colors.white);
@@ -126,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Container(
-                          margin: const EdgeInsets.only(top: 10),
+                          margin: const EdgeInsets.only(top: 10, right: 20),
                           child: ElevatedButton(
                               onPressed: () =>
                                   Modular.to.pushNamed('/user_registration/'),
@@ -136,17 +138,22 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             ),
-            SizedBox(
-              height: height,
-              width: width,
-              child: RotatedBox(
-                quarterTurns: 45,
-                child: SvgPicture.asset(
-                  'images/wave.svg',
-                  alignment: Alignment.topRight,
-                  fit: BoxFit.fitWidth,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                  height: height,
+                  width: 150,
+                  child: RotatedBox(
+                    quarterTurns: 45,
+                    child: SvgPicture.asset(
+                      'images/wave.svg',
+                      alignment: Alignment.topRight,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ],
         ),

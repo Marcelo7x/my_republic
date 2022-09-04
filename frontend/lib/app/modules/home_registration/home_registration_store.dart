@@ -74,13 +74,16 @@ abstract class _HomeRegistrationStoreBase with Store {
   @action
   createHomeByName() async {
     loading = true;
+
+        homeRegistrarionError = false; 
+
     try {
       await ConnectionManager.initApiClient();
       var result = await ConnectionManager.homeRegistration(
         homename: homename.text,
       );
 
-      if (result != null) {
+      if (result != null && result.isNotEmpty) {
         findHome = true;
         homeid = result['homeid'];
 
@@ -98,6 +101,8 @@ abstract class _HomeRegistrationStoreBase with Store {
 
           Modular.to.navigate('/home/', arguments: t['access_token']);
         }
+      } else {
+        homeRegistrarionError = true; 
       }
     } on ConnectionManagerError catch (e) {
       print("erro ao adicionar usuario");
