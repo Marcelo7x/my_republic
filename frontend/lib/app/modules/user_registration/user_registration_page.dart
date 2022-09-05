@@ -165,8 +165,32 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
             ),
             keyboardType: TextInputType.visiblePassword,
             maxLength: 100,
+            obscureText: true,
             validator: (value) =>
                 userRegistrarionController.passwordValidate(value),
+          ),
+        ),
+        Container(
+          width: width * .8,
+          padding: const EdgeInsets.only(bottom: 15),
+          child: TextFormField(
+            controller: userRegistrarionController.password2,
+            decoration: const InputDecoration(
+              label: Text("Repita a Senha"),
+              prefixIcon: Icon(Icons.password),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(18),
+                ),
+              ),
+            ),
+            keyboardType: TextInputType.visiblePassword,
+            maxLength: 100,
+            obscureText: true,
+            validator: (value) => userRegistrarionController.password2.text !=
+                    userRegistrarionController.passwordController.text
+                ? 'Senha diferente'
+                : null,
           ),
         ),
         Row(

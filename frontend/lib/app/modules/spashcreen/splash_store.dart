@@ -67,7 +67,11 @@ abstract class _SplashStoreBase with Store {
 
       bool logged = false;
       if (accessToken != null) {
-        logged = await ConnectionManager.checkToken(accessToken);
+        try {
+          logged = await ConnectionManager.checkToken(accessToken);
+        } catch (e) {
+          Modular.to.navigate('/login/');
+        }
 
         if (!logged) {
           await ConnectionManager.initApiClient();
@@ -81,7 +85,7 @@ abstract class _SplashStoreBase with Store {
           }
         }
       }
-      
+
       if (logged) {
         JwtDecodeService jwt = Modular.get<JwtDecodeService>();
         final payload = jwt.getPayload(accessToken!);

@@ -91,21 +91,28 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
+                          
                         ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(right: 100),
-                        padding: const EdgeInsets.only(top: 5, bottom: 20),
-                        child: Observer(builder: (_) {
-                          return loginController.logginError
-                              ? Text(
-                                  "O email ou senha está errado.",
-                                  style: TextStyle(
-                                    color: Theme.of(context).errorColor,
-                                  ),
-                                )
-                              : const Text("");
-                        }),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: width * .65,
+                            // margin: const EdgeInsets.only(right: 100),
+                            padding: const EdgeInsets.only(top: 5, bottom: 20),
+                            child: Observer(builder: (_) {
+                              return loginController.logginError
+                                  ? Text(
+                                      "O email ou senha está errado.",
+                                      style: TextStyle(
+                                        color: Theme.of(context).errorColor,
+                                      ),
+                                    )
+                                  : const Text("");
+                            }),
+                          ),
+                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

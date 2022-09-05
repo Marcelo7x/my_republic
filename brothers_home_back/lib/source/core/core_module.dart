@@ -11,9 +11,9 @@ import 'package:shelf_modular/shelf_modular.dart';
 class CoreModule extends Module {
   @override
   List<Bind> get binds => [
-      Bind.singleton<DotEnvService>((i) => DotEnvService(), export: true),
-        Bind.singleton<RemoteDatabase>((i) => PostgresDatabase(i()), export: true),
-        Bind.singleton<JwtService>((i) => JwtServiceImp(i()), export: true),
+      // Bind.singleton<DotEnvService>((i) => DotEnvService(), export: true),
+        Bind.singleton<RemoteDatabase>((i) => PostgresDatabase(), export: true),
+        Bind.singleton<JwtService>((i) => JwtServiceImp(), export: true),
         Bind.singleton<EncryptService>((i) => BCryptServiceImp(), export: true),
         Bind.singleton((i) => RequestExtractor(), export: true),
   ];

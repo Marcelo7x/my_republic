@@ -89,6 +89,22 @@ mixin _$UserRegistrationStore on _UserRegistrationStoreBase, Store {
     });
   }
 
+  late final _$password2Atom =
+      Atom(name: '_UserRegistrationStoreBase.password2', context: context);
+
+  @override
+  TextEditingController get password2 {
+    _$password2Atom.reportRead();
+    return super.password2;
+  }
+
+  @override
+  set password2(TextEditingController value) {
+    _$password2Atom.reportWrite(value, super.password2, () {
+      super.password2 = value;
+    });
+  }
+
   late final _$loadingAtom =
       Atom(name: '_UserRegistrationStoreBase.loading', context: context);
 
@@ -140,6 +156,7 @@ lastNameController: ${lastNameController},
 homeNameController: ${homeNameController},
 emailController: ${emailController},
 passwordController: ${passwordController},
+password2: ${password2},
 loading: ${loading},
 userRegistrarionError: ${userRegistrarionError}
     ''';

@@ -18,6 +18,8 @@ abstract class _UserRegistrationStoreBase with Store {
   TextEditingController emailController = TextEditingController();
   @observable
   TextEditingController passwordController = TextEditingController();
+  @observable
+  TextEditingController password2 = TextEditingController();
 
   @observable
   bool loading = false;

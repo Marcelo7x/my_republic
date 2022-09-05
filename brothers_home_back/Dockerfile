@@ -9,14 +9,15 @@ RUN dart pub get
 # Copy app source code (except anything in .dockerignore) and AOT compile app.
 COPY . .
 RUN dart pub get --offline
-RUN dart compile exe bin/brothers_home.dart -o bin/brothers_home_server
+RUN dart compile exe bin/brothers_home.dart -o bin/server
 
 # Build minimal serving image from AOT-compiled `/server`
 # and the pre-built AOT-runtime in the `/runtime/` directory of the base image.
 FROM scratch
 COPY --from=build /runtime/ /
-COPY --from=build /app/bin/brothers_home_server /app/bin/
+COPY --from=build /app/bin/server /server
+COPY specs /specs
 
 # Start server.
-EXPOSE 8080
-CMD ["/app/bin/brothers_home_server"]
+EXPOSE 3001
+CMD ["/server"]
