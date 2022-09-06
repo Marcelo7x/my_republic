@@ -20,4 +20,4 @@ doc/api/
 *.js.deps
 *.js.map
 
-.env
+brothers_home_back/.env
