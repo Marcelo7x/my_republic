@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -61,6 +62,10 @@ class _LoginPageState extends State<LoginPage> {
                         width: width * .95,
                         height: 70,
                         child: TextField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.deny(' ',
+                                replacementString: '')
+                          ],
                           controller: loginController.emailController,
                           keyboardType: TextInputType.emailAddress,
                           decoration: const InputDecoration(
@@ -91,7 +96,6 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
-                          
                         ),
                       ),
                       Row(
