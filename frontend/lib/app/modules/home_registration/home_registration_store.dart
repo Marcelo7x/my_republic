@@ -37,11 +37,10 @@ abstract class _HomeRegistrationStoreBase with Store {
     String patttern = r'(^[a-zA-Z0-9]*$)';
     RegExp regExp = RegExp(patttern);
     if (value == null || value.isEmpty) {
-      return "Digite um nome";
     } else if (value.contains(' ')) {
       return "O nome não pode conter espaços";
     } else if (!regExp.hasMatch(value)) {
-      return "O nome deve conter apenas letras e números";
+      return "Apenas letras e números";
     }
     return null;
   }
@@ -75,7 +74,7 @@ abstract class _HomeRegistrationStoreBase with Store {
   createHomeByName() async {
     loading = true;
 
-        homeRegistrarionError = false; 
+    homeRegistrarionError = false;
 
     try {
       await ConnectionManager.initApiClient();
@@ -102,7 +101,7 @@ abstract class _HomeRegistrationStoreBase with Store {
           Modular.to.navigate('/home/', arguments: t['access_token']);
         }
       } else {
-        homeRegistrarionError = true; 
+        homeRegistrarionError = true;
       }
     } on ConnectionManagerError catch (e) {
       print("erro ao adicionar usuario");
@@ -118,6 +117,14 @@ abstract class _HomeRegistrationStoreBase with Store {
   @observable
   int? homeid;
 
+  @observable
+  bool isFindingHome = false;
+
+  @action
+  setIsFindingHome(bool value) {
+    isFindingHome = value;
+  }
+
   @action
   homeSearch() async {
     loading = true;
@@ -128,31 +135,48 @@ abstract class _HomeRegistrationStoreBase with Store {
     try {
       var result = await ConnectionManager.homeSearch(homenameSearch.text);
 
-      if (result != null && result.isNotEmpty) {
-        findHome = true;
+      if (result != null &&
+          result.isNotEmpty &&
+          result.entries.first.value is num) {
         homeid = result['homeid'];
 
-        await ConnectionManager.userUpadate(homeid: homeid);
+        isFindingHome = true;
 
-        StorageLocal st = await StorageLocal.getInstance();
-        Tokenization tokenization = Tokenization(
-            accessToken: await st.getString('access_token') ?? '-',
-            refreshToken: await st.getString('refresh_token') ?? '-');
-
-        var t = await ConnectionManager.refreshToken(tokenization.refreshToken);
-
-        if (t != null && t.isNotEmpty) {
-          await st.saveCredentials(t['access_token'], t['refresh_token']);
-
-          Modular.to.navigate('/home/', arguments: t['access_token']);
-        }
+        return true;
       } else {
-        findHome = false;
         homeRegistrarionError = true;
+        return false;
       }
     } on ConnectionManagerError catch (e) {
       print("erro ao pesquisar home");
       homeRegistrarionError = true;
+    }
+
+    loading = false;
+  }
+
+  @action
+  addHomeToUser() async {
+    loading = true;
+    if (!isFindingHome || homeid == null) return;
+
+    try {
+      await ConnectionManager.userUpadate(homeid: homeid);
+    } on ConnectionManagerError catch (e) {
+      homeRegistrarionError = true;
+    }
+
+    StorageLocal st = await StorageLocal.getInstance();
+    Tokenization tokenization = Tokenization(
+        accessToken: await st.getString('access_token') ?? '-',
+        refreshToken: await st.getString('refresh_token') ?? '-');
+
+    var t = await ConnectionManager.refreshToken(tokenization.refreshToken);
+
+    if (t != null && t.isNotEmpty) {
+      await st.saveCredentials(t['access_token'], t['refresh_token']);
+
+      Modular.to.navigate('/home/', arguments: t['access_token']);
     }
 
     loading = false;

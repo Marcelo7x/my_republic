@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:frontend/app/app_widget.dart';
 import 'package:frontend/app/modules/home_registration/home_registration_store.dart';
 
 class HomeRegistrationPage extends StatefulWidget {
@@ -77,22 +78,28 @@ class _HomeRegistrationPageState extends State<HomeRegistrationPage> {
                         Container(
                           width: width * .75,
                           padding: const EdgeInsets.only(bottom: 15, right: 10),
-                          child: TextField(
-                            controller:
-                                homeRegistrarionController.homenameSearch,
-                            decoration: const InputDecoration(
-                              label: Text(
-                                "Encontrar república",
-                              ),
-                              prefixIcon: Icon(Icons.search),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(18),
+                          child: Form(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            child: TextFormField(
+                              controller:
+                                  homeRegistrarionController.homenameSearch,
+                              validator: (value) => homeRegistrarionController
+                                  .nameValidate(value),
+                              decoration: const InputDecoration(
+                                label: Text(
+                                  "Encontrar república",
+                                ),
+                                prefixIcon: Icon(Icons.search),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(18),
+                                  ),
                                 ),
                               ),
+                              keyboardType: TextInputType.name,
+                              maxLength: 40,
                             ),
-                            keyboardType: TextInputType.name,
-                            maxLength: 40,
                           ),
                         ),
                         Row(
@@ -101,7 +108,7 @@ class _HomeRegistrationPageState extends State<HomeRegistrationPage> {
                             Container(
                               width: 150,
                               height: 70,
-                              padding: EdgeInsets.only(right: 20),
+                              padding: const EdgeInsets.only(right: 20),
                               child: Observer(builder: (_) {
                                 return ElevatedButton(
                                   onPressed: () async {
@@ -114,38 +121,111 @@ class _HomeRegistrationPageState extends State<HomeRegistrationPage> {
                                           duration: Duration(seconds: 90),
                                         ),
                                       );
-                                      await homeRegistrarionController
-                                          .homeSearch();
-                                      if (homeRegistrarionController
-                                          .homeRegistrarionError) {
-                                        ScaffoldMessenger.of(context)
-                                            .removeCurrentSnackBar();
+                                      if (await homeRegistrarionController
+                                              .homeSearch() ??
+                                          false == false) {
+                                        if (homeRegistrarionController
+                                            .homeRegistrarionError) {
+                                          ScaffoldMessenger.of(context)
+                                              .removeCurrentSnackBar();
 
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                          content: const Text(
-                                              'Erro... República não encontrada!'),
-                                          duration: const Duration(seconds: 5),
-                                          backgroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .error,
-                                        ));
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .removeCurrentSnackBar();
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: const Text(
+                                                'Erro!!! República não encontrada ou falha na rede'),
+                                            duration:
+                                                const Duration(seconds: 5),
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .error,
+                                          ));
 
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                          content: const Text(
-                                              "República adicionada"),
-                                          backgroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                          duration: const Duration(seconds: 2),
-                                        ));
-                                        await Future.delayed(
-                                            const Duration(seconds: 1));
-                                        // Modular.to.pop();
+                                          homeRegistrarionController
+                                              .homeRegistrarionError = false;
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                AlertDialog(
+                                              elevation: 1000,
+                                              backgroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .surface,
+                                              title: Text(
+                                                  'Entrar para a República ${homeRegistrarionController.homenameSearch.text}?'),
+                                              content: const Text(
+                                                  'Um pedido de entrada será enviado para o criador da república.'),
+                                              actions: <Widget>[
+                                                ElevatedButton(
+                                                  child:
+                                                      const Text("Adicionar"),
+                                                  onPressed: () async {
+                                                    await homeRegistrarionController
+                                                        .addHomeToUser();
+
+                                                    if (homeRegistrarionController
+                                                        .homeRegistrarionError) {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .removeCurrentSnackBar();
+
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              SnackBar(
+                                                        content: const Text(
+                                                            'Erro!!!'),
+                                                        duration:
+                                                            const Duration(
+                                                                seconds: 5),
+                                                        backgroundColor:
+                                                            Theme.of(context)
+                                                                .colorScheme
+                                                                .error,
+                                                      ));
+                                                    } else {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .removeCurrentSnackBar();
+
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              SnackBar(
+                                                        content: const Text(
+                                                            "Pedido enviado"),
+                                                        backgroundColor:
+                                                            Theme.of(context)
+                                                                .colorScheme
+                                                                .secondary,
+                                                        duration:
+                                                            const Duration(
+                                                                seconds: 2),
+                                                      ));
+                                                      await Future.delayed(
+                                                          const Duration(
+                                                              seconds: 1));
+                                                      // Modular.to.pop();
+                                                    }
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: Text(
+                                                    "Cancelar",
+                                                    style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .error,
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }
                                       }
                                     }
                                   },

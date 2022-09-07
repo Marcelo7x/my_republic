@@ -301,9 +301,9 @@ class ConnectionManager {
       var result = await _conn.get('$_url/home/h/homename/$homename');
       return result.data;
     } on UnoError catch (e) {
-      if (e.response?.status == 403) {
+      if (e.response?.status == 403 || e.response == null) {
         throw ConnectionManagerError(
-            e.response!.status, 'erro search home by name');
+            e.response?.status ?? 403, 'erro search home by name');
       }
     }
     return {};

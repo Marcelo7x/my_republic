@@ -219,6 +219,22 @@ mixin _$HomeRegistrationStore on _HomeRegistrationStoreBase, Store {
     });
   }
 
+  late final _$isFindingHomeAtom =
+      Atom(name: '_HomeRegistrationStoreBase.isFindingHome', context: context);
+
+  @override
+  bool get isFindingHome {
+    _$isFindingHomeAtom.reportRead();
+    return super.isFindingHome;
+  }
+
+  @override
+  set isFindingHome(bool value) {
+    _$isFindingHomeAtom.reportWrite(value, super.isFindingHome, () {
+      super.isFindingHome = value;
+    });
+  }
+
   late final _$homeRegistrarionAsyncAction = AsyncAction(
       '_HomeRegistrationStoreBase.homeRegistrarion',
       context: context);
@@ -245,6 +261,28 @@ mixin _$HomeRegistrationStore on _HomeRegistrationStoreBase, Store {
     return _$homeSearchAsyncAction.run(() => super.homeSearch());
   }
 
+  late final _$addHomeToUserAsyncAction =
+      AsyncAction('_HomeRegistrationStoreBase.addHomeToUser', context: context);
+
+  @override
+  Future addHomeToUser() {
+    return _$addHomeToUserAsyncAction.run(() => super.addHomeToUser());
+  }
+
+  late final _$_HomeRegistrationStoreBaseActionController =
+      ActionController(name: '_HomeRegistrationStoreBase', context: context);
+
+  @override
+  dynamic setIsFindingHome(bool value) {
+    final _$actionInfo = _$_HomeRegistrationStoreBaseActionController
+        .startAction(name: '_HomeRegistrationStoreBase.setIsFindingHome');
+    try {
+      return super.setIsFindingHome(value);
+    } finally {
+      _$_HomeRegistrationStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
@@ -260,7 +298,8 @@ cep: ${cep},
 loading: ${loading},
 homeRegistrarionError: ${homeRegistrarionError},
 findHome: ${findHome},
-homeid: ${homeid}
+homeid: ${homeid},
+isFindingHome: ${isFindingHome}
     ''';
   }
 }
