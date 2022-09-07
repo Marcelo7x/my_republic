@@ -5,16 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "backendProd",
+            "name": "frontend",
             "request": "launch",
-            "type": "dart",
-            "program": "bin/myRepublicProd.dart"
+            "type": "dart"
         },
         {
-            "name": "backendDev",
+            "name": "frontend (profile mode)",
             "request": "launch",
             "type": "dart",
-            "program": "bin/myRepublicDev.dart"
+            "flutterMode": "profile"
+        },
+        {
+            "name": "frontend (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
         }
     ]
 }

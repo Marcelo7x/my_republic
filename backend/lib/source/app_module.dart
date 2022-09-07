@@ -10,9 +10,12 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
 
 class AppModule extends Module {
+  final String dotEnvPath;
+  AppModule({required this.dotEnvPath});
+
   @override
   List<Module> get imports => [
-    CoreModule(),
+    CoreModule(dotEnvPath: dotEnvPath),
   ];
 
   @override

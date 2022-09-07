@@ -2,8 +2,8 @@ import 'package:brothers_home/source/app_module.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
 
-Future<Handler> startShelfModular() async {
-  final handler = Modular(module: AppModule(), middlewares: [
+Future<Handler> startShelfModular({required String dotEnvPath}) async {
+  final handler = Modular(module: AppModule(dotEnvPath: dotEnvPath), middlewares: [
     logRequests(),
     jsonResponse(),
   ]);
