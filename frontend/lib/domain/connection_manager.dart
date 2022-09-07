@@ -23,7 +23,7 @@ class ConnectionManagerError implements Exception {
 }
 
 class ConnectionManager {
-  static const _url = 'http://137.184.222.172:3001';
+  static const _url = 'http://192.168.1.9:3001';
   static final Uno _conn = Uno();
 
   static Future<void> initApiClient() async {
