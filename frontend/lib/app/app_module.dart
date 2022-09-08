@@ -10,12 +10,22 @@ import 'package:frontend/app/modules/user_registration/user_registration_store.d
 
 import 'package:frontend/domain/jwt/jwt_decode_impl.dart';
 import 'package:frontend/domain/jwt/jwt_decode_service.dart';
+import 'package:frontend/domain/services_module.dart';
 
 import 'modules/home/home_module.dart';
 import 'modules/home/home_store.dart';
 import 'modules/login/login_module.dart';
 
 class AppModule extends Module {
+  final String dotEnvPath;
+
+  AppModule({required this.dotEnvPath});
+
+  @override
+  List<Module> get imports => [
+    ServicesModule(dotEnvPath: dotEnvPath),
+  ];
+
   @override
   final List<Bind> binds = [
     Bind.lazySingleton((i) => LoginStore()),

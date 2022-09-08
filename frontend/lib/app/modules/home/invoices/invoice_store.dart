@@ -35,10 +35,9 @@ abstract class InvoiceStoreBase with Store {
     }
 
     loading = true;
+      final cm = Modular.get<ConnectionManager>();
 
-    await ConnectionManager.initApiClient();
-
-    var result = await ConnectionManager.get_invoices(
+    var result = await cm.get_invoices(
         start_date: dateRange.startDate!,
         end_date: dateRange.endDate!,
         home_id: home.id);
@@ -136,8 +135,10 @@ abstract class InvoiceStoreBase with Store {
   @action
   addInvoice() async {
     loading = true;
+      final cm = Modular.get<ConnectionManager>();
+
     try {
-      var result = await ConnectionManager.add_invoice(
+      var result = await cm.add_invoice(
               description: description.text,
               categoryId: category!.id,
               price: (price!.numberValue * 100).toInt(),
@@ -159,8 +160,10 @@ abstract class InvoiceStoreBase with Store {
   @action
   modifyInvoice() async {
     loading = true;
+      final cm = Modular.get<ConnectionManager>();
+
     try {
-      var result = await ConnectionManager.modify_invoice(
+      var result = await cm.modify_invoice(
               description: description.text,
               categoryId: category!.id,
               price: (price!.numberValue * 100).toInt(),
@@ -183,8 +186,10 @@ abstract class InvoiceStoreBase with Store {
   @action
   removeInvoice() async {
     loading = true;
+      final cm = Modular.get<ConnectionManager>();
+
     try {
-      var result = await ConnectionManager.remove_invoice(
+      var result = await cm.remove_invoice(
         invoiceid: selectedInvoice!.id,
       );
     } on Exception catch (e) {
@@ -201,7 +206,9 @@ abstract class InvoiceStoreBase with Store {
   @action
   getCategories() async {
     loading = true;
-    List<Category> result = await ConnectionManager.get_categories();
+      final cm = Modular.get<ConnectionManager>();
+
+    List<Category> result = await cm.get_categories();
     categories = result;
     loading = false;
   }

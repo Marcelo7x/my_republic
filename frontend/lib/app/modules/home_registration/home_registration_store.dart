@@ -51,8 +51,10 @@ abstract class _HomeRegistrationStoreBase with Store {
   @action
   homeRegistrarion() async {
     loading = true;
+    final cm = Modular.get<ConnectionManager>();
+
     try {
-      await ConnectionManager.homeRegistration(
+      await cm.homeRegistration(
         homename: homename.text,
         street: street.text,
         district: district.text,
@@ -76,9 +78,10 @@ abstract class _HomeRegistrationStoreBase with Store {
 
     homeRegistrarionError = false;
 
+    final cm = Modular.get<ConnectionManager>();
+
     try {
-      await ConnectionManager.initApiClient();
-      var result = await ConnectionManager.homeRegistration(
+      var result = await cm.homeRegistration(
         homename: homename.text,
       );
 
@@ -86,14 +89,14 @@ abstract class _HomeRegistrationStoreBase with Store {
         findHome = true;
         homeid = result['homeid'];
 
-        await ConnectionManager.userUpadate(homeid: homeid);
+        await cm.userUpadate(homeid: homeid);
 
         StorageLocal st = await StorageLocal.getInstance();
         Tokenization tokenization = Tokenization(
             accessToken: await st.getString('access_token') ?? '-',
             refreshToken: await st.getString('refresh_token') ?? '-');
 
-        var t = await ConnectionManager.refreshToken(tokenization.refreshToken);
+        var t = await cm.refreshToken(tokenization.refreshToken);
 
         if (t != null && t.isNotEmpty) {
           await st.saveCredentials(t['access_token'], t['refresh_token']);
@@ -130,10 +133,10 @@ abstract class _HomeRegistrationStoreBase with Store {
     loading = true;
     homeRegistrarionError = false;
 
-    await ConnectionManager.initApiClient();
+    final cm = Modular.get<ConnectionManager>();
 
     try {
-      var result = await ConnectionManager.homeSearch(homenameSearch.text);
+      var result = await cm.homeSearch(homenameSearch.text);
 
       if (result != null &&
           result.isNotEmpty &&
@@ -158,10 +161,11 @@ abstract class _HomeRegistrationStoreBase with Store {
   @action
   addHomeToUser() async {
     loading = true;
+    final cm = Modular.get<ConnectionManager>();
     if (!isFindingHome || homeid == null) return;
 
     try {
-      await ConnectionManager.userUpadate(homeid: homeid);
+      await cm.userUpadate(homeid: homeid);
     } on ConnectionManagerError catch (e) {
       homeRegistrarionError = true;
     }
@@ -171,7 +175,7 @@ abstract class _HomeRegistrationStoreBase with Store {
         accessToken: await st.getString('access_token') ?? '-',
         refreshToken: await st.getString('refresh_token') ?? '-');
 
-    var t = await ConnectionManager.refreshToken(tokenization.refreshToken);
+    var t = await cm.refreshToken(tokenization.refreshToken);
 
     if (t != null && t.isNotEmpty) {
       await st.saveCredentials(t['access_token'], t['refresh_token']);

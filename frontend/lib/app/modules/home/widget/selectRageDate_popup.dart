@@ -24,9 +24,8 @@ Widget SelectRageDatePopup(BuildContext context, HomeStore homeController,
       ElevatedButton(
         child: const Text("Confirmar"),
         onPressed: () async {
-          await homeController.reload();
-
           Navigator.of(context).pop();
+          await homeController.reload();
         },
       ),
     ],

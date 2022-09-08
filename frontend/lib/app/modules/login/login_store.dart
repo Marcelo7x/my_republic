@@ -26,11 +26,12 @@ abstract class _LoginStoreBase with Store {
   @action
   loggin() async {
     loading = true;
+    final cm = Modular.get<ConnectionManager>();
 
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
       try {
-        final data = await ConnectionManager.login(
-            emailController.text, passwordController.text);
+        final data =
+            await cm.login(emailController.text, passwordController.text);
 
         if (data.isNotEmpty && data['access_token'] != null) {
           final accessToken = data['access_token'];
@@ -41,6 +42,8 @@ abstract class _LoginStoreBase with Store {
 
           JwtDecodeService jwt = Modular.get<JwtDecodeService>();
           final payload = jwt.getPayload(accessToken);
+
+          await cm.initApiClient();
 
           if (payload['homeid'].runtimeType == Null) {
             Modular.to.navigate('/home_registration', arguments: accessToken);

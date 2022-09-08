@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/domain/connection_manager.dart';
 import 'package:mobx/mobx.dart';
 
@@ -68,7 +69,8 @@ abstract class _UserRegistrationStoreBase with Store {
   userRegistrarion() async {
     loading = true;
     try {
-      await ConnectionManager.userRegistration(
+      final cm = Modular.get<ConnectionManager>();
+      await cm.userRegistration(
           firstName: firstNameController.text,
           lastName: lastNameController.text,
           email: emailController.text,

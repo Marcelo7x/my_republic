@@ -19,24 +19,26 @@
             "program": "bin/my_republic_prod.dart"
         },
         {
-            "name": "frontend",
-            "cwd": "frontend",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "frontend (profile mode)",
+            "name": "frontend (Prod)",
             "cwd": "frontend",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "program": "lib/main_prod.dart"
+        },
+        {
+            "name": "frontend (Dev)",
+            "cwd": "frontend",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_dev.dart"
         },
         {
             "name": "frontend (release mode)",
             "cwd": "frontend",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "program": "lib/main_prod.dart"
         }
     ]
 }

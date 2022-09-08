@@ -12,8 +12,10 @@ part 'balance_store.g.dart';
 class BalanceStore = BalanceStoreBase with _$BalanceStore;
 
 abstract class BalanceStoreBase with Store {
-  User user = User.fromMap(Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data));
-  Home home = Home(Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data)['homeid']);
+  User user = User.fromMap(
+      Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data));
+  Home home = Home(Modular.get<JwtDecodeServiceImpl>()
+      .getPayload(Modular.args.data)['homeid']);
 
   InvoiceStore invoicesController = Modular.get<InvoiceStore>();
 
@@ -34,8 +36,10 @@ abstract class BalanceStoreBase with Store {
 
   @action
   getResidents() async {
+    final cm = Modular.get<ConnectionManager>();
+
     try {
-      var data = await ConnectionManager.number_users(homeId: home.id);
+      var data = await cm.number_users(homeId: home.id);
 
       data.forEach((e) {
         residents[e['userid']] = {

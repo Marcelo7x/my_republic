@@ -1,3 +1,4 @@
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/auth/errors/auth_errors.dart';
 import 'package:frontend/app/modules/auth/models/auth_models.dart';
 import 'package:frontend/app/modules/auth/state/auth_states.dart';
@@ -14,8 +15,10 @@ abstract class AuthStoreBase with Store {
 
   @action
   Future<void> login(email, password) async {
+    final cm = Modular.get<ConnectionManager>();
+
     try {
-      final result = await ConnectionManager.login(email, password);
+      final result = await cm.login(email, password);
       Tokenization tokenization = Tokenization.fromMap(result);
 
       authState = Logged(tokenization);

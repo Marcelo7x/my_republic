@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:frontend/app/modules/auth/models/auth_models.dart';
-import 'package:frontend/app/modules/user_registration/user_registration_page.dart';
 import 'package:frontend/domain/category.dart';
+import 'package:frontend/domain/dotenv/dot_env.dart';
 import 'package:frontend/domain/enum_paid.dart';
 import 'package:frontend/domain/storage_local.dart';
 import 'package:uno/uno.dart';
@@ -23,10 +23,22 @@ class ConnectionManagerError implements Exception {
 }
 
 class ConnectionManager {
-  static const _url = 'http://192.168.1.9:3001';
-  static final Uno _conn = Uno();
+  late Uno _conn;
 
-  static Future<void> initApiClient() async {
+  _init(String DotEnvPath) async {
+    final env = await DotEnvService.getInstance(path: DotEnvPath);
+    _conn = Uno(baseURL: env['API_URL']);
+  }
+
+  static Future<ConnectionManager> getInstance(
+      {required String dotEnvPath}) async {
+    ConnectionManager c = ConnectionManager();
+    await c._init(dotEnvPath);
+    await c.initApiClient();
+    return c;
+  }
+
+  Future<void> initApiClient() async {
     StorageLocal st = await StorageLocal.getInstance();
     Tokenization tokenization = Tokenization(
         accessToken: await st.getString('access_token') ?? '-',
@@ -60,17 +72,22 @@ class ConnectionManager {
     });
   }
 
-  static removeInterceptors() {
-    final myInterceptor = _conn.interceptors.request.use((request) => request);
-    _conn.interceptors.request.eject(myInterceptor);
+  removeInterceptors() async {
+    // final myInterceptor = _conn.interceptors.request.use((request) => request);
+    // _conn.interceptors.request.eject(myInterceptor);
+
+    _conn = Uno(baseURL: _conn.baseURL);
   }
 
-  static Future<bool> checkToken(String token) async {
+  Future<bool> checkToken(String token) async {
+    removeInterceptors();
     try {
       final result = await _conn.get(
-        '$_url/auth/check_token',
+        'auth/check_token',
         headers: {"authorization": "Bearer $token"},
       );
+
+      await initApiClient();
 
       return (result.data['message'] ?? '') == 'ok';
     } on UnoError catch (e) {
@@ -79,22 +96,30 @@ class ConnectionManager {
       }
     }
 
+    await initApiClient();
     return false;
   }
 
-  static Future<Map<String, dynamic>> refreshToken(String token) async {
-    final result = await Uno().get('$_url/auth/refresh_token',
-        headers: {"authorization": "Bearer $token"});
+  Future<Map<String, dynamic>> refreshToken(String token) async {
+    removeInterceptors();
 
-    return result.data;
+    try {
+      final result = await _conn.get('auth/refresh_token',
+          headers: {"authorization": "Bearer $token"});
+      initApiClient();
+      return result.data;
+    } on UnoError catch (e) {
+      throw ConnectionManagerError(403, 'invalid token');
+    }
   }
 
-  static Future<Map<String, dynamic>> login(
+  Future<Map<String, dynamic>> login(
       final String email, final String password) async {
     String basicAuth = 'basic ${base64Encode(('$email:$password').codeUnits)}';
 
+    removeInterceptors();
     try {
-      var response = await Uno().get('$_url/auth/login', headers: {
+      var response = await _conn.get('auth/login', headers: {
         'authorization': basicAuth,
       });
 
@@ -107,14 +132,15 @@ class ConnectionManager {
         throw ConnectionManagerError(e.response!.status, 'invalid credentials');
       }
     }
+    await initApiClient();
     return {};
   }
 
-  static Future<Map<String, dynamic>?> verify_server() async {
+  Future<Map<String, dynamic>?> verify_server() async {
     Map<String, dynamic>? data;
 
     try {
-      var result = await _conn.get(_url).timeout(const Duration(seconds: 7),
+      var result = await _conn.get('').timeout(const Duration(seconds: 7),
           onTimeout: () {
         throw Exception();
       });
@@ -126,25 +152,25 @@ class ConnectionManager {
     }
   }
 
-  static Future number_users({required homeId}) async {
-    var result = await _conn.get('$_url/home/h/users');
+  Future number_users({required homeId}) async {
+    var result = await _conn.get('home/h/users');
 
     return result.data;
   }
 
-  static Future<dynamic> get_invoices(
+  Future<dynamic> get_invoices(
       {required DateTime start_date,
       required DateTime end_date,
       required int home_id}) async {
     var result = await _conn.get(
-        '$_url/invoice/i/start/${start_date.toIso8601String()}/end/${end_date.toIso8601String()}');
+        'invoice/i/start/${start_date.toIso8601String()}/end/${end_date.toIso8601String()}');
 
     var data = result.data;
     return data;
   }
 
-  static Future<List<Category>> get_categories() async {
-    var result = await _conn.get('$_url/home/h/category');
+  Future<List<Category>> get_categories() async {
+    var result = await _conn.get('home/h/category');
     var data = result.data;
     List<Category> categories = [];
 
@@ -156,7 +182,7 @@ class ConnectionManager {
     return categories;
   }
 
-  static Future add_invoice(
+  Future add_invoice(
       {required String description,
       required int categoryId,
       required int price,
@@ -166,7 +192,7 @@ class ConnectionManager {
       required Paid isPayed}) async {
     print('add_invoice');
     var result = await _conn.post(
-      '$_url/invoice/i',
+      'invoice/i',
       data: jsonEncode({
         "description": description,
         "categoryid": categoryId.toString(),
@@ -181,7 +207,7 @@ class ConnectionManager {
     return result.data;
   }
 
-  static Future modify_invoice(
+  Future modify_invoice(
       {required String description,
       required int categoryId,
       required int price,
@@ -191,7 +217,7 @@ class ConnectionManager {
       required Paid isPayed}) async {
     print('modify_invoice');
     var result = await _conn.put(
-      '$_url/invoice/i',
+      'invoice/i',
       data: jsonEncode({
         "description": description,
         "categoryid": categoryId.toString(),
@@ -206,22 +232,22 @@ class ConnectionManager {
     return result.data;
   }
 
-  static Future remove_invoice({
+  Future remove_invoice({
     required int invoiceid,
   }) async {
-    var result = await _conn.delete('$_url/invoice/i/$invoiceid');
+    var result = await _conn.delete('invoice/i/$invoiceid');
 
     return result.data;
   }
 
-  static Future userRegistration({
+  Future userRegistration({
     required String firstName,
     required String lastName,
     required String email,
     required String password,
   }) async {
     var result = await _conn.post(
-      '$_url/user/u',
+      'user/u',
       data: jsonEncode({
         "firstname": firstName,
         'lastname': lastName,
@@ -233,7 +259,7 @@ class ConnectionManager {
     return result;
   }
 
-  static Future userUpadate({
+  Future userUpadate({
     String? firstName,
     String? lastName,
     String? email,
@@ -249,7 +275,7 @@ class ConnectionManager {
     if (info.isNotEmpty) {
       try {
         var result = await _conn.put(
-          '$_url/user/u',
+          'user/u',
           data: jsonEncode(info),
         );
       } on UnoError catch (e) {
@@ -260,7 +286,7 @@ class ConnectionManager {
     }
   }
 
-  static Future homeRegistration({
+  Future homeRegistration({
     required String homename,
     String? street,
     String? district,
@@ -283,7 +309,7 @@ class ConnectionManager {
 
     try {
       var result = await _conn.post(
-        '$_url/home/h',
+        'home/h',
         data: jsonEncode(info),
       );
       return result.data;
@@ -295,10 +321,10 @@ class ConnectionManager {
     }
   }
 
-  static Future<Map> homeSearch(String homename) async {
+  Future<Map> homeSearch(String homename) async {
     print('home search');
     try {
-      var result = await _conn.get('$_url/home/h/homename/$homename');
+      var result = await _conn.get('home/h/homename/$homename');
       return result.data;
     } on UnoError catch (e) {
       if (e.response?.status == 403 || e.response == null) {

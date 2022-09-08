@@ -46,6 +46,7 @@ dependencies:
   uno: any
   jwt_decode: ^0.3.1
   flutter_svg: ^1.1.4
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   build_runner: ^2.1.8
@@ -77,6 +78,8 @@ flutter_icons:
 flutter:
   assets:
     - images/
+    - .env
+    - .envDev
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

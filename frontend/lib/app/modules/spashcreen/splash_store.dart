@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:frontend/app/app_module.dart';
 import 'package:frontend/app/app_widget.dart';
+import 'package:frontend/app/modules/auth/models/auth_models.dart';
 import 'package:frontend/domain/connection_manager.dart';
 import 'package:frontend/domain/home.dart';
 import 'package:frontend/domain/jwt/jwt_decode_service.dart';
@@ -52,51 +54,53 @@ abstract class _SplashStoreBase with Store {
   @action
   verifyLogin() async {
     var result;
+    await Modular.isModuleReady<AppModule>();
+    final cm = Modular.get<ConnectionManager>();
     try {
-      result = await ConnectionManager.verify_server();
+      result = await cm.verify_server();
     } on Exception catch (e) {
       error = true;
       erroMenssage = "O servidor está desligado, tente voltar daqui a pouco.";
     }
 
+    Tokenization? tokenization;
     if (!error) verifyVersion(result["force_update"]);
 
     if (!error) {
       final StorageLocal conn = await StorageLocal.getInstance();
       final String? accessToken = await conn.getString('access_token');
+      final String? refreshToken = await conn.getString('refresh_token');
+
 
       bool logged = false;
-      if (accessToken != null) {
+      if (accessToken != null && refreshToken != null) {
         try {
-          logged = await ConnectionManager.checkToken(accessToken);
-        } catch (e) {
-          Modular.to.navigate('/login/');
-        }
-
-        if (!logged) {
-          await ConnectionManager.initApiClient();
-          final String? refreshToken = await conn.getString('refresh_token');
-          final result = await ConnectionManager.refreshToken(refreshToken!);
-          if (result['accessToken'] != null &&
-              (result['accessToken'] as String).isNotEmpty) {
-            await conn.setString('accessToken', result['accessToken']);
-            await conn.setString('refreshToken', result['refreshToken']);
+          final keys = await cm.refreshToken(refreshToken);
+          if (keys['access_token'] != null &&
+              (keys['access_token'] as String).isNotEmpty) {
+            tokenization = Tokenization(
+                accessToken: keys['access_token'],
+                refreshToken: keys['refresh_token']);
+            conn.saveCredentials(tokenization.accessToken, tokenization.refreshToken);
             logged = true;
           }
+        } on ConnectionManagerError catch (e) {
+          Modular.to.navigate('/login/');
+          return;
         }
       }
 
-      if (logged) {
+      if (logged && tokenization != null) {
         JwtDecodeService jwt = Modular.get<JwtDecodeService>();
-        final payload = jwt.getPayload(accessToken!);
+        final payload = jwt.getPayload(tokenization.accessToken);
 
         if (payload['homeid'].runtimeType == Null) {
-          Modular.to.navigate('/home_registration', arguments: accessToken);
+          Modular.to.navigate('/home_registration', arguments: tokenization.accessToken);
         } else {
-          Modular.to.navigate('/home/', arguments: accessToken);
+          Modular.to.navigate('/home/', arguments: tokenization.accessToken);
         }
       } else {
-        Modular.to.navigate('/login');
+        Modular.to.navigate('/login/');
       }
     }
   }

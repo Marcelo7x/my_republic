@@ -153,15 +153,14 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
                 invoicesController.price!.value == 0.00) {
               return;
             }
-            print('jklashd');
 
             !invoicesController.isModify
                 ? await invoicesController.addInvoice()
                 : await invoicesController.modifyInvoice();
 
             Navigator.of(context).pop();
-            await Modular.get<HomeStore>().reload();
             Modular.to.navigate('/home/');
+            await Modular.get<HomeStore>().reload();
           },
         ),
         TextButton(
@@ -172,8 +171,8 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
             ),
           ),
           onPressed: () {
-            invoicesController.clearInput();
             Navigator.of(context).pop();
+            invoicesController.clearInput();
           },
         ),
       ],
