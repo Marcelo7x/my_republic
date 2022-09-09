@@ -6,6 +6,7 @@ import 'package:frontend/app/modules/home/home_store.dart';
 import 'package:frontend/app/modules/home/invoices/add_invoice_popup.dart';
 import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 import 'package:frontend/app/modules/home/invoices/invoices_page.dart';
+import 'package:frontend/app/modules/home/notifications/notifications_page.dart';
 import 'package:frontend/app/modules/home/setting/options_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -39,6 +40,7 @@ class _HomePageState extends State<HomePage> {
     List<Widget> listWidget = <Widget>[
       const InvoicesPage(),
       BalancePage(context: context, invoicesController: invoicesController),
+      const NotificationsPage(),
       OptionsPage(context: context, homeController: homeController),
     ];
 
@@ -75,6 +77,10 @@ class _HomePageState extends State<HomePage> {
                   NavigationDestination(
                     icon: Icon(Icons.graphic_eq),
                     label: "Balanço",
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.notifications),
+                    label: "Notificações",
                   ),
                   NavigationDestination(
                     icon: Icon(Icons.settings),

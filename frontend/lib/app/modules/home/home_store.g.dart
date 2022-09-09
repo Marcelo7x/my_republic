@@ -57,6 +57,22 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  late final _$notificationsAtom =
+      Atom(name: 'HomeStoreBase.notifications', context: context);
+
+  @override
+  List<NotificationItem> get notifications {
+    _$notificationsAtom.reportRead();
+    return super.notifications;
+  }
+
+  @override
+  set notifications(List<NotificationItem> value) {
+    _$notificationsAtom.reportWrite(value, super.notifications, () {
+      super.notifications = value;
+    });
+  }
+
   late final _$setDateRangeAsyncAction =
       AsyncAction('HomeStoreBase.setDateRange', context: context);
 
@@ -111,7 +127,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
     return '''
 selectedIndex: ${selectedIndex},
 dateRange: ${dateRange},
-loading: ${loading}
+loading: ${loading},
+notifications: ${notifications}
     ''';
   }
 }

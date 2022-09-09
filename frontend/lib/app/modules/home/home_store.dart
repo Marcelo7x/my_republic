@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/balance/balance_store.dart';
 import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
+import 'package:frontend/app/modules/home/notifications/notifications_models.dart';
 import 'package:frontend/domain/connection_manager.dart';
 
 import 'package:frontend/domain/home.dart';
@@ -56,6 +58,10 @@ abstract class HomeStoreBase with Store {
   setDateRange(PickerDateRange dt) async {
     dateRange = dt;
   }
+
+  @observable
+  List<NotificationItem> notifications = [EntryRequest(title: 'Teste', message: 'testando')];
+
 
   @action
   logout() async {
