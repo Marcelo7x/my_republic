@@ -80,4 +80,15 @@ class HomeDatasourceImpl extends HomeDatasource {
 
     return home.length > 0 ? home.first : {};
   }
+
+  @override
+  Future<void> entryRequest(int userid, int homeid) async {
+    await _database.query(
+      'INSERT INTO "EntryRequest" (entryrequestid, userid, homeid) VALUES (DEFAULT, @userid, @homeid)',
+      variables: {
+        'userid' : userid,
+        'homeid' : homeid,
+      },
+    );
+  }
 }

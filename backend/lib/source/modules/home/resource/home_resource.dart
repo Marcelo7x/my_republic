@@ -10,17 +10,16 @@ import 'package:shelf_modular/shelf_modular.dart';
 class HomeResource extends Resource {
   @override
   List<Route> get routes => [
-        Route.get('/h', _getHome, middlewares: [
-          AuthGuard()
-        ]),
+        Route.get('/h', _getHome, middlewares: [AuthGuard()]),
         Route.post('/h', _insertHome, middlewares: [AuthGuard()]),
-        Route.delete('/h', _deleteHome, middlewares: [
-          AuthGuard()
-        ]),
+        Route.delete('/h', _deleteHome, middlewares: [AuthGuard()]),
         Route.put('/h', _updateHome, middlewares: [AuthGuard()]),
         Route.get('/h/users', _getUsersHome, middlewares: [AuthGuard()]),
         Route.get('/h/category', _getCategory, middlewares: [AuthGuard()]),
-        Route.get('/h/homename/:name', _getHomeByName, middlewares: [AuthGuard()]),
+        Route.get('/h/homename/:name', _getHomeByName,
+            middlewares: [AuthGuard()]),
+        Route.get('/h/entry_request/:homeid', _entryRequest,
+            middlewares: [AuthGuard()]),
       ];
 
   FutureOr<Response> _insertHome(
@@ -29,9 +28,8 @@ class HomeResource extends Resource {
     final homeRepository = injector.get<HomeRepository>();
 
     try {
-      Map<String, dynamic> result  = await homeRepository.insertHome(homeParams);
+      Map<String, dynamic> result = await homeRepository.insertHome(homeParams);
       return Response.ok(jsonEncode(result));
-
     } on HomeException catch (e) {
       return Response(e.statusCode, body: e.message);
     }
@@ -123,9 +121,27 @@ class HomeResource extends Resource {
     final homeRepository = injector.get<HomeRepository>();
 
     try {
-      Map<String, dynamic> result = await homeRepository.getHomeByName(homeParams);
+      Map<String, dynamic> result =
+          await homeRepository.getHomeByName(homeParams);
 
       return Response.ok(jsonEncode(result));
+    } on HomeException catch (e) {
+      return Response(e.statusCode, body: e.message);
+    }
+  }
+
+  FutureOr<Response> _entryRequest(
+      ModularArguments arguments, Injector injector, Request request) async {
+    final homeRepository = injector.get<HomeRepository>();
+    final extractor = injector.get<RequestExtractor>();
+
+    final homeParams = (arguments.params).cast<String, dynamic>();
+    final token = extractor.getAuthorizationBearer(request);
+
+    try {
+      await homeRepository.entryRequest(homeParams, token);
+
+      return Response.ok(jsonEncode({'message' : 'ok'}));
     } on HomeException catch (e) {
       return Response(e.statusCode, body: e.message);
     }

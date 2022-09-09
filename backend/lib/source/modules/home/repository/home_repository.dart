@@ -9,6 +9,7 @@ abstract class HomeDatasource {
   Future<List<Map<String, dynamic>>> getCategory();
   Future<List<Map<String, dynamic>>> getHome();
   Future<Map<String, dynamic>> getHomeByName(String homename);
+  Future<void> entryRequest(int userid, int homeid);
   Future<void> deleteHome(int homeid);
 }
 
@@ -135,6 +136,24 @@ class HomeRepository {
       }
 
       return result;
+    } on HomeException catch (e) {
+      throw HomeException(e.statusCode, e.message);
+    }
+  }
+
+  Future<void> entryRequest(homeParams, token) async {
+    final payload = _jwt.getPayload(token);
+
+    if (payload['userid'] == null) {
+      throw HomeException(403, "Invalid homeid");
+    }
+    
+    if (payload['homeid'] != null) {
+      throw HomeException(403, "Has exist homeid");
+    }
+
+    try {
+      await _datasource.entryRequest(payload['userid'], int.parse(homeParams['homeid']));
     } on HomeException catch (e) {
       throw HomeException(e.statusCode, e.message);
     }
