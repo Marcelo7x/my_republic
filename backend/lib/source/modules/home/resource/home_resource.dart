@@ -141,9 +141,9 @@ class HomeResource extends Resource {
     try {
       await homeRepository.entryRequest(homeParams, token);
 
-      return Response.ok(jsonEncode({'message' : 'ok'}));
+      return Response.ok(jsonEncode({'message': 'ok'}));
     } on HomeException catch (e) {
-      return Response(e.statusCode, body: e.message);
+      return Response(e.statusCode, body: jsonEncode({'message': e.message}));
     }
   }
 }
