@@ -45,6 +45,8 @@ abstract class _LoginStoreBase with Store {
 
           await cm.initApiClient();
 
+        // TODO: NoHomePage route
+
           if (payload['homeid'].runtimeType == Null) {
             Modular.to.navigate('/home_registration', arguments: accessToken);
           } else {

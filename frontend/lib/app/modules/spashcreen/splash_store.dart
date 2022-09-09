@@ -93,7 +93,9 @@ abstract class _SplashStoreBase with Store {
       if (logged && tokenization != null) {
         JwtDecodeService jwt = Modular.get<JwtDecodeService>();
         final payload = jwt.getPayload(tokenization.accessToken);
-
+ 
+        // TODO: NoHomePage route
+ 
         if (payload['homeid'].runtimeType == Null) {
           Modular.to.navigate('/home_registration', arguments: tokenization.accessToken);
         } else {

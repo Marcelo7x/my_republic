@@ -18,7 +18,7 @@ class HomeResource extends Resource {
         Route.get('/h/category', _getCategory, middlewares: [AuthGuard()]),
         Route.get('/h/homename/:name', _getHomeByName,
             middlewares: [AuthGuard()]),
-        Route.get('/h/entry_request/:homeid', _entryRequest,
+        Route.post('/h/entry_request/:homeid', _entryRequest,
             middlewares: [AuthGuard()]),
       ];
 

@@ -334,4 +334,16 @@ class ConnectionManager {
     }
     return {};
   }
+
+  Future<void> entryRequest(int homeid) async {
+    try {
+      await _conn.post('home/h/entry_request/$homeid');
+
+    } on UnoError catch (e) {
+      if (e.response?.status == 403 || e.response == null) {
+        throw ConnectionManagerError(
+            e.response?.status ?? 403, 'erro entryRequest');
+      }
+    }
+  }
 }

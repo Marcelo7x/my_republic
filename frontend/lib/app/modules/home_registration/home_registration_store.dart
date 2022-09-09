@@ -164,23 +164,34 @@ abstract class _HomeRegistrationStoreBase with Store {
     final cm = Modular.get<ConnectionManager>();
     if (!isFindingHome || homeid == null) return;
 
-    try {
-      await cm.userUpadate(homeid: homeid);
-    } on ConnectionManagerError catch (e) {
+    // try {
+    //   await cm.userUpadate(homeid: homeid);
+    // } on ConnectionManagerError catch (e) {
+    //   homeRegistrarionError = true;
+    // }
+
+    // StorageLocal st = await StorageLocal.getInstance();
+    // Tokenization tokenization = Tokenization(
+    //     accessToken: await st.getString('access_token') ?? '-',
+    //     refreshToken: await st.getString('refresh_token') ?? '-');
+
+    // var t = await cm.refreshToken(tokenization.refreshToken);
+
+    // if (t != null && t.isNotEmpty) {
+    //   await st.saveCredentials(t['access_token'], t['refresh_token']);
+
+    //   Modular.to.navigate('/home/', arguments: t['access_token']);
+    // }
+    if (homeid == null) {
       homeRegistrarionError = true;
+      return;
     }
 
-    StorageLocal st = await StorageLocal.getInstance();
-    Tokenization tokenization = Tokenization(
-        accessToken: await st.getString('access_token') ?? '-',
-        refreshToken: await st.getString('refresh_token') ?? '-');
-
-    var t = await cm.refreshToken(tokenization.refreshToken);
-
-    if (t != null && t.isNotEmpty) {
-      await st.saveCredentials(t['access_token'], t['refresh_token']);
-
-      Modular.to.navigate('/home/', arguments: t['access_token']);
+    try {
+      await cm.entryRequest(homeid!);
+      Modular.to.navigate('/login/');
+    } catch (e) {
+      homeRegistrarionError = true;
     }
 
     loading = false;
