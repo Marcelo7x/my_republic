@@ -14,6 +14,7 @@ model User {
     home       Home?     @relation(fields: [homeid], references: [homeid])
     homeid     Int?
     Invoice    Invoice[]
+    entryrequest EntryRequest[]
 }
 
 enum UserRole {
@@ -34,6 +35,7 @@ model Home {
     cep      Int?
     user     User[]
     Invoice  Invoice[]
+    entryrequest EntryRequest[]
 }
 
 model Invoice {
@@ -62,4 +64,12 @@ model Category {
     categoryid Int       @id @default(autoincrement())
     name       String
     Invoice    Invoice[]
+}
+
+model EntryRequest {
+    entryrequestid Int @id @default(autoincrement())
+    user        User     @relation(fields: [userid], references: [userid])
+    home        Home     @relation(fields: [homeid], references: [homeid])
+    userid Int
+    homeid Int
 }
