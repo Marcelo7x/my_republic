@@ -101,7 +101,7 @@ abstract class _SplashStoreBase with Store {
             final existRequest = await cm.getEntryRequest();
 
             if (existRequest) {
-              Modular.to.navigate('/home/no_home');
+              Modular.to.navigate('/home/', arguments: tokenization.accessToken);
               return;
             }
           } on ConnectionManagerError catch (e) {}

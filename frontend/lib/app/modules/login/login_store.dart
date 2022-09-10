@@ -45,14 +45,13 @@ abstract class _LoginStoreBase with Store {
 
           await cm.initApiClient();
 
-          // TODO: NoHomePage route
-
           if (payload['homeid'].runtimeType == Null) {
             try {
               final existRequest = await cm.getEntryRequest();
 
               if (existRequest) {
-                Modular.to.navigate('/home/no_home');
+                Modular.to.navigate('/home/', arguments: accessToken);
+
                 return;
               }
             } on ConnectionManagerError catch (e) {}

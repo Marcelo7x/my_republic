@@ -73,6 +73,22 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  late final _$isLiveInHomeAtom =
+      Atom(name: 'HomeStoreBase.isLiveInHome', context: context);
+
+  @override
+  bool get isLiveInHome {
+    _$isLiveInHomeAtom.reportRead();
+    return super.isLiveInHome;
+  }
+
+  @override
+  set isLiveInHome(bool value) {
+    _$isLiveInHomeAtom.reportWrite(value, super.isLiveInHome, () {
+      super.isLiveInHome = value;
+    });
+  }
+
   late final _$setDateRangeAsyncAction =
       AsyncAction('HomeStoreBase.setDateRange', context: context);
 
@@ -128,7 +144,8 @@ mixin _$HomeStore on HomeStoreBase, Store {
 selectedIndex: ${selectedIndex},
 dateRange: ${dateRange},
 loading: ${loading},
-notifications: ${notifications}
+notifications: ${notifications},
+isLiveInHome: ${isLiveInHome}
     ''';
   }
 }

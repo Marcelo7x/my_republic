@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/balance/balance_store.dart';
 import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 import 'package:frontend/app/modules/home/notifications/notifications_models.dart';
 import 'package:frontend/domain/connection_manager.dart';
-
 import 'package:frontend/domain/home.dart';
 import 'package:frontend/domain/jwt/jwt_decode_impl.dart';
 import 'package:frontend/domain/storage_local.dart';
@@ -22,7 +20,7 @@ abstract class HomeStoreBase with Store {
   User user = User.fromMap(
       Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data));
   Home home = Home(Modular.get<JwtDecodeServiceImpl>()
-      .getPayload(Modular.args.data)['homeid']);
+      .getPayload(Modular.args.data)['homeid']?? -1);
 
   @observable
   int selectedIndex = 0;
@@ -60,8 +58,9 @@ abstract class HomeStoreBase with Store {
   }
 
   @observable
-  List<NotificationItem> notifications = [EntryRequest(title: 'Teste', message: 'testando')];
-
+  List<NotificationItem> notifications = [
+    EntryRequest(title: 'Teste', message: 'testando')
+  ];
 
   @action
   logout() async {
@@ -76,11 +75,22 @@ abstract class HomeStoreBase with Store {
     Modular.to.navigate('/login/');
   }
 
+  @observable
+  bool isLiveInHome = false;
+
   @action
   reload() async {
-    await Modular.get<InvoiceStore>().getInvoices();
-    await Modular.get<InvoiceStore>().getCategories();
-    await Modular.get<BalanceStore>().calcTotal();
+    final cm = Modular.get<ConnectionManager>();
+
+    try {
+      isLiveInHome = await cm.getEntryRequest();
+    } on ConnectionManagerError catch (e) {}
+
+    if (!isLiveInHome) {
+      await Modular.get<InvoiceStore>().getInvoices();
+      await Modular.get<InvoiceStore>().getCategories();
+      await Modular.get<BalanceStore>().calcTotal();
+    }
   }
 
   switchTheme(bool isDarkTheme) async {

@@ -6,6 +6,7 @@ import 'package:frontend/app/modules/home/home_store.dart';
 import 'package:frontend/app/modules/home/invoices/add_invoice_popup.dart';
 import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 import 'package:frontend/app/modules/home/invoices/invoices_page.dart';
+import 'package:frontend/app/modules/home/no_home/no_home_page.dart';
 import 'package:frontend/app/modules/home/notifications/notifications_page.dart';
 import 'package:frontend/app/modules/home/setting/options_page.dart';
 
@@ -44,6 +45,13 @@ class _HomePageState extends State<HomePage> {
       OptionsPage(context: context, homeController: homeController),
     ];
 
+    List<Widget> noHome = <Widget>[
+      const NoHomePage(),
+      NoHomePage(),
+      const NotificationsPage(),
+      OptionsPage(context: context, homeController: homeController),
+    ];
+
     return Observer(
       builder: (_) {
         return Scaffold(
@@ -51,11 +59,13 @@ class _HomePageState extends State<HomePage> {
             return SizedBox(
               width: width,
               height: height,
-              child: PageView(
-                controller: homeController.page_controller,
-                children: listWidget,
-                onPageChanged: (index) => homeController.setIndex(index),
-              ),
+              child: Observer(builder: (_) {
+                return PageView(
+                  controller: homeController.page_controller,
+                  children: homeController.isLiveInHome? noHome : listWidget,
+                  onPageChanged: (index) => homeController.setIndex(index),
+                );
+              }),
             );
           }),
           bottomNavigationBar: ClipRRect(
@@ -92,7 +102,7 @@ class _HomePageState extends State<HomePage> {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.miniCenterFloat,
-          floatingActionButton: homeController.selectedIndex == 0
+          floatingActionButton: homeController.selectedIndex == 0 && !homeController.isLiveInHome
               ? FloatingActionButton(
                   onPressed: () => showDialog(
                     context: context,

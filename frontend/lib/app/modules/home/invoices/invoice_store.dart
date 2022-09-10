@@ -19,7 +19,7 @@ abstract class InvoiceStoreBase with Store {
   User user = User.fromMap(
       Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data));
   Home home = Home(Modular.get<JwtDecodeServiceImpl>()
-      .getPayload(Modular.args.data)['homeid']);
+      .getPayload(Modular.args.data)['homeid'] ?? -1);
 
   @observable
   bool loading = false;
