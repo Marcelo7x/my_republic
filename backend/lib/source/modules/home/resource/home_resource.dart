@@ -20,6 +20,8 @@ class HomeResource extends Resource {
             middlewares: [AuthGuard()]),
         Route.post('/h/entry_request/:homeid', _entryRequest,
             middlewares: [AuthGuard()]),
+        Route.get('/h/entry_request', _getEntryRequest,
+            middlewares: [AuthGuard()]),
       ];
 
   FutureOr<Response> _insertHome(
@@ -142,6 +144,22 @@ class HomeResource extends Resource {
       await homeRepository.entryRequest(homeParams, token);
 
       return Response.ok(jsonEncode({'message': 'ok'}));
+    } on HomeException catch (e) {
+      return Response(e.statusCode, body: jsonEncode({'message': e.message}));
+    }
+  }
+
+  FutureOr<Response> _getEntryRequest(
+      ModularArguments arguments, Injector injector, Request request) async {
+    final homeRepository = injector.get<HomeRepository>();
+    final extractor = injector.get<RequestExtractor>();
+
+    final token = extractor.getAuthorizationBearer(request);
+
+    try {
+      final bool result = await homeRepository.getEntryRequest(token);
+
+      return Response.ok(jsonEncode({'exist_request': result? 'yes' : 'no'}));
     } on HomeException catch (e) {
       return Response(e.statusCode, body: jsonEncode({'message': e.message}));
     }

@@ -106,7 +106,7 @@ class ConnectionManager {
     try {
       final result = await _conn.get('auth/refresh_token',
           headers: {"authorization": "Bearer $token"});
-      initApiClient();
+      await initApiClient();
       return result.data;
     } on UnoError catch (e) {
       throw ConnectionManagerError(403, 'invalid token');
@@ -124,11 +124,15 @@ class ConnectionManager {
       });
 
       final data = response.data;
+      await initApiClient();
+
       if (data.length > 0 && data['access_token'] != null) {
         return data;
       }
     } on UnoError catch (e) {
       if (e.response?.status == 403) {
+        await initApiClient();
+
         throw ConnectionManagerError(e.response!.status, 'invalid credentials');
       }
     }
@@ -338,12 +342,30 @@ class ConnectionManager {
   Future<void> entryRequest(int homeid) async {
     try {
       await _conn.post('home/h/entry_request/$homeid');
-
     } on UnoError catch (e) {
       if (e.response?.status == 403 || e.response == null) {
         throw ConnectionManagerError(
             e.response?.status ?? 403, 'erro entryRequest');
       }
     }
+  }
+
+  Future<bool> getEntryRequest() async {
+    try {
+      final result = await _conn.get('home/h/entry_request');
+      final data = result.data;
+
+      if (data['exist_request'] == null || data['exist_request'] != 'yes') {
+        return false;
+      }
+
+      return true;
+    } on UnoError catch (e) {
+      if (e.response?.status == 403 || e.response == null) {
+        throw ConnectionManagerError(
+            e.response?.status ?? 403, 'erro getEntryRequest');
+      }
+    }
+    return false;
   }
 }

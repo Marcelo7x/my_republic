@@ -91,4 +91,16 @@ class HomeDatasourceImpl extends HomeDatasource {
       },
     );
   }
+
+  @override
+  Future<Map<String, dynamic>> getEntryRequest(int userid) async {
+    List<Map<String, Map<String, dynamic>>> result = await _database.query(
+      'SELECT userid FROM "EntryRequest" WHERE userid = @userid',
+      variables: {
+        'userid' : userid,
+      },
+    );
+
+    return result.map((e) => e["EntryRequest"] ?? {}).first;
+  }
 }

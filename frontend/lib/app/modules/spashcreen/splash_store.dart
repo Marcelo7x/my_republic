@@ -71,7 +71,6 @@ abstract class _SplashStoreBase with Store {
       final String? accessToken = await conn.getString('access_token');
       final String? refreshToken = await conn.getString('refresh_token');
 
-
       bool logged = false;
       if (accessToken != null && refreshToken != null) {
         try {
@@ -81,7 +80,8 @@ abstract class _SplashStoreBase with Store {
             tokenization = Tokenization(
                 accessToken: keys['access_token'],
                 refreshToken: keys['refresh_token']);
-            conn.saveCredentials(tokenization.accessToken, tokenization.refreshToken);
+            conn.saveCredentials(
+                tokenization.accessToken, tokenization.refreshToken);
             logged = true;
           }
         } on ConnectionManagerError catch (e) {
@@ -93,11 +93,21 @@ abstract class _SplashStoreBase with Store {
       if (logged && tokenization != null) {
         JwtDecodeService jwt = Modular.get<JwtDecodeService>();
         final payload = jwt.getPayload(tokenization.accessToken);
- 
+
         // TODO: NoHomePage route
- 
+
         if (payload['homeid'].runtimeType == Null) {
-          Modular.to.navigate('/home_registration', arguments: tokenization.accessToken);
+          try {
+            final existRequest = await cm.getEntryRequest();
+
+            if (existRequest) {
+              Modular.to.navigate('/home/no_home');
+              return;
+            }
+          } on ConnectionManagerError catch (e) {}
+
+          Modular.to.navigate('/home_registration',
+              arguments: tokenization.accessToken);
         } else {
           Modular.to.navigate('/home/', arguments: tokenization.accessToken);
         }
