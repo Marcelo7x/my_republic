@@ -24,3 +24,5 @@ backend/.env
 backend/.envDev
 frontend/.env
 frontend/.envDev
+*.env
+*.envDev
