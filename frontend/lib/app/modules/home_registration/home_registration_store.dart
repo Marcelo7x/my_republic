@@ -187,9 +187,14 @@ abstract class _HomeRegistrationStoreBase with Store {
       return;
     }
 
+    StorageLocal st = await StorageLocal.getInstance();
+        Tokenization tokenization = Tokenization(
+            accessToken: await st.getString('access_token') ?? '-',
+            refreshToken: await st.getString('refresh_token') ?? '-');
+
     try {
       await cm.entryRequest(homeid!);
-      Modular.to.navigate('/login/');
+      Modular.to.navigate('/home/', arguments: tokenization.accessToken);
     } catch (e) {
       homeRegistrarionError = true;
     }

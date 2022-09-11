@@ -9,7 +9,10 @@ abstract class HomeDatasource {
   Future<List<Map<String, dynamic>>> getCategory();
   Future<List<Map<String, dynamic>>> getHome();
   Future<Map<String, dynamic>> getHomeByName(String homename);
-  Future<Map<String, dynamic>> getEntryRequest(int userid);
+  Future<Map<String, dynamic>> getEntryRequestByUserid(int userid);
+  Future<List<Map<String, dynamic>>> getEntryRequestByHomeid(int homeid);
+  Future<void> acceptEntryRequest(int userid, int homeid);
+  Future<void> deleteEntryRequest(int userid, int homeid);
   Future<void> entryRequest(int userid, int homeid);
   Future<void> deleteHome(int homeid);
 }
@@ -161,7 +164,7 @@ class HomeRepository {
     }
   }
 
-  Future<bool> getEntryRequest(token) async {
+  Future<bool> getEntryRequestByUserid(token) async {
     final payload = _jwt.getPayload(token);
 
     if (payload['userid'] == null) {
@@ -174,14 +177,74 @@ class HomeRepository {
 
     try {
       Map<String, dynamic> result =
-          await _datasource.getEntryRequest(payload['userid']);
-      
+          await _datasource.getEntryRequestByUserid(payload['userid']);
+
       if (result.isNotEmpty) {
         return true;
       } else {
         return false;
       }
+    } on HomeException catch (e) {
+      throw HomeException(e.statusCode, e.message);
+    }
+  }
 
+  Future<List<Map<String, dynamic>>> getEntryRequestByHomeid(token) async {
+    final payload = _jwt.getPayload(token);
+
+    if (payload['userid'] == null) {
+      throw HomeException(403, "Invalid userid");
+    }
+
+    if (payload['homeid'] == null) {
+      throw HomeException(403, "Invalid Homeid");
+    }
+
+    try {
+      List<Map<String, dynamic>> result =
+          await _datasource.getEntryRequestByHomeid(payload['homeid']);
+
+      return result;
+    } on HomeException catch (e) {
+      throw HomeException(e.statusCode, e.message);
+    }
+  }
+
+  Future<void> acceptEntryRequest(homeParams, token) async {
+    final payload = _jwt.getPayload(token);
+
+    if (homeParams['userid'] == null) {
+      throw HomeException(403, "Invalid userid");
+    }
+
+    if (payload['homeid'] == null) {
+      throw HomeException(403, "Invalid homeid");
+    }
+
+    try {
+      await _datasource.acceptEntryRequest(
+          int.parse(homeParams['userid']), payload['homeid']);
+
+      await deleteEntryRequest(homeParams, token);
+    } on HomeException catch (e) {
+      throw HomeException(e.statusCode, e.message);
+    }
+  }
+
+  Future<void> deleteEntryRequest(homeParams, token) async {
+    final payload = _jwt.getPayload(token);
+
+    if (homeParams['userid'] == null) {
+      throw HomeException(403, "Invalid userid");
+    }
+
+    if (payload['homeid'] == null) {
+      throw HomeException(403, "Invalid homeid");
+    }
+
+    try {
+      await _datasource.deleteEntryRequest(
+          int.parse(homeParams['userid']), payload['homeid']);
     } on HomeException catch (e) {
       throw HomeException(e.statusCode, e.message);
     }

@@ -86,21 +86,55 @@ class HomeDatasourceImpl extends HomeDatasource {
     await _database.query(
       'INSERT INTO "EntryRequest" (entryrequestid, userid, homeid) VALUES (DEFAULT, @userid, @homeid)',
       variables: {
-        'userid' : userid,
-        'homeid' : homeid,
+        'userid': userid,
+        'homeid': homeid,
       },
     );
   }
 
   @override
-  Future<Map<String, dynamic>> getEntryRequest(int userid) async {
+  Future<Map<String, dynamic>> getEntryRequestByUserid(int userid) async {
     List<Map<String, Map<String, dynamic>>> result = await _database.query(
       'SELECT userid FROM "EntryRequest" WHERE userid = @userid',
       variables: {
-        'userid' : userid,
+        'userid': userid,
       },
     );
 
     return result.map((e) => e["EntryRequest"] ?? {}).first;
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getEntryRequestByHomeid(int homeid) async {
+    List<Map<String, Map<String, dynamic>>> result = await _database.query(
+      'SELECT u.userid, u.firstname, u.lastname FROM "EntryRequest" as e INNER JOIN "User" as u ON e.userid = u.userid WHERE e.homeid = @homeid',
+      variables: {
+        'homeid': homeid,
+      },
+    );
+
+    return result.map((e) => e["User"] ?? {}).toList();
+  }
+
+  @override
+  Future<void> acceptEntryRequest(int userid, int homeid) async {
+    await _database.query(
+      'Update "User" SET homeid = @homeid WHERE userid = @userid',
+      variables: {
+        'homeid': homeid,
+        'userid': userid,
+      },
+    );
+  }
+
+  @override
+  Future<void> deleteEntryRequest(int userid, int homeid) async {
+    await _database.query(
+      'Delete From "EntryRequest" WHERE userid = @userid and homeid = @homeid',
+      variables: {
+        'homeid': homeid,
+        'userid': userid,
+      },
+    );
   }
 }

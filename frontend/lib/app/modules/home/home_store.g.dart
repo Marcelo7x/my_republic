@@ -57,6 +57,22 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  late final _$useridSelectedAtom =
+      Atom(name: 'HomeStoreBase.useridSelected', context: context);
+
+  @override
+  int get useridSelected {
+    _$useridSelectedAtom.reportRead();
+    return super.useridSelected;
+  }
+
+  @override
+  set useridSelected(int value) {
+    _$useridSelectedAtom.reportWrite(value, super.useridSelected, () {
+      super.useridSelected = value;
+    });
+  }
+
   late final _$notificationsAtom =
       Atom(name: 'HomeStoreBase.notifications', context: context);
 
@@ -89,6 +105,22 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  late final _$usersEntryRequestAtom =
+      Atom(name: 'HomeStoreBase.usersEntryRequest', context: context);
+
+  @override
+  List<Map<String, dynamic>> get usersEntryRequest {
+    _$usersEntryRequestAtom.reportRead();
+    return super.usersEntryRequest;
+  }
+
+  @override
+  set usersEntryRequest(List<Map<String, dynamic>> value) {
+    _$usersEntryRequestAtom.reportWrite(value, super.usersEntryRequest, () {
+      super.usersEntryRequest = value;
+    });
+  }
+
   late final _$setDateRangeAsyncAction =
       AsyncAction('HomeStoreBase.setDateRange', context: context);
 
@@ -105,6 +137,23 @@ mixin _$HomeStore on HomeStoreBase, Store {
     return _$logoutAsyncAction.run(() => super.logout());
   }
 
+  late final _$verifyIfIsLiveInHomeAsyncAction =
+      AsyncAction('HomeStoreBase.verifyIfIsLiveInHome', context: context);
+
+  @override
+  Future verifyIfIsLiveInHome() {
+    return _$verifyIfIsLiveInHomeAsyncAction
+        .run(() => super.verifyIfIsLiveInHome());
+  }
+
+  late final _$getEntryRequestAsyncAction =
+      AsyncAction('HomeStoreBase.getEntryRequest', context: context);
+
+  @override
+  Future getEntryRequest() {
+    return _$getEntryRequestAsyncAction.run(() => super.getEntryRequest());
+  }
+
   late final _$reloadAsyncAction =
       AsyncAction('HomeStoreBase.reload', context: context);
 
@@ -115,6 +164,28 @@ mixin _$HomeStore on HomeStoreBase, Store {
 
   late final _$HomeStoreBaseActionController =
       ActionController(name: 'HomeStoreBase', context: context);
+
+  @override
+  dynamic load(bool value) {
+    final _$actionInfo =
+        _$HomeStoreBaseActionController.startAction(name: 'HomeStoreBase.load');
+    try {
+      return super.load(value);
+    } finally {
+      _$HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setUseridSelected(dynamic userid) {
+    final _$actionInfo = _$HomeStoreBaseActionController.startAction(
+        name: 'HomeStoreBase.setUseridSelected');
+    try {
+      return super.setUseridSelected(userid);
+    } finally {
+      _$HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   dynamic setPageAndIndex(int index) {
@@ -144,8 +215,10 @@ mixin _$HomeStore on HomeStoreBase, Store {
 selectedIndex: ${selectedIndex},
 dateRange: ${dateRange},
 loading: ${loading},
+useridSelected: ${useridSelected},
 notifications: ${notifications},
-isLiveInHome: ${isLiveInHome}
+isLiveInHome: ${isLiveInHome},
+usersEntryRequest: ${usersEntryRequest}
     ''';
   }
 }

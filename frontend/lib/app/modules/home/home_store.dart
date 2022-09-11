@@ -20,7 +20,8 @@ abstract class HomeStoreBase with Store {
   User user = User.fromMap(
       Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data));
   Home home = Home(Modular.get<JwtDecodeServiceImpl>()
-      .getPayload(Modular.args.data)['homeid']?? -1);
+          .getPayload(Modular.args.data)['homeid'] ??
+      -1);
 
   @observable
   int selectedIndex = 0;
@@ -38,6 +39,19 @@ abstract class HomeStoreBase with Store {
 
   @observable
   bool loading = false;
+
+  @action
+  load(bool value) {
+    loading = value;
+  }
+
+  @observable
+  int useridSelected = -1;
+
+  @action
+  setUseridSelected(userid) {
+    useridSelected = userid;
+  }
 
   @action
   setPageAndIndex(int index) {
@@ -58,9 +72,7 @@ abstract class HomeStoreBase with Store {
   }
 
   @observable
-  List<NotificationItem> notifications = [
-    EntryRequest(title: 'Teste', message: 'testando')
-  ];
+  List<NotificationItem> notifications = [];
 
   @action
   logout() async {
@@ -79,12 +91,44 @@ abstract class HomeStoreBase with Store {
   bool isLiveInHome = false;
 
   @action
-  reload() async {
+  verifyIfIsLiveInHome() async {
     final cm = Modular.get<ConnectionManager>();
 
     try {
       isLiveInHome = await cm.getEntryRequest();
     } on ConnectionManagerError catch (e) {}
+  }
+
+  @observable
+  List<Map<String, dynamic>> usersEntryRequest = [];
+
+  @action
+  getEntryRequest() async {
+    final cm = Modular.get<ConnectionManager>();
+
+    try {
+      final result = await cm.verifyEntryRequest();
+
+      usersEntryRequest = [];
+      notifications = [];
+      for (var el in result) {
+        usersEntryRequest.add(el);
+      }
+
+      for (var el in usersEntryRequest) {
+        notifications.add(EntryRequest(
+            userid: el['userid'],
+            title: '${el['firstname']} ${el['lastname']}',
+            message: 'Enviou um pedido para entrar para a sua república'));
+      }
+    } on ConnectionManagerError catch (e) {}
+  }
+
+  @action
+  reload() async {
+    await verifyIfIsLiveInHome();
+
+    if (home != null && home.id != -1) getEntryRequest();
 
     if (!isLiveInHome) {
       await Modular.get<InvoiceStore>().getInvoices();

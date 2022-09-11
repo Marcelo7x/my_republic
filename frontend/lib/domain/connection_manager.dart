@@ -368,4 +368,48 @@ class ConnectionManager {
     }
     return false;
   }
+
+  Future<List> verifyEntryRequest() async {
+    try {
+      final result = await _conn.get('home/h/entry_request/home');
+      final data = result.data;
+
+      if (data == null || data.isEmpty) {
+        return [];
+      }
+
+      return data;
+    } on UnoError catch (e) {
+      if (e.response?.status == 403 || e.response == null) {
+        throw ConnectionManagerError(
+            e.response?.status ?? 403, 'erro verifyEntryRequest');
+      }
+    }
+    return [];
+  }
+
+  Future<void> acceptEntryRequest(int userid) async {
+    try {
+      await _conn.put('home/h/entry_request/$userid');
+      
+    } on UnoError catch (e) {
+      if (e.response?.status == 403 || e.response == null) {
+        throw ConnectionManagerError(
+            e.response?.status ?? 403, 'erro acceptEntryRequest');
+      }
+    }
+  }
+
+  Future<void> deleteEntryRequest(int userid) async {
+    try {
+      await _conn.delete('home/h/entry_request/$userid');
+      
+    } on UnoError catch (e) {
+      if (e.response?.status == 403 || e.response == null) {
+        throw ConnectionManagerError(
+            e.response?.status ?? 403, 'erro acceptEntryRequest');
+      }
+    }
+
+  }
 }

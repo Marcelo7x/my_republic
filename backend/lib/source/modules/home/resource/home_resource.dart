@@ -20,7 +20,13 @@ class HomeResource extends Resource {
             middlewares: [AuthGuard()]),
         Route.post('/h/entry_request/:homeid', _entryRequest,
             middlewares: [AuthGuard()]),
-        Route.get('/h/entry_request', _getEntryRequest,
+        Route.get('/h/entry_request', _getEntryRequestByUserid,
+            middlewares: [AuthGuard()]),
+        Route.get('/h/entry_request/home', _getEntryRequestByHomeid,
+            middlewares: [AuthGuard()]),
+        Route.put('/h/entry_request/:userid', _acceptEntryRequest,
+            middlewares: [AuthGuard()]),
+            Route.delete('/h/entry_request/:userid', _deleteEntryRequest,
             middlewares: [AuthGuard()]),
       ];
 
@@ -149,17 +155,70 @@ class HomeResource extends Resource {
     }
   }
 
-  FutureOr<Response> _getEntryRequest(
-      ModularArguments arguments, Injector injector, Request request) async {
+  FutureOr<Response> _getEntryRequestByUserid(
+      Injector injector, Request request) async {
     final homeRepository = injector.get<HomeRepository>();
     final extractor = injector.get<RequestExtractor>();
 
     final token = extractor.getAuthorizationBearer(request);
 
     try {
-      final bool result = await homeRepository.getEntryRequest(token);
+      final bool result = await homeRepository.getEntryRequestByUserid(token);
 
-      return Response.ok(jsonEncode({'exist_request': result? 'yes' : 'no'}));
+      return Response.ok(jsonEncode({'exist_request': result ? 'yes' : 'no'}));
+    } on HomeException catch (e) {
+      return Response(e.statusCode, body: jsonEncode({'message': e.message}));
+    }
+  }
+
+  FutureOr<Response> _getEntryRequestByHomeid(
+      Injector injector, Request request) async {
+    final homeRepository = injector.get<HomeRepository>();
+    final extractor = injector.get<RequestExtractor>();
+
+    final token = extractor.getAuthorizationBearer(request);
+
+    try {
+      final List<Map<String, dynamic>> result =
+          await homeRepository.getEntryRequestByHomeid(token);
+
+      return Response.ok(jsonEncode(result));
+    } on HomeException catch (e) {
+      return Response(e.statusCode, body: jsonEncode({'message': e.message}));
+    }
+  }
+
+  FutureOr<Response> _acceptEntryRequest(
+      ModularArguments arguments, Injector injector, Request request) async {
+    final homeRepository = injector.get<HomeRepository>();
+    final extractor = injector.get<RequestExtractor>();
+
+    final homeParams = (arguments.params).cast<String, dynamic>();
+
+    final token = extractor.getAuthorizationBearer(request);
+
+    try {
+      await homeRepository.acceptEntryRequest(homeParams, token);
+
+      return Response.ok(jsonEncode({'message': 'ok'}));
+    } on HomeException catch (e) {
+      return Response(e.statusCode, body: jsonEncode({'message': e.message}));
+    }
+  }
+
+  FutureOr<Response> _deleteEntryRequest(
+      ModularArguments arguments, Injector injector, Request request) async {
+    final homeRepository = injector.get<HomeRepository>();
+    final extractor = injector.get<RequestExtractor>();
+
+    final homeParams = (arguments.params).cast<String, dynamic>();
+
+    final token = extractor.getAuthorizationBearer(request);
+
+    try {
+      await homeRepository.deleteEntryRequest(homeParams, token);
+
+      return Response.ok(jsonEncode({'message': 'ok'}));
     } on HomeException catch (e) {
       return Response(e.statusCode, body: jsonEncode({'message': e.message}));
     }

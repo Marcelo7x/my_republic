@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class NoHomePage extends StatefulWidget {
   const NoHomePage({Key? key}) : super(key: key);
@@ -12,8 +10,19 @@ class NoHomePage extends StatefulWidget {
 class _NoHomePageState extends State<NoHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Aguardando confirmação da república'),),
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Center(
+            child: Text('Bem Vindo(a) ao MY REPUBLIC.'),
+          ),
+          Center(
+            child: Text(
+                'Sua solicitação foi envida, aguarde a confirmação da república.'),
+          ),
+        ],
+      ),
     );
   }
 }
