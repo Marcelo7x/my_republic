@@ -20,6 +20,7 @@ doc/api/
 *.js.deps
 *.js.map
 
+*.env
 backend/.env
 backend/.envDev
 frontend/.env
