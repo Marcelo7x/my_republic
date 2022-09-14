@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 import 'package:frontend/domain/connection_manager.dart';
+import 'package:frontend/domain/enum_paid.dart';
 import 'package:frontend/domain/home.dart';
 import 'package:frontend/domain/jwt/jwt_decode_impl.dart';
 import 'package:frontend/domain/user.dart';
@@ -69,9 +70,9 @@ abstract class BalanceStoreBase with Store {
 
     for (var element in invoicesController.invoices) {
       totalInvoice += element.price;
-      anyPayed += element.paid == false ? element.price : 0;
+      anyPayed += element.paid == Paid.anypayed ? element.price : 0;
       residents[element.user.id]['value'] += element.price;
-      residents[element.user.id]['paid'] = element.paid == true
+      residents[element.user.id]['paid'] = element.paid == Paid.payed
           ? residents[element.user.id]['paid']! + element.price
           : residents[element.user.id]['paid']!;
 
