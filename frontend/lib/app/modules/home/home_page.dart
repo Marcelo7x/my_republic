@@ -42,7 +42,6 @@ class _HomePageState extends State<HomePage> {
     List<Widget> listWidget = <Widget>[
       // const InvoicesPage(),
       const ResumePage(),
-      BalancePage(context: context, invoicesController: invoicesController),
       const NotificationsPage(),
       OptionsPage(context: context, homeController: homeController),
     ];
@@ -70,30 +69,32 @@ class _HomePageState extends State<HomePage> {
               }),
             );
           }),
-          bottomNavigationBar: Observer(builder: (_) {
-            return NavigationBar(
-              height: height * .09,
-              onDestinationSelected: (index) =>
-                  homeController.setPageAndIndex(index),
-              selectedIndex: homeController.selectedIndex,
-              labelBehavior:
-                  NavigationDestinationLabelBehavior.onlyShowSelected,
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.money_off),
-                  label: "Contas",
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.notifications),
-                  label: "Notificações",
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.settings),
-                  label: "Opções",
-                ),
-              ],
-            );
-          }),
+          bottomNavigationBar: Observer(
+            builder: (_) {
+              return NavigationBar(
+                height: height * .09,
+                onDestinationSelected: (index) =>
+                    homeController.setPageAndIndex(index),
+                selectedIndex: homeController.selectedIndex,
+                labelBehavior:
+                    NavigationDestinationLabelBehavior.onlyShowSelected,
+                destinations: const [
+                  NavigationDestination(
+                    icon: Icon(Icons.money_off),
+                    label: "Contas",
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.notifications),
+                    label: "Notificações",
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.settings),
+                    label: "Opções",
+                  ),
+                ],
+              );
+            },
+          ),
         );
       },
     );

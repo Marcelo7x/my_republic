@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:frontend/app/modules/home/balance/balance_page.dart';
 import 'package:frontend/app/modules/home/balance/balance_store.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
 import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
@@ -111,48 +112,54 @@ class _ResumePageState extends State<ResumePage> {
                 ),
               ],
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 15, top: 50),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: width * 0.8,
-                    height: 50,
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.graphic_eq,
-                          size: 30,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 15),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Balanço",
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              Text(
-                                "Veja um resumo das contas de ${homeController.home.id}",
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
+            GestureDetector(
+              onTap: () {
+                Modular.to.push(MaterialPageRoute(
+                              builder: ((context) => BalancePage())));
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: 15, top: 50),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: width * 0.8,
+                      height: 50,
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.graphic_eq,
+                            size: 30,
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: EdgeInsets.only(left: 15),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Balanço",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                Text(
+                                  "Veja um resumo das contas de ${homeController.home.id}",
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(right: 15),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 20,
-                    ),
-                  )
-                ],
+                    const Padding(
+                      padding: EdgeInsets.only(right: 15),
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 20,
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             SingleChildScrollView(
