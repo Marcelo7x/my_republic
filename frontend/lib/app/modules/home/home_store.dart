@@ -126,6 +126,8 @@ abstract class HomeStoreBase with Store {
 
   @action
   reload() async {
+    loading = true;
+
     await verifyIfIsLiveInHome();
 
     if (home != null && home.id != -1) getEntryRequest();
@@ -135,6 +137,8 @@ abstract class HomeStoreBase with Store {
       await Modular.get<InvoiceStore>().getCategories();
       await Modular.get<BalanceStore>().calcTotal();
     }
+
+    loading = false;
   }
 
   switchTheme(bool isDarkTheme) async {

@@ -43,10 +43,10 @@ class PostgresDatabase implements RemoteDatabase, Disposable {
           queryText,
           substitutionValues: variables,
         );
-      } on PostgreSQLException catch (e) {
+      } catch (e) {
         if (!erroConnection) {
           erroConnection = true;
-          _init();
+          await _init();
           continue;
         } else {
           rethrow;

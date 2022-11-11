@@ -16,7 +16,8 @@ abstract class BalanceStoreBase with Store {
   User user = User.fromMap(
       Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data));
   Home home = Home(Modular.get<JwtDecodeServiceImpl>()
-      .getPayload(Modular.args.data)['homeid'] ?? -1);
+          .getPayload(Modular.args.data)['homeid'] ??
+      -1);
 
   InvoiceStore invoicesController = Modular.get<InvoiceStore>();
 

@@ -8,6 +8,7 @@ import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 import 'package:frontend/app/modules/home/invoices/invoices_page.dart';
 import 'package:frontend/app/modules/home/no_home/no_home_page.dart';
 import 'package:frontend/app/modules/home/notifications/notifications_page.dart';
+import 'package:frontend/app/modules/home/resume/resume_page.dart';
 import 'package:frontend/app/modules/home/setting/options_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -39,7 +40,8 @@ class _HomePageState extends State<HomePage> {
     final width = MediaQuery.of(context).size.width;
     // Lista de contas
     List<Widget> listWidget = <Widget>[
-      const InvoicesPage(),
+      // const InvoicesPage(),
+      const ResumePage(),
       BalancePage(context: context, invoicesController: invoicesController),
       const NotificationsPage(),
       OptionsPage(context: context, homeController: homeController),
@@ -62,7 +64,7 @@ class _HomePageState extends State<HomePage> {
               child: Observer(builder: (_) {
                 return PageView(
                   controller: homeController.page_controller,
-                  children: homeController.isLiveInHome? noHome : listWidget,
+                  children: homeController.isLiveInHome ? noHome : listWidget,
                   onPageChanged: (index) => homeController.setIndex(index),
                 );
               }),
@@ -102,17 +104,18 @@ class _HomePageState extends State<HomePage> {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.miniCenterFloat,
-          floatingActionButton: homeController.selectedIndex == 0 && !homeController.isLiveInHome
-              ? FloatingActionButton(
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const AddInvoicePopup();
-                    },
-                  ),
-                  child: const Icon(Icons.add),
-                )
-              : Container(),
+          floatingActionButton:
+              homeController.selectedIndex == 0 && !homeController.isLiveInHome
+                  ? FloatingActionButton(
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const AddInvoicePopup();
+                        },
+                      ),
+                      child: const Icon(Icons.add),
+                    )
+                  : Container(),
         );
       },
     );
