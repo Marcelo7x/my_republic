@@ -8,9 +8,14 @@ import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 import 'package:frontend/app/modules/home/widget/selectRageDate_popup.dart';
 import 'package:intl/intl.dart';
 
-class BalancePage extends StatelessWidget {
+class BalancePage extends StatefulWidget {
   const BalancePage({Key? key}) : super(key: key);
 
+  @override
+  State<BalancePage> createState() => _BalancePageState();
+}
+
+class _BalancePageState extends State<BalancePage> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -22,6 +27,7 @@ class BalancePage extends StatelessWidget {
       locale: 'pt_BR',
       name: 'R\$',
     );
+    String name = '';
 
     return Scaffold(
       body: SafeArea(
@@ -120,9 +126,12 @@ class BalancePage extends StatelessWidget {
                                   height: 70,
                                   width: 70,
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .surfaceVariant,
+                                    color: Color.fromARGB(
+                                      255,
+                                      e.value['r'],
+                                      e.value['g'],
+                                      e.value['b'],
+                                    ),
                                     borderRadius: BorderRadius.circular(100),
                                     border: Border.all(
                                       color: Color.fromARGB(
@@ -240,26 +249,32 @@ class BalancePage extends StatelessWidget {
               //   ),
               // ),
 
-              Padding(
-                padding: const EdgeInsets.only(top: 10, left: 10),
-                child: Wrap(
-                    //mainAxisAlignment: MainAxisAlignment.center,
-                    children:
-                        balanceController.categoryPercents.entries.map((e) {
-                  return Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Indicator(
-                      text: e.value['name'],
-                      isSquare: false,
-                      color: Color.fromARGB(
-                        255,
-                        e.value['r'],
-                        e.value['g'],
-                        e.value['b'],
-                      ),
-                    ),
-                  );
-                }).toList()),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, left: 10),
+                    child: Wrap(
+                        direction: Axis.horizontal,
+                        verticalDirection: VerticalDirection.up,
+                        children:
+                            balanceController.categoryPercents.entries.map((e) {
+                          return Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Indicator(
+                              isSquare: name == e.value['name'],
+                              text: e.value['name'],
+                              // isSquare: false,
+                              color: Color.fromARGB(
+                                255,
+                                e.value['r'],
+                                e.value['g'],
+                                e.value['b'],
+                              ),
+                            ),
+                          );
+                        }).toList()),
+                  ),
+                ],
               ),
 
               Container(
@@ -268,17 +283,39 @@ class BalancePage extends StatelessWidget {
                 width: width,
                 child: PieChart(
                   PieChartData(
-                      sections: balanceController.categoryPercents.entries
-                          .map(
-                            (e) => PieChartSectionData(
-                              value: e.value["value"] * 100,
-                              title: "${(e.value["value"] * 100).round()}%",
-                              showTitle: true,
-                              color: Color.fromARGB(255, e.value["r"],
-                                  e.value["g"], e.value["b"]),
+                    sections: balanceController.categoryPercents.entries
+                        .map(
+                          (e) => PieChartSectionData(
+                            value: e.value["value"] * 100,
+                            title: "${(e.value["value"] * 100).round()}%",
+                            showTitle: true,
+                            color: Color.fromARGB(
+                              255,
+                              e.value["r"],
+                              e.value["g"],
+                              e.value["b"],
                             ),
-                          )
-                          .toList()),
+                          ),
+                        )
+                        .toList(),
+                    pieTouchData: PieTouchData(
+                      touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                        setState(() {
+                          if (!event.isInterestedForInteractions ||
+                              pieTouchResponse == null ||
+                              pieTouchResponse.touchedSection == null) {
+                            name = "";
+                            return;
+                          }
+                          name = balanceController.categoryPercents.entries
+                              .toList()[pieTouchResponse
+                                  .touchedSection!.touchedSectionIndex]
+                              .value['name'];
+                        });
+                      },
+                    ),
+                    sectionsSpace: 1,
+                  ),
                   swapAnimationDuration:
                       Duration(milliseconds: 150), // Optional
                   swapAnimationCurve: Curves.linear, // Optional

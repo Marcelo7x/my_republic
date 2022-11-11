@@ -62,6 +62,10 @@ abstract class InvoiceStoreBase with Store {
                   : Paid.anypayed));
     }
 
+    for (var e in invoices) {
+      print(e.user.name);
+    }
+
     loading = false;
   }
 

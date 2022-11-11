@@ -49,9 +49,9 @@ abstract class BalanceStoreBase with Store {
           'name': e['firstname'],
           'total': 0,
           'paid': 0,
-          'r': Random().nextInt(255),
-          'g': Random().nextInt(255),
-          'b': Random().nextInt(255),
+          'r': Random().nextInt(225) + 30,
+          'g': Random().nextInt(225) + 30,
+          'b': Random().nextInt(225) + 30,
         };
       });
     } on Exception catch (e) {
@@ -81,9 +81,9 @@ abstract class BalanceStoreBase with Store {
         categoryPercents[element.category.name] = {
           'name': element.category.name,
           'value': element.price,
-          'r': Random().nextInt(255),
-          'g': Random().nextInt(255),
-          'b': Random().nextInt(255),
+          'r': Random().nextInt(225) + 30,
+          'g': Random().nextInt(225) + 30,
+          'b': Random().nextInt(225) + 30,
         };
       } else {
         categoryPercents[element.category.name]['value'] += element.price;

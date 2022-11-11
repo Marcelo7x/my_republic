@@ -31,6 +31,21 @@ class _ResumePageState extends State<ResumePage> {
       name: 'R\$',
     );
 
+    List<String> months = [
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro'
+    ];
+
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
@@ -113,9 +128,10 @@ class _ResumePageState extends State<ResumePage> {
               ],
             ),
             GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
-                Modular.to.push(MaterialPageRoute(
-                              builder: ((context) => BalancePage())));
+                Modular.to.push(
+                    MaterialPageRoute(builder: ((context) => BalancePage())));
               },
               child: Padding(
                 padding: EdgeInsets.only(left: 15, top: 50),
@@ -134,7 +150,7 @@ class _ResumePageState extends State<ResumePage> {
                           Padding(
                             padding: EdgeInsets.only(left: 15),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
@@ -224,6 +240,131 @@ class _ResumePageState extends State<ResumePage> {
                 ),
               ),
             ),
+            Container(
+              margin: const EdgeInsets.only(top: 20),
+              color:
+                  Theme.of(context).colorScheme.surfaceVariant.withAlpha(150),
+              height: 1.5,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20, left: 15, bottom: 20),
+              child: Text(
+                "Histórico do mês",
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600),
+              ),
+            ),
+            Observer(builder: (_) {
+              return SizedBox(
+                height: 100.0 * invoicesController.invoices.length,
+                width: width,
+                child: Observer(builder: (_) {
+                  return ListView(
+                    physics: const ClampingScrollPhysics(),
+                    children: invoicesController.invoices
+                        .map(
+                          (e) => Container(
+                            height: 100,
+                            width: width,
+                            padding: const EdgeInsets.only(top: 15),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  width: 1.0,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceVariant
+                                      .withAlpha(150),
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 15),
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .surfaceVariant,
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                      child: const Icon(
+                                        Icons.difference_outlined,
+                                        size: 20,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 15),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            toBeginningOfSentenceCase(
+                                                e.category.name)!,
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onBackground,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                          Text(
+                                            e.user.name
+                                                .toString()
+                                                .toUpperCase(),
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onBackground,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                          Text(
+                                            numberFormat.format(e.price),
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onBackground,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 15),
+                                  child: Text(
+                                    "${e.date.day} ${months[e.date.month]}",
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  );
+                }),
+              );
+            }),
           ],
         ),
       ),
