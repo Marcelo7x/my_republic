@@ -28,13 +28,38 @@ class EntryRequest implements NotificationItem {
   double get width => width;
 
   @override
-  Widget getWidget(BuildContext context) => Card(
-        child: ListTile(
-          leading: const Icon(
-            Icons.person,
-            size: 56,
+  Widget getWidget(BuildContext context) => Container(
+        margin: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(
+          top: 10,
+          bottom: 10,
+        ),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              width: 1.0,
+              color:
+                  Theme.of(context).colorScheme.surfaceVariant.withAlpha(150),
+            ),
           ),
-          title: Text(title),
+        ),
+        child: ListTile(
+          leading: Container(
+            height: 56,
+            width: 56,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceVariant,
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: const Icon(
+              Icons.person,
+              size: 30,
+            ),
+          ),
+          title: Text(
+            title.toUpperCase(),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
           subtitle: Text(message),
           trailing: SizedBox(
               width: 90,
@@ -48,21 +73,24 @@ class EntryRequest implements NotificationItem {
                           Padding(
                             padding: const EdgeInsets.only(right: 10),
                             child: GestureDetector(
-                                onTap: () async {
-                                  final homeController =
-                                      Modular.get<HomeStore>();
+                              onTap: () async {
+                                final homeController = Modular.get<HomeStore>();
 
-                                  homeController.setUseridSelected(userid);
-                                  homeController.load(true);
+                                homeController.setUseridSelected(userid);
+                                homeController.load(true);
 
-                                  final cm = Modular.get<ConnectionManager>();
-                                  await cm.acceptEntryRequest(userid);
-                                  await homeController.reload();
-                                  homeController.load(false);
-                                  homeController.setUseridSelected(-1);
-                                },
-                                child: const Icon(Icons.check_circle_sharp,
-                                    size: 36)),
+                                final cm = Modular.get<ConnectionManager>();
+                                await cm.acceptEntryRequest(userid);
+                                await homeController.reload();
+                                homeController.load(false);
+                                homeController.setUseridSelected(-1);
+                              },
+                              child: Icon(
+                                Icons.check_circle_sharp,
+                                size: 36,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
                           ),
                           GestureDetector(
                             onTap: () async {
@@ -79,17 +107,18 @@ class EntryRequest implements NotificationItem {
                               homeController.load(false);
                               homeController.setUseridSelected(-1);
                             },
-                            child: const Icon(
+                            child: Icon(
                               Icons.highlight_remove_rounded,
                               size: 36,
+                              color: Theme.of(context).colorScheme.error,
                             ),
                           ),
                         ],
                       )
                     : const SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: CircularProgressIndicator());
+                        width: 20,
+                        height: 20,
+                        child: Center(child: CircularProgressIndicator()));
               })),
         ),
       );

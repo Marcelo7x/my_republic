@@ -48,7 +48,6 @@ class _HomePageState extends State<HomePage> {
 
     List<Widget> noHome = <Widget>[
       const NoHomePage(),
-      NoHomePage(),
       const NotificationsPage(),
       OptionsPage(context: context, homeController: homeController),
     ];

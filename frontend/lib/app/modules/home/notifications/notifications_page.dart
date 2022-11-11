@@ -26,15 +26,23 @@ class _NotificationsPageState extends State<NotificationsPage> {
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(20),
+              Container(
+                //header
+                height: height * 0.05,
+                width: width,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.notifications_on_rounded),
-                    Text(
+                  children: [
+                    Icon(
+                      Icons.notifications,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const Text(
                       "Notificações",
-                      style: TextStyle(fontSize: 22),
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -49,7 +57,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               .map((e) => e.getWidget(context))
                               .toList(),
                         )
-                      : Container();
+                      : Container(
+                          child: Center(
+                            child: Text("Nenhuma notificação"),
+                          ),
+                        );
                 }),
               ),
             ],

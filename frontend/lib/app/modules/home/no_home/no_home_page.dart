@@ -10,16 +10,35 @@ class NoHomePage extends StatefulWidget {
 class _NoHomePageState extends State<NoHomePage> {
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Center(
-            child: Text('Bem Vindo(a) ao MY REPUBLIC.'),
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            //header
+            alignment: Alignment.center,
+            height: height * 0.05,
+            width: width,
+            child: const Text(
+              "Bem vindo ao MY REPUBLIC",
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-          Center(
-            child: Text(
-                'Sua solicitação foi envida, aguarde a confirmação da república.'),
+          Container(
+            margin: const EdgeInsets.only(top: 20),
+            alignment: Alignment.center,
+            height: height * 0.05,
+            child: const Text(
+              'Sua solicitação foi envida, aguarde a confirmação da república.',
+              textAlign: TextAlign.center,
+            ),
           ),
         ],
       ),
