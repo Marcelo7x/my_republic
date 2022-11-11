@@ -428,7 +428,7 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
                 child: TextButton(
                   child: Observer(builder: (_) {
                     return Text(
-                      "Adicionar",
+                      invoicesController.isModify ? "Atualizar" : "Adicionar",
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onPrimary,
                           fontSize: 22,
@@ -441,11 +441,16 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
                       return;
                     }
 
+                    bool closeIfIsModify = invoicesController.isModify;
+
                     !invoicesController.isModify
                         ? await invoicesController.addInvoice()
                         : await invoicesController.modifyInvoice();
 
                     Navigator.of(context).pop();
+                    if (closeIfIsModify) {
+                      Navigator.of(context).pop();
+                    }
                     Modular.to.navigate('/home/');
                     await Modular.get<HomeStore>().reload();
                   },

@@ -7,6 +7,7 @@ import 'package:frontend/app/modules/home/home_store.dart';
 import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 import 'package:frontend/app/modules/home/resume/show_information_popup.dart';
 import 'package:frontend/app/modules/home/resume/add_invoice_popup.dart';
+import 'package:frontend/domain/enum_paid.dart';
 import 'package:intl/intl.dart';
 
 class ResumePage extends StatefulWidget {
@@ -288,30 +289,35 @@ class _ResumePageState extends State<ResumePage> {
                               physics: const ClampingScrollPhysics(),
                               children: invoicesController.invoices
                                   .map(
-                                    (e) => GestureDetector(
-                                      behavior: HitTestBehavior.translucent,
-                                      onTap: () {
-                                        ShowInformationPopup(
-                                            context: context,
-                                            homeController: homeController,
-                                            invoicesController:
-                                                invoicesController);
-                                      },
-                                      child: Container(
-                                        height: 100,
-                                        width: width,
-                                        padding: const EdgeInsets.only(top: 15),
-                                        decoration: BoxDecoration(
-                                          border: Border(
-                                            bottom: BorderSide(
-                                              width: 1.0,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .surfaceVariant
-                                                  .withAlpha(150),
-                                            ),
+                                    (e) => Container(
+                                      height: 100,
+                                      width: width,
+                                      padding: const EdgeInsets.only(top: 15),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            width: 1.0,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .surfaceVariant
+                                                .withAlpha(150),
                                           ),
                                         ),
+                                      ),
+                                      child: GestureDetector(
+                                        behavior: HitTestBehavior.translucent,
+                                        onTap: () {
+                                          invoicesController.selectInvoice(e);
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  ShowInformationPopup(
+                                                      context: context,
+                                                      homeController:
+                                                          homeController,
+                                                      invoicesController:
+                                                          invoicesController));
+                                        },
                                         child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -328,16 +334,33 @@ class _ResumePageState extends State<ResumePage> {
                                                   height: 50,
                                                   width: 50,
                                                   decoration: BoxDecoration(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .surfaceVariant,
+                                                    color: e.paid ==
+                                                                Paid.payed ||
+                                                            e.paid ==
+                                                                Paid.anypayed
+                                                        ? Theme.of(context)
+                                                            .colorScheme
+                                                            .primary
+                                                        : Theme.of(context)
+                                                            .colorScheme
+                                                            .surfaceVariant,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             100),
                                                   ),
-                                                  child: const Icon(
+                                                  child: Icon(
                                                     Icons.difference_outlined,
                                                     size: 20,
+                                                    color: e.paid ==
+                                                                Paid.payed ||
+                                                            e.paid ==
+                                                                Paid.anypayed
+                                                        ? Theme.of(context)
+                                                            .colorScheme
+                                                            .onPrimary
+                                                        : Theme.of(context)
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
                                                   ),
                                                 ),
                                                 Padding(
@@ -394,19 +417,50 @@ class _ResumePageState extends State<ResumePage> {
                                                 ),
                                               ],
                                             ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 15),
-                                              child: Text(
-                                                "${e.date.day} ${months[e.date.month]}",
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .onBackground,
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 15),
+                                                  child: Text(
+                                                    "${e.date.day} ${months[e.date.month - 1]}",
+                                                    style: TextStyle(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onBackground,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 19,
+                                                          right: 15),
+                                                  child: Text(
+                                                    e.paid == Paid.payed
+                                                        ? "Pago por ${toBeginningOfSentenceCase(e.user.name)}"
+                                                        : e.paid ==
+                                                                Paid.anypayed
+                                                            ? "Pago por todos"
+                                                            : "Em aberto",
+                                                    style: TextStyle(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onBackground,
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),

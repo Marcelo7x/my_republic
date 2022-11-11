@@ -1,241 +1,216 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
-import 'package:frontend/app/modules/home/invoices/add_invoice_popup.dart';
+import 'package:frontend/app/modules/home/resume/add_invoice_popup.dart';
 import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
+import 'package:frontend/domain/enum_paid.dart';
 import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 Widget ShowInformationPopup(
     {required BuildContext context,
     required HomeStore homeController,
     required InvoiceStore invoicesController}) {
-  var numberFormat = NumberFormat('##0.00');
   var e = invoicesController.selectedInvoice;
+  final height = MediaQuery.of(context).size.height;
+  final width = MediaQuery.of(context).size.width;
+  var numberFormat = NumberFormat.currency(
+    locale: 'pt_BR',
+    name: 'R\$',
+  );
+
+  List<String> months = [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro'
+  ];
 
   return Observer(builder: (_) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * .4,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            //mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+    return Container(
+      decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background,
+          borderRadius: BorderRadius.circular(10)),
+      child: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 10, top: 12),
-                          child: Text(
-                            "R\$",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.normal,
+                    Container(
+                      //header
+                      height: height * 0.05,
+                      width: width,
+                      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              invoicesController.clearInput();
+                              Modular.to.pop();
+                            },
+                            child: const Icon(
+                              Icons.close_rounded,
+                              size: 25,
                             ),
                           ),
-                        ),
-                        Text(
-                          (numberFormat.format(e!.price / 100)),
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
+                          Padding(
+                            padding: const EdgeInsets.only(right: 25),
+                            child: Text(
+                              "${e!.date.day} ${months[e.date.month - 1]} ${e.date.year}",
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5, top: 12),
-                      child: Text(
-                        "${e.date.day}/${e.date.month}/${e.date.year}",
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                          fontStyle: FontStyle.italic,
-                        ),
+                          Container(),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ),
-              Row(children: [
-                const Text(
-                  "Usuário: ",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+                Container(
+                  height: 70,
+                  width: 70,
+                  margin: const EdgeInsets.only(top: 20),
+                  decoration: BoxDecoration(
+                    color: e.paid == Paid.payed || e.paid == Paid.anypayed
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.surfaceVariant,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: Icon(
+                    Icons.post_add,
+                    size: 30,
+                    color: e.paid == Paid.payed || e.paid == Paid.anypayed
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
-                Text(
-                  toBeginningOfSentenceCase(e.user.name.toString())!,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20,
+                  ),
+                  child: Text(
+                    e.category.name.toString().toUpperCase(),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700),
                   ),
                 ),
-              ]),
-              e.paid != null
-                  ? Row(children: [
-                      const Text(
-                        "Pago por: ",
-                        style: TextStyle(
-                          fontSize: 14,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 0,
+                  ),
+                  child: Text(
+                    toBeginningOfSentenceCase(e.user.name)!,
+                    style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onBackground
+                            .withAlpha(150),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(
+                    e.paid == Paid.payed
+                        ? "Pago por ${e.user.name}"
+                        : e.paid == Paid.anypayed
+                            ? "Pago por todos"
+                            : "Em aberto",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 5,
+                  ),
+                  child: Observer(
+                    builder: (_) {
+                      return Text(
+                        numberFormat.format(e.price / 100),
+                        style: const TextStyle(
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
-                      Text(
-                        e.paid == true
-                            ? toBeginningOfSentenceCase(e.user.name.toString())!
-                            : 'Todos',
-                        style: const TextStyle(
+                      );
+                    },
+                  ),
+                ),
+                Container(
+                  height: height * .2,
+                  width: width * .8,
+                  margin: const EdgeInsets.only(
+                    top: 20,
+                  ),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Theme.of(context).colorScheme.surfaceVariant),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      'Descrição: ' + e.description,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground,
                           fontSize: 14,
-                          fontWeight: FontWeight.normal,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            homeController.user.id == e.user.id
+                ? Observer(
+                    builder: (_) {
+                      return Container(
+                        width: width,
+                        height: 60,
+                        color: Theme.of(context).colorScheme.primary,
+                        child: TextButton(
+                          child: Observer(builder: (_) {
+                            return Text(
+                              "Editar",
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600),
+                            );
+                          }),
+                          onPressed: () async {
+                            invoicesController.modify();
+                            Modular.to.push(MaterialPageRoute(
+                                builder: ((context) => AddInvoicePopup())));
+                          },
                         ),
-                      ),
-                    ])
-                  : Container(),
-              Row(
-                children: [
-                  const Text(
-                    "Categoria: ",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    toBeginningOfSentenceCase(e.category.name.toString())!,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  const Text(
-                    "Descrição: ",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    toBeginningOfSentenceCase(e.description.toString())!,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  e.user.id == homeController.user.id
-                      ? SizedBox(
-                          width: 120,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              invoicesController.modify();
-
-                              await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return const AddInvoicePopup();
-                                  });
-                            },
-                            child: Row(
-                              children: const [
-                                Icon(Icons.edit_road),
-                                Text("Editar"),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Container(),
-                  e.user.id == homeController.user.id
-                      ? SizedBox(
-                          width: 120,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    // retorna um objeto do tipo Dialog
-                                    return AlertDialog(
-                                      actionsAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      content: const Text(
-                                          "Tem certeza que deseja excluir essa conta?"),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () async {
-                                            await invoicesController
-                                                .removeInvoice();
-
-                                            Navigator.of(context).pop();
-
-                                            await homeController.reload();
-                                          },
-                                          child: const Text("Sim"),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text(
-                                            "Cancelar",
-                                            style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .error),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  });
-                            },
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.delete,
-                                  color: Theme.of(context).colorScheme.error,
-                                ),
-                                Text(
-                                  "Excluir",
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Container(),
-                ],
-              ),
-              TextButton(
-                onPressed: () {
-                  invoicesController.selectInvoice(null);
-                },
-                child: const Icon(Icons.arrow_upward),
-              ),
-            ],
-          ),
-        ],
+                      );
+                    },
+                  )
+                : Container(),
+          ],
+        ),
       ),
     );
   });
