@@ -38,6 +38,24 @@ class _LoginPageState extends State<LoginPage> {
             //     ),
             //   ),
             // ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                  height: height,
+                  width: 150,
+                  child: RotatedBox(
+                    quarterTurns: 45,
+                    child: SvgPicture.asset(
+                      'images/wave.svg',
+                      alignment: Alignment.topRight,
+                      fit: BoxFit.fill,
+                      color: Theme.of(context).colorScheme.surfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             SizedBox(
               width: width,
               height: height,
@@ -57,10 +75,15 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Column(
                     children: [
-                      SizedBox(
+                      Container(
                         //input de email
-                        width: width * .95,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        width: width * .9,
                         height: 70,
+                        alignment: Alignment.center,
                         child: TextField(
                           inputFormatters: [
                             FilteringTextInputFormatter.deny(' ',
@@ -69,34 +92,43 @@ class _LoginPageState extends State<LoginPage> {
                           controller: loginController.emailController,
                           keyboardType: TextInputType.emailAddress,
                           decoration: const InputDecoration(
-                            label: Text("Email"),
+                            hintText: "Email",
                             prefixIcon: Icon(Icons.email),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(18),
-                              ),
-                            ),
+                            border: InputBorder.none,
                           ),
                         ),
                       ),
                       Container(
                         //input senha
-                        width: width * .88,
+                        width: width * .9,
                         height: 70,
                         margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                        child: TextField(
-                          controller: loginController.passwordController,
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                            label: Text("Senha"),
-                            prefixIcon: Icon(Icons.password),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(18),
-                              ),
-                            ),
-                          ),
-                        ),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surfaceVariant,
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Observer(builder: (context) {
+                          return TextField(
+                            controller: loginController.passwordController,
+                            obscureText:
+                                loginController.visibility ? false : true,
+                            decoration: InputDecoration(
+                                hintText: "Senha",
+                                prefixIcon: Icon(Icons.password),
+                                border: InputBorder.none,
+                                suffixIcon: GestureDetector(
+                                  onTap: () =>
+                                      loginController.alterVisibility(),
+                                  child: Observer(builder: (_) {
+                                    return Icon(
+                                      loginController.visibility
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                    );
+                                  }),
+                                )),
+                          );
+                        }),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -125,7 +157,10 @@ class _LoginPageState extends State<LoginPage> {
                             width: width * .5,
                             height: 50,
                             margin: const EdgeInsets.only(right: 70),
-                            child: ElevatedButton(
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                borderRadius: BorderRadius.circular(15)),
+                            child: TextButton(
                               onPressed: () {
                                 FocusScope.of(context)
                                     .requestFocus(FocusNode());
@@ -133,9 +168,14 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               child: Observer(builder: (_) {
                                 return !loginController.loading
-                                    ? const Text(
+                                    ? Text(
                                         "Entrar",
-                                        style: TextStyle(fontSize: 20),
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                        ),
                                       )
                                     : const CircularProgressIndicator(
                                         color: Colors.white);
@@ -160,23 +200,23 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SizedBox(
-                  height: height,
-                  width: 150,
-                  child: RotatedBox(
-                    quarterTurns: 45,
-                    child: SvgPicture.asset(
-                      'images/wave.svg',
-                      alignment: Alignment.topRight,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.end,
+            //   children: [
+            //     SizedBox(
+            //       height: height,
+            //       width: 150,
+            //       child: RotatedBox(
+            //         quarterTurns: 45,
+            //         child: SvgPicture.asset(
+            //           'images/wave.svg',
+            //           alignment: Alignment.topRight,
+            //           fit: BoxFit.fill,
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),

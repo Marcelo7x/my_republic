@@ -73,6 +73,22 @@ mixin _$LoginStore on _LoginStoreBase, Store {
     });
   }
 
+  late final _$visibilityAtom =
+      Atom(name: '_LoginStoreBase.visibility', context: context);
+
+  @override
+  bool get visibility {
+    _$visibilityAtom.reportRead();
+    return super.visibility;
+  }
+
+  @override
+  set visibility(bool value) {
+    _$visibilityAtom.reportWrite(value, super.visibility, () {
+      super.visibility = value;
+    });
+  }
+
   late final _$logginAsyncAction =
       AsyncAction('_LoginStoreBase.loggin', context: context);
 
@@ -81,13 +97,28 @@ mixin _$LoginStore on _LoginStoreBase, Store {
     return _$logginAsyncAction.run(() => super.loggin());
   }
 
+  late final _$_LoginStoreBaseActionController =
+      ActionController(name: '_LoginStoreBase', context: context);
+
+  @override
+  dynamic alterVisibility() {
+    final _$actionInfo = _$_LoginStoreBaseActionController.startAction(
+        name: '_LoginStoreBase.alterVisibility');
+    try {
+      return super.alterVisibility();
+    } finally {
+      _$_LoginStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
 emailController: ${emailController},
 passwordController: ${passwordController},
 loading: ${loading},
-logginError: ${logginError}
+logginError: ${logginError},
+visibility: ${visibility}
     ''';
   }
 }

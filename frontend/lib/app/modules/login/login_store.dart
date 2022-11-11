@@ -23,6 +23,14 @@ abstract class _LoginStoreBase with Store {
   @observable
   bool logginError = false;
 
+  @observable
+  bool visibility = false;
+
+  @action
+  alterVisibility() {
+    visibility = !visibility;
+  }
+
   @action
   loggin() async {
     loading = true;
