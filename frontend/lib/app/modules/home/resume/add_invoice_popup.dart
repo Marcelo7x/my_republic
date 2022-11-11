@@ -24,88 +24,93 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            children: [
-              Container(
-                //header
-                height: height * 0.05,
-                width: width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        invoicesController.clearInput();
-                        Modular.to.pop();
-                      },
-                      child: const Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        size: 25,
+        child: Column(
+          children: [
+            Container(
+              //header
+              height: height * 0.05,
+              width: width,
+              padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      invoicesController.clearInput();
+                      Modular.to.pop();
+                    },
+                    child: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 25,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.post_add_outlined,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.post_add_outlined,
-                          color: Theme.of(context).colorScheme.primary,
+                      Text(
+                        !invoicesController.isModify
+                            ? " Adicionar Conta"
+                            : " Modificar Conta",
+                        style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
                         ),
-                        Text(
-                          !invoicesController.isModify
-                              ? " Adicionar Conta"
-                              : " Modificar Conta",
-                          style: const TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container()
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                  Container()
+                ],
               ),
-
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .7,
-                child: Column(
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15),
+              child: SingleChildScrollView(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * .68,
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 20),
-                        child: Observer(builder: (_) {
-                          return DropdownButton(
-                            icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                            borderRadius: BorderRadius.circular(18),
-                            hint: const Padding(
-                              padding: EdgeInsets.only(
-                                left: 5,
-                                right: 5,
+                        child: Observer(
+                          builder: (_) {
+                            return DropdownButton(
+                              icon:
+                                  const Icon(Icons.keyboard_arrow_down_rounded),
+                              borderRadius: BorderRadius.circular(18),
+                              hint: const Padding(
+                                padding: EdgeInsets.only(
+                                  left: 5,
+                                  right: 5,
+                                ),
+                                child: Text(
+                                  "Selecione uma categoria",
+                                  style: TextStyle(fontSize: 16),
+                                ),
                               ),
-                              child: Text(
-                                "Selecione uma categoria",
-                                style: TextStyle(fontSize: 16),
+                              underline: Container(
+                                height: 2,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
-                            ),
-                            underline: Container(
-                              height: 2,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            value: invoicesController.category,
-                            items:
-                                invoicesController.categories.map((Category e) {
-                              return DropdownMenuItem<Category>(
-                                value: e,
-                                child: Text(toBeginningOfSentenceCase(e.name)!),
-                              );
-                            }).toList(),
-                            onChanged: (Category? e) {
-                              invoicesController.setCategory(e!);
-                            },
-                          );
-                        }),
+                              value: invoicesController.category,
+                              items: invoicesController.categories
+                                  .map((Category e) {
+                                return DropdownMenuItem<Category>(
+                                  value: e,
+                                  child:
+                                      Text(toBeginningOfSentenceCase(e.name)!),
+                                );
+                              }).toList(),
+                              onChanged: (Category? e) {
+                                invoicesController.setCategory(e!);
+                              },
+                            );
+                          },
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 20),
@@ -236,39 +241,42 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
                                   width: 120,
                                   child: Column(
                                     children: [
-                                      Observer(builder: (_) {
-                                        return Container(
-                                          height: 70,
-                                          width: 70,
-                                          decoration: BoxDecoration(
-                                            color: invoicesController.isPayed ==
-                                                    Paid.unpaid
-                                                ? Theme.of(context)
-                                                    .colorScheme
-                                                    .primary
-                                                : Theme.of(context)
-                                                    .colorScheme
-                                                    .surfaceVariant,
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                          ),
-                                          child: Observer(builder: (_) {
-                                            return Icon(
-                                              Icons.attach_money_rounded,
-                                              size: 30,
+                                      Observer(
+                                        builder: (_) {
+                                          return Container(
+                                            height: 70,
+                                            width: 70,
+                                            decoration: BoxDecoration(
                                               color:
                                                   invoicesController.isPayed ==
                                                           Paid.unpaid
                                                       ? Theme.of(context)
                                                           .colorScheme
-                                                          .onPrimary
+                                                          .primary
                                                       : Theme.of(context)
                                                           .colorScheme
-                                                          .onSurfaceVariant,
-                                            );
-                                          }),
-                                        );
-                                      }),
+                                                          .surfaceVariant,
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                            ),
+                                            child: Observer(builder: (_) {
+                                              return Icon(
+                                                Icons.attach_money_rounded,
+                                                size: 30,
+                                                color: invoicesController
+                                                            .isPayed ==
+                                                        Paid.unpaid
+                                                    ? Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary
+                                                    : Theme.of(context)
+                                                        .colorScheme
+                                                        .onSurfaceVariant,
+                                              );
+                                            }),
+                                          );
+                                        },
+                                      ),
                                       const Padding(
                                         padding: EdgeInsets.only(top: 5),
                                         child: Text(
@@ -286,35 +294,38 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  invoicesController.setPaid(Paid.unpaid);
+                                  invoicesController.setPaid(Paid.payed);
                                 },
                                 child: SizedBox(
                                   height: 120,
                                   width: 120,
                                   child: Column(
                                     children: [
-                                      Observer(builder: (_) {
-                                        return Container(
-                                          height: 70,
-                                          width: 70,
-                                          decoration: BoxDecoration(
-                                            color: invoicesController.isPayed ==
-                                                    Paid.payed
-                                                ? Theme.of(context)
-                                                    .colorScheme
-                                                    .primary
-                                                : Theme.of(context)
-                                                    .colorScheme
-                                                    .surfaceVariant,
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                          ),
-                                          child: Observer(builder: (_) {
-                                            return Icon(
-                                              Icons.person,
-                                              size: 30,
+                                      Observer(
+                                        builder: (_) {
+                                          return Container(
+                                            height: 70,
+                                            width: 70,
+                                            decoration: BoxDecoration(
                                               color:
                                                   invoicesController.isPayed ==
+                                                          Paid.payed
+                                                      ? Theme.of(context)
+                                                          .colorScheme
+                                                          .primary
+                                                      : Theme.of(context)
+                                                          .colorScheme
+                                                          .surfaceVariant,
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                            ),
+                                            child: Observer(
+                                              builder: (_) {
+                                                return Icon(
+                                                  Icons.person,
+                                                  size: 30,
+                                                  color: invoicesController
+                                                              .isPayed ==
                                                           Paid.payed
                                                       ? Theme.of(context)
                                                           .colorScheme
@@ -322,10 +333,12 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
                                                       : Theme.of(context)
                                                           .colorScheme
                                                           .onSurfaceVariant,
-                                            );
-                                          }),
-                                        );
-                                      }),
+                                                );
+                                              },
+                                            ),
+                                          );
+                                        },
+                                      ),
                                       const Padding(
                                         padding: EdgeInsets.only(top: 5),
                                         child: Text(
@@ -343,7 +356,7 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  invoicesController.setPaid(Paid.unpaid);
+                                  invoicesController.setPaid(Paid.anypayed);
                                 },
                                 child: SizedBox(
                                   height: 120,
@@ -356,7 +369,7 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
                                           width: 70,
                                           decoration: BoxDecoration(
                                             color: invoicesController.isPayed ==
-                                                    Paid.payed
+                                                    Paid.anypayed
                                                 ? Theme.of(context)
                                                     .colorScheme
                                                     .primary
@@ -402,80 +415,62 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
                           ),
                         ),
                       ),
-                      Observer(builder: (_) {
-                        return DropdownButton<Paid?>(
-                          borderRadius: BorderRadius.circular(18),
-                          hint: invoicesController.isPayed == Paid.unpaid
-                              ? const Text("Em aberto")
-                              : invoicesController.isPayed == Paid.payed
-                                  ? const Text("Pago por mim")
-                                  : Text(
-                                      "pago por todos",
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary),
-                                    ),
-                          underline: Container(
-                            height: 2,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                          value: invoicesController.isPayed,
-                          items: const [
-                            DropdownMenuItem<Paid?>(
-                              value: Paid.unpaid,
-                              child: Text("Em aberto"),
-                            ),
-                            DropdownMenuItem<Paid?>(
-                              value: Paid.payed,
-                              child: Text("Pago por mim"),
-                            ),
-                            DropdownMenuItem<Paid?>(
-                              value: Paid.anypayed,
-                              child: Text("Pago por todos"),
-                            ),
-                          ],
-                          onChanged: (Paid? e) {
-                            invoicesController.setPaid(e);
-                          },
-                        );
-                      }),
-                    ]),
+                    ],
+                  ),
+                ),
               ),
+            ),
+            Observer(builder: (_) {
+              return Container(
+                width: width,
+                height: 60,
+                color: Theme.of(context).colorScheme.primary,
+                child: TextButton(
+                  child: Observer(builder: (_) {
+                    return Text(
+                      "Adicionar",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600),
+                    );
+                  }),
+                  onPressed: () async {
+                    if (invoicesController.category == null ||
+                        invoicesController.price!.numberValue <= 0.00) {
+                      return;
+                    }
 
-              // define os botões na base do dialogo
-              ElevatedButton(
-                child: const Text("Adicionar"),
-                onPressed: () async {
-                  if (invoicesController.description.text == "" ||
-                      invoicesController.category == null ||
-                      invoicesController.price!.value == 0.00) {
-                    return;
-                  }
+                    !invoicesController.isModify
+                        ? await invoicesController.addInvoice()
+                        : await invoicesController.modifyInvoice();
 
-                  !invoicesController.isModify
-                      ? await invoicesController.addInvoice()
-                      : await invoicesController.modifyInvoice();
-
-                  Navigator.of(context).pop();
-                  Modular.to.navigate('/home/');
-                  await Modular.get<HomeStore>().reload();
-                },
-              ),
-              TextButton(
+                    Navigator.of(context).pop();
+                    Modular.to.navigate('/home/');
+                    await Modular.get<HomeStore>().reload();
+                  },
+                ),
+              );
+            }),
+            Container(
+              width: width,
+              height: 60,
+              color: Theme.of(context).colorScheme.errorContainer,
+              child: TextButton(
                 child: Text(
                   "Cancelar",
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
+                      color: Theme.of(context).colorScheme.error,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600),
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();
                   invoicesController.clearInput();
                 },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

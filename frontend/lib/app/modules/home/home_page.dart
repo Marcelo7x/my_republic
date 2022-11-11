@@ -70,52 +70,30 @@ class _HomePageState extends State<HomePage> {
               }),
             );
           }),
-          bottomNavigationBar: ClipRRect(
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(18), topRight: Radius.circular(18)),
-            child: Observer(builder: (_) {
-              return NavigationBar(
-                height: height * .09,
-                onDestinationSelected: (index) =>
-                    homeController.setPageAndIndex(index),
-                selectedIndex: homeController.selectedIndex,
-                labelBehavior:
-                    NavigationDestinationLabelBehavior.onlyShowSelected,
-                destinations: const [
-                  NavigationDestination(
-                    icon: Icon(Icons.money_off),
-                    label: "Contas",
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.graphic_eq),
-                    label: "Balanço",
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.notifications),
-                    label: "Notificações",
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.settings),
-                    label: "Opções",
-                  ),
-                ],
-              );
-            }),
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.miniCenterFloat,
-          floatingActionButton:
-              homeController.selectedIndex == 0 && !homeController.isLiveInHome
-                  ? FloatingActionButton(
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const AddInvoicePopup();
-                        },
-                      ),
-                      child: const Icon(Icons.add),
-                    )
-                  : Container(),
+          bottomNavigationBar: Observer(builder: (_) {
+            return NavigationBar(
+              height: height * .09,
+              onDestinationSelected: (index) =>
+                  homeController.setPageAndIndex(index),
+              selectedIndex: homeController.selectedIndex,
+              labelBehavior:
+                  NavigationDestinationLabelBehavior.onlyShowSelected,
+              destinations: const [
+                NavigationDestination(
+                  icon: Icon(Icons.money_off),
+                  label: "Contas",
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.notifications),
+                  label: "Notificações",
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.settings),
+                  label: "Opções",
+                ),
+              ],
+            );
+          }),
         );
       },
     );

@@ -19,7 +19,8 @@ abstract class InvoiceStoreBase with Store {
   User user = User.fromMap(
       Modular.get<JwtDecodeServiceImpl>().getPayload(Modular.args.data));
   Home home = Home(Modular.get<JwtDecodeServiceImpl>()
-      .getPayload(Modular.args.data)['homeid'] ?? -1);
+          .getPayload(Modular.args.data)['homeid'] ??
+      -1);
 
   @observable
   bool loading = false;
@@ -35,7 +36,7 @@ abstract class InvoiceStoreBase with Store {
     }
 
     loading = true;
-      final cm = Modular.get<ConnectionManager>();
+    final cm = Modular.get<ConnectionManager>();
 
     var result = await cm.get_invoices(
         start_date: dateRange.startDate!,
@@ -135,10 +136,11 @@ abstract class InvoiceStoreBase with Store {
   @action
   addInvoice() async {
     loading = true;
-      final cm = Modular.get<ConnectionManager>();
+    final cm = Modular.get<ConnectionManager>();
 
     try {
-      var result = await cm.add_invoice(
+      var result = await cm
+          .add_invoice(
               description: description.text,
               categoryId: category!.id,
               price: (price!.numberValue * 100).toInt(),
@@ -160,10 +162,11 @@ abstract class InvoiceStoreBase with Store {
   @action
   modifyInvoice() async {
     loading = true;
-      final cm = Modular.get<ConnectionManager>();
+    final cm = Modular.get<ConnectionManager>();
 
     try {
-      var result = await cm.modify_invoice(
+      var result = await cm
+          .modify_invoice(
               description: description.text,
               categoryId: category!.id,
               price: (price!.numberValue * 100).toInt(),
@@ -186,7 +189,7 @@ abstract class InvoiceStoreBase with Store {
   @action
   removeInvoice() async {
     loading = true;
-      final cm = Modular.get<ConnectionManager>();
+    final cm = Modular.get<ConnectionManager>();
 
     try {
       var result = await cm.remove_invoice(
@@ -206,7 +209,7 @@ abstract class InvoiceStoreBase with Store {
   @action
   getCategories() async {
     loading = true;
-      final cm = Modular.get<ConnectionManager>();
+    final cm = Modular.get<ConnectionManager>();
 
     List<Category> result = await cm.get_categories();
     categories = result;
