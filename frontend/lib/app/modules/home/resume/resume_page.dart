@@ -68,6 +68,7 @@ class _ResumePageState extends State<ResumePage> {
                         //header
                         height: height * 0.05,
                         width: width,
+                        margin: const EdgeInsets.only(top: 20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -308,15 +309,13 @@ class _ResumePageState extends State<ResumePage> {
                                         behavior: HitTestBehavior.translucent,
                                         onTap: () {
                                           invoicesController.selectInvoice(e);
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) =>
-                                                  ShowInformationPopup(
-                                                      context: context,
-                                                      homeController:
-                                                          homeController,
-                                                      invoicesController:
-                                                          invoicesController));
+
+                                          Modular.to.push(
+                                            MaterialPageRoute(
+                                              builder: ((context) =>
+                                                  const ShowInformationInvoice()),
+                                            ),
+                                          );
                                         },
                                         child: Row(
                                           crossAxisAlignment:

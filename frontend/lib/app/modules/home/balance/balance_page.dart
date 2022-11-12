@@ -39,6 +39,7 @@ class _BalancePageState extends State<BalancePage> {
                 //header
                 height: height * 0.05,
                 width: width,
+                margin: const EdgeInsets.only(top: 20),
                 padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,72 +111,75 @@ class _BalancePageState extends State<BalancePage> {
                 padding: const EdgeInsets.only(top: 10),
                 width: width,
                 height: 130,
-                child: ListView(
+                child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  children: balanceController.residents.entries
-                      .map(
-                        (e) => SizedBox(
-                          height: 120,
-                          width: 120,
-                          child: SizedBox(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: balanceController.residents.entries
+                        .map(
+                          (e) => SizedBox(
                             height: 120,
-                            width: 80,
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 70,
-                                  width: 70,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(
-                                      255,
-                                      e.value['r'],
-                                      e.value['g'],
-                                      e.value['b'],
-                                    ),
-                                    borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(
+                            width: 120,
+                            child: SizedBox(
+                              height: 120,
+                              width: 80,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 70,
+                                    width: 70,
+                                    decoration: BoxDecoration(
                                       color: Color.fromARGB(
                                         255,
                                         e.value['r'],
                                         e.value['g'],
                                         e.value['b'],
                                       ),
+                                      borderRadius: BorderRadius.circular(100),
+                                      border: Border.all(
+                                        color: Color.fromARGB(
+                                          255,
+                                          e.value['r'],
+                                          e.value['g'],
+                                          e.value['b'],
+                                        ),
+                                      ),
+                                    ),
+                                    child: const Icon(
+                                      Icons.person,
+                                      size: 30,
                                     ),
                                   ),
-                                  child: const Icon(
-                                    Icons.person,
-                                    size: 30,
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "${e.value['name']}",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600),
+                                      softWrap: false,
+                                      maxLines: 2,
+                                    ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    "${e.value['name']}",
-                                    overflow: TextOverflow.ellipsis,
+                                  Text(
+                                    numberFormat.format(
+                                        (balanceController.totalInvoicePerson -
+                                                e.value['paid']) /
+                                            100),
                                     style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600),
                                     softWrap: false,
                                     maxLines: 2,
                                   ),
-                                ),
-                                Text(
-                                  numberFormat.format(
-                                      (balanceController.totalInvoicePerson -
-                                              e.value['paid']) /
-                                          100),
-                                  style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600),
-                                  softWrap: false,
-                                  maxLines: 2,
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                      .toList(),
+                        )
+                        .toList(),
+                  ),
                 ),
               ),
               Padding(
@@ -188,97 +192,34 @@ class _BalancePageState extends State<BalancePage> {
                       fontWeight: FontWeight.w600),
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 5, right: 5),
-              //   child: Wrap(
-              //       //mainAxisAlignment: MainAxisAlignment.center,
-              //       children:
-              //           balanceController.categoryPercents.entries.map((e) {
-              //     return Container(
-              //       height: 30,
-              //       width: 150,
-              //       margin: const EdgeInsets.all(10),
-              //       alignment: Alignment.center,
-              //       decoration: BoxDecoration(
-              //         border: Border.all(
-              //           color: Color.fromARGB(
-              //             255,
-              //             e.value['r'],
-              //             e.value['g'],
-              //             e.value['b'],
-              //           ),
-              //         ),
-              //         borderRadius: BorderRadius.circular(18),
-              //       ),
-              //       child: Text(
-              //         "${toBeginningOfSentenceCase(e.value['name'].toString())!} ${(e.value['value'] * 100).round().toString()}%",
-              //         style: const TextStyle(
-              //           fontSize: 14,
-              //         ),
-              //       ),
-              //     );
-              //   }).toList()),
-              // ),
-              // Padding(
-              //   padding: const EdgeInsets.all(15),
-              //   child: ClipRRect(
-              //     borderRadius: BorderRadius.circular(18),
-              //     child: SizedBox(
-              //       width: width - 30,
-              //       height: 30,
-              //       //margin: const EdgeInsets.only(top: 5),
-              //       child: Row(
-              //         children: balanceController.categoryPercents.entries
-              //             .map(
-              //               (e) => Container(
-              //                 height: 30,
-              //                 decoration: BoxDecoration(
-              //                   color: Color.fromARGB(
-              //                     255,
-              //                     e.value['r'],
-              //                     e.value['g'],
-              //                     e.value['b'],
-              //                   ),
-              //                 ),
-              //                 width: (width - 30) * (e.value['value']),
-              //               ),
-              //             )
-              //             .toList(),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 10),
-                    child: Wrap(
-                        direction: Axis.horizontal,
-                        verticalDirection: VerticalDirection.up,
-                        children:
-                            balanceController.categoryPercents.entries.map((e) {
-                          return Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: Indicator(
-                              isSquare: name == e.value['name'],
-                              text: e.value['name'],
-                              // isSquare: false,
-                              color: Color.fromARGB(
-                                255,
-                                e.value['r'],
-                                e.value['g'],
-                                e.value['b'],
-                              ),
-                            ),
-                          );
-                        }).toList()),
-                  ),
-                ],
-              ),
-
               Container(
-                margin: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 10, left: 10),
+                width: width,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children:
+                          balanceController.categoryPercents.entries.map((e) {
+                        return Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: Indicator(
+                            isSquare: name == e.value['name'],
+                            text: e.value['name'],
+                            // isSquare: false,
+                            color: Color.fromARGB(
+                              255,
+                              e.value['r'],
+                              e.value['g'],
+                              e.value['b'],
+                            ),
+                          ),
+                        );
+                      }).toList()),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 20),
                 height: 200,
                 width: width,
                 child: PieChart(

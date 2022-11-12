@@ -30,6 +30,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 //header
                 height: height * 0.05,
                 width: width,
+                margin: const EdgeInsets.only(top: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
