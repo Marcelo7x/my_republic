@@ -1,3 +1,4 @@
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/app/app_widget.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
@@ -38,29 +39,6 @@ Widget OptionsPage(
                 ],
               ),
             ),
-            SizedBox(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 15),
-                    child: Text("Tema Escuro",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                  SizedBox(
-                    child: Switch(
-                        value: themeMode.value == ThemeMode.dark,
-                        //child: const Text("Trocar tema"),
-                        onChanged: (isDark) async {
-                          themeMode.value =
-                              isDark ? ThemeMode.dark : ThemeMode.light;
-                          await homeController
-                              .switchTheme(themeMode.value == ThemeMode.dark);
-                        }),
-                  ),
-                ],
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.only(top: 20, left: 15),
               child: Row(
@@ -70,6 +48,65 @@ Widget OptionsPage(
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   SelectDateInterval(context),
                 ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20, left: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Tema Escuro",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(
+                    child: Switch(
+                        value: themeModeAndColor.value['thememode'] ==
+                            ThemeMode.dark,
+                        //child: const Text("Trocar tema"),
+                        onChanged: (isDark) async {
+                          themeModeAndColor.value['thememode'] =
+                              isDark ? ThemeMode.dark : ThemeMode.light;
+                          await homeController.switchTheme(
+                              themeModeAndColor.value['thememode'] ==
+                                  ThemeMode.dark);
+                          themeModeAndColor.notifyListeners();
+                        }),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20, left: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: const [
+                  Text("Cor de Destaque",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: ColorPicker(
+                // Use the screenPickerColor as start color.
+                color: themeModeAndColor.value['color'],
+                pickersEnabled: const <ColorPickerType, bool>{
+                  ColorPickerType.both: false,
+                  ColorPickerType.primary: true,
+                  ColorPickerType.accent: false,
+                  ColorPickerType.bw: false,
+                  ColorPickerType.custom: false,
+                  ColorPickerType.wheel: false,
+                },
+                enableShadesSelection: false,
+                // Update the themeModeAndColor using the callback.
+                onColorChanged: (Color color) {
+                  themeModeAndColor.value['color'] = color;
+                  homeController.switchColor(color);
+                  themeModeAndColor.notifyListeners();
+                },
+                width: 44,
+                height: 44,
+                borderRadius: 22,
               ),
             ),
           ],

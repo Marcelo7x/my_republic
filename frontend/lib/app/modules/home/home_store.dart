@@ -145,4 +145,9 @@ abstract class HomeStoreBase with Store {
       prefs.setBool('is_dark_theme', false);
     }
   }
+
+  switchColor(Color color) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('color_theme', color.value);
+  }
 }

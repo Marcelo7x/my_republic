@@ -34,8 +34,14 @@ abstract class _SplashStoreBase with Store {
     bool? isDarkTheme = prefs.connection.getBool('is_dark_theme');
 
     if (isDarkTheme != null && isDarkTheme) {
-      themeMode.value = ThemeMode.dark;
+      themeModeAndColor.value['thememode'] = ThemeMode.dark;
     }
+
+    int? colorTheme = prefs.connection.getInt('color_theme');
+    themeModeAndColor.value['color'] = Color(colorTheme ?? 0xff2196f3);
+    print(colorTheme);
+
+    themeModeAndColor.notifyListeners();
   }
 
   verifyVersion(final String v) {
@@ -101,7 +107,8 @@ abstract class _SplashStoreBase with Store {
             final existRequest = await cm.getEntryRequest();
 
             if (existRequest) {
-              Modular.to.navigate('/home/', arguments: tokenization.accessToken);
+              Modular.to
+                  .navigate('/home/', arguments: tokenization.accessToken);
               return;
             }
           } on ConnectionManagerError catch (e) {}
