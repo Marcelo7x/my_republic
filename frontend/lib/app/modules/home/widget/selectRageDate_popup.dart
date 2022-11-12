@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
 import 'package:frontend/app/modules/home/invoices/invoice_store.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -33,11 +34,14 @@ Widget SelectRageDatePopup(BuildContext context, HomeStore homeController,
 }
 
 Widget SelectDateInterval(
-    BuildContext context, HomeStore homeController, invoicesController) {
+  BuildContext context,
+) {
+  final HomeStore homeController = Modular.get<HomeStore>();
+  final InvoiceStore invoicesController = Modular.get<InvoiceStore>();
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      const Text("Intervalo: "),
+      // const Text("Intervalo: "),
       GestureDetector(
         child: Observer(builder: (_) {
           return Text(

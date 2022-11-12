@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/app/app_widget.dart';
 import 'package:frontend/app/modules/home/home_store.dart';
+import 'package:frontend/app/modules/home/widget/selectRageDate_popup.dart';
 
 Widget OptionsPage(
     {required BuildContext context, required HomeStore homeController}) {
@@ -13,6 +14,7 @@ Widget OptionsPage(
       children: [
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               //header
@@ -41,7 +43,7 @@ Widget OptionsPage(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Padding(
-                    padding: EdgeInsets.only(left: 8.0),
+                    padding: EdgeInsets.only(left: 15),
                     child: Text("Tema Escuro",
                         style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
@@ -56,6 +58,17 @@ Widget OptionsPage(
                               .switchTheme(themeMode.value == ThemeMode.dark);
                         }),
                   ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20, left: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Text("Alterar período   ",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  SelectDateInterval(context),
                 ],
               ),
             ),

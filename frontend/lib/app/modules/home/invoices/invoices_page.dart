@@ -47,7 +47,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
                     ),
                   ],
                 ),
-                SelectDateInterval(context, homeController, invoicesController)
+                SelectDateInterval(context,)
               ],
             ),
           ),
