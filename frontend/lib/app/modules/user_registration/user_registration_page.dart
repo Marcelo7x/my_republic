@@ -73,11 +73,11 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
         children: [
           SizedBox(
             width: width * .8,
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Padding(
-                  padding: EdgeInsets.only(top: 5, bottom: 90),
+                  padding: EdgeInsets.only(top: 5, bottom: 50),
                   child: Text(
                     "Cadastro",
                     style: TextStyle(
@@ -200,11 +200,18 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
                   width: 150,
-                  height: 70,
+                  height: 50,
                   child: Observer(builder: (_) {
-                    return ElevatedButton(
+                    return FilledButton(
+                      style: FilledButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            18.0,
+                          ),
+                        ),
+                      ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           ScaffoldMessenger.of(context).showSnackBar(

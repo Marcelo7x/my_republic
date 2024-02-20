@@ -21,30 +21,15 @@ class _LoginPageState extends State<LoginPage> {
     final LoginStore loginController = Modular.get<LoginStore>();
 
     return Scaffold(
-      //backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
-        //color: Theme.of(context).backgroundColor,
         child: Stack(
           children: [
-            // SizedBox(
-            //   height: height,
-            //   width: width,
-            //   child: RotatedBox(
-            //     quarterTurns: 45,
-            //     child: SvgPicture.asset(
-            //       'images/wave.svg',
-            //       alignment: Alignment.topRight,
-            //       fit: BoxFit.fitWidth,
-            //     ),
-            //   ),
-            // ),
             SizedBox(
               width: width,
               height: height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  // Image.asset("images/logo.png", height: 200, width: 200),
                   Container(
                     margin: const EdgeInsets.only(top: 80, bottom: 30),
                     width: 250,
@@ -125,7 +110,12 @@ class _LoginPageState extends State<LoginPage> {
                             width: width * .5,
                             height: 50,
                             margin: const EdgeInsets.only(right: 70),
-                            child: ElevatedButton(
+                            child: FilledButton(
+                              style: FilledButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                ),
+                              ),
                               onPressed: () {
                                 FocusScope.of(context)
                                     .requestFocus(FocusNode());
@@ -137,8 +127,10 @@ class _LoginPageState extends State<LoginPage> {
                                         "Entrar",
                                         style: TextStyle(fontSize: 20),
                                       )
-                                    : const CircularProgressIndicator(
-                                        color: Colors.white);
+                                    : CircularProgressIndicator(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary);
                               }),
                             ),
                           ),

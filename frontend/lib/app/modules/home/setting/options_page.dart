@@ -14,12 +14,12 @@ Widget OptionsPage(
           //header
           height: height * 0.1,
           width: width * 0.9,
-          child: Column(
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(Icons.settings),
                   Text(
                     "Configurações",
@@ -51,17 +51,24 @@ Widget OptionsPage(
                           onChanged: (isDark) async {
                             themeMode.value =
                                 isDark ? ThemeMode.dark : ThemeMode.light;
-                            await homeController.switchTheme(
-                                themeMode.value == ThemeMode.dark);
+                            await homeController
+                                .switchTheme(themeMode.value == ThemeMode.dark);
                           }),
                     ),
                   ],
                 ),
               ),
               SizedBox(
-                height: 30,
+                height: 40,
                 width: 100,
-                child: ElevatedButton(
+                child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          18.0,
+                        ),
+                      ),
+                    ),
                     child: const Text("Sair"),
                     onPressed: () {
                       homeController.logout();

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -53,190 +55,190 @@ class _HomeRegistrationPageState extends State<HomeRegistrationPage> {
             SafeArea(
               child: Column(
                 children: [
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(
-                          width: width * .7,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Padding(
-                                padding: EdgeInsets.only(top: 150, bottom: 30),
-                                child: Text(
-                                  "Entrar para República",
-                                  style: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: width * .75,
-                          padding: const EdgeInsets.only(bottom: 15, right: 10),
-                          child: Form(
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            child: TextFormField(
-                              controller:
-                                  homeRegistrarionController.homenameSearch,
-                              validator: (value) => homeRegistrarionController
-                                  .nameValidate(value),
-                              decoration: const InputDecoration(
-                                label: Text(
-                                  "Encontrar república",
-                                ),
-                                prefixIcon: Icon(Icons.search),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(18),
-                                  ),
-                                ),
-                              ),
-                              keyboardType: TextInputType.name,
-                              maxLength: 40,
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        width: width * .7,
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              width: 150,
-                              height: 70,
-                              padding: const EdgeInsets.only(right: 20),
-                              child: Observer(builder: (_) {
-                                return ElevatedButton(
-                                  onPressed: () async {
-                                    if (homeRegistrarionController
-                                        .homenameSearch.text.isNotEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Pesquisando...'),
-                                          duration: Duration(seconds: 90),
-                                        ),
-                                      );
-                                      if (await homeRegistrarionController
-                                              .homeSearch() ??
-                                          false == false) {
-                                        if (homeRegistrarionController
-                                            .homeRegistrarionError) {
-                                          ScaffoldMessenger.of(context)
-                                              .removeCurrentSnackBar();
-
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                            content: const Text(
-                                                'Erro!!! República não encontrada ou falha na rede'),
-                                            duration:
-                                                const Duration(seconds: 5),
-                                            backgroundColor: Theme.of(context)
-                                                .colorScheme
-                                                .error,
-                                          ));
-
-                                          homeRegistrarionController
-                                              .homeRegistrarionError = false;
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) =>
-                                                AlertDialog(
-                                              elevation: 1000,
-                                              backgroundColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .surface,
-                                              title: Text(
-                                                  'Entrar para a República ${homeRegistrarionController.homenameSearch.text}?'),
-                                              content: const Text(
-                                                  'Um pedido de entrada será enviado para o criador da república.'),
-                                              actions: <Widget>[
-                                                ElevatedButton(
-                                                  child:
-                                                      const Text("Adicionar"),
-                                                  onPressed: () async {
-                                                    await homeRegistrarionController
-                                                        .addHomeToUser();
-
-                                                    if (homeRegistrarionController
-                                                        .homeRegistrarionError) {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .removeCurrentSnackBar();
-
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                              SnackBar(
-                                                        content: const Text(
-                                                            'Erro!!!'),
-                                                        duration:
-                                                            const Duration(
-                                                                seconds: 5),
-                                                        backgroundColor:
-                                                            Theme.of(context)
-                                                                .colorScheme
-                                                                .error,
-                                                      ));
-                                                    } else {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .removeCurrentSnackBar();
-
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                              SnackBar(
-                                                        content: const Text(
-                                                            "Pedido enviado"),
-                                                        backgroundColor:
-                                                            Theme.of(context)
-                                                                .colorScheme
-                                                                .secondary,
-                                                        duration:
-                                                            const Duration(
-                                                                seconds: 2),
-                                                      ));
-                                                      await Future.delayed(
-                                                          const Duration(
-                                                              seconds: 1));
-                                                      // Modular.to.pop();
-                                                    }
-                                                  },
-                                                ),
-                                                TextButton(
-                                                  child: Text(
-                                                    "Cancelar",
-                                                    style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .error,
-                                                    ),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }
-                                      }
-                                    }
-                                  },
-                                  child: const Text('Pesquisar'),
-                                );
-                              }),
+                            Padding(
+                              padding: EdgeInsets.only(top: 150, bottom: 30),
+                              child: Text(
+                                "Entrar para República",
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ),
                           ],
-                        )
-                      ],
-                    ),
+                        ),
+                      ),
+                      Container(
+                        width: width * .75,
+                        padding: const EdgeInsets.only(bottom: 15, right: 10),
+                        child: Form(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          child: TextFormField(
+                            controller:
+                                homeRegistrarionController.homenameSearch,
+                            validator: (value) =>
+                                homeRegistrarionController.nameValidate(value),
+                            decoration: const InputDecoration(
+                              label: Text(
+                                "Encontrar república",
+                              ),
+                              prefixIcon: Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(18),
+                                ),
+                              ),
+                            ),
+                            keyboardType: TextInputType.name,
+                            maxLength: 40,
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            width: 150,
+                            height: 50,
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Observer(builder: (_) {
+                              return FilledButton(
+                                style: FilledButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      18.0,
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  if (homeRegistrarionController
+                                      .homenameSearch.text.isNotEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Pesquisando...'),
+                                        duration: Duration(seconds: 90),
+                                      ),
+                                    );
+                                    if (await homeRegistrarionController
+                                            .homeSearch() ??
+                                        false == false) {
+                                      if (homeRegistrarionController
+                                          .homeRegistrarionError) {
+                                        ScaffoldMessenger.of(context)
+                                            .removeCurrentSnackBar();
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          content: const Text(
+                                              'Erro!!! República não encontrada ou falha na rede'),
+                                          duration: const Duration(seconds: 5),
+                                          backgroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .error,
+                                        ));
+
+                                        homeRegistrarionController
+                                            .homeRegistrarionError = false;
+                                      } else {
+                                        // ignore: use_build_context_synchronously
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertDialog(
+                                            elevation: 1000,
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .surface,
+                                            title: Text(
+                                                'Entrar para a República ${homeRegistrarionController.homenameSearch.text}?'),
+                                            content: const Text(
+                                                'Um pedido de entrada será enviado para o criador da república.'),
+                                            actions: <Widget>[
+                                              ElevatedButton(
+                                                child: const Text("Adicionar"),
+                                                onPressed: () async {
+                                                  await homeRegistrarionController
+                                                      .addHomeToUser();
+
+                                                  if (homeRegistrarionController
+                                                      .homeRegistrarionError) {
+                                                    // ignore: use_build_context_synchronously
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .removeCurrentSnackBar();
+
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                      content:
+                                                          const Text('Erro!!!'),
+                                                      duration: const Duration(
+                                                          seconds: 5),
+                                                      backgroundColor:
+                                                          Theme.of(context)
+                                                              .colorScheme
+                                                              .error,
+                                                    ));
+                                                  } else {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .removeCurrentSnackBar();
+
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                      content: const Text(
+                                                          "Pedido enviado"),
+                                                      backgroundColor:
+                                                          Theme.of(context)
+                                                              .colorScheme
+                                                              .secondary,
+                                                      duration: const Duration(
+                                                          seconds: 2),
+                                                    ));
+                                                    await Future.delayed(
+                                                        const Duration(
+                                                            seconds: 1));
+                                                    // Modular.to.pop();
+                                                  }
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: Text(
+                                                  "Cancelar",
+                                                  style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .error,
+                                                  ),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  }
+                                },
+                                child: const Text('Pesquisar',
+                                    style: TextStyle(fontSize: 16)),
+                              );
+                            }),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                   Container(
                     margin: const EdgeInsets.all(15.0),
@@ -256,7 +258,6 @@ class _HomeRegistrationPageState extends State<HomeRegistrationPage> {
   }
 
   Widget _formUI(context) {
-    final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
     return Column(
@@ -264,9 +265,9 @@ class _HomeRegistrationPageState extends State<HomeRegistrationPage> {
       children: [
         SizedBox(
           width: width * .7,
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Padding(
                 padding: EdgeInsets.only(top: 70, bottom: 30),
                 child: Text(
@@ -305,11 +306,18 @@ class _HomeRegistrationPageState extends State<HomeRegistrationPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
+            SizedBox(
               width: 150,
-              height: 70,
+              height: 50,
               child: Observer(builder: (_) {
-                return ElevatedButton(
+                return FilledButton(
+                  style: FilledButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        18.0,
+                      ),
+                    ),
+                  ),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -350,7 +358,8 @@ class _HomeRegistrationPageState extends State<HomeRegistrationPage> {
                     }
                     // ScaffoldMessenger.of(context).removeCurrentSnackBar();
                   },
-                  child: const Text('Cadastrar'),
+                  child:
+                      const Text('Cadastrar', style: TextStyle(fontSize: 16)),
                 );
               }),
             ),

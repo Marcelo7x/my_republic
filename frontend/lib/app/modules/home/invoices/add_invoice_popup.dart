@@ -145,7 +145,14 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
       ),
       actions: <Widget>[
         // define os botões na base do dialogo
-        ElevatedButton(
+        FilledButton(
+          style: FilledButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                18.0,
+              ),
+            ),
+          ),
           child: const Text("Adicionar"),
           onPressed: () async {
             if (invoicesController.description.text == "" ||
@@ -158,6 +165,7 @@ class _AddInvoicePopupState extends State<AddInvoicePopup> {
                 ? await invoicesController.addInvoice()
                 : await invoicesController.modifyInvoice();
 
+            // ignore: use_build_context_synchronously
             Navigator.of(context).pop();
             Modular.to.navigate('/home/');
             await Modular.get<HomeStore>().reload();
