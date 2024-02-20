@@ -52,7 +52,7 @@ A documentação pode ser acessada em `localhost:3001/documentation/`.
 
 Frontend do MyRepublic.
 
-<img src="/frontend/images/screenshots/1.png" alt="MyRepublic Login" heigth="500" width="200"> <img src="/frontend/images/screenshots/2.png" alt="MyRepublic Sign Up" heigth="500" width="200"> <img src="/frontend/images/screenshots/3.png" alt="MyRepublic Search Republic" heigth="500" width="200"> <img src="/frontend/images/screenshots/4.png" alt="MyRepublic Search Republic2" heigth="500" width="200"> <img src="/frontend/images/screenshots/5.png" alt="MyRepublic Notification" heigth="500" width="200"> <img src="/frontend/images/screenshots/6.png" alt="MyRepublic Invoices" heigth="500" width="200"> <img src="/frontend/images/screenshots/7.png" alt="MyRepublic Balance" heigth="500" width="200">
+<img src="/frontend/images/screenshots/1.png" alt="MyRepublic Login" heigth="500" width="200"> <img src="/frontend/images/screenshots/2.png" alt="MyRepublic Sign Up" heigth="500" width="200"> <img src="/frontend/images/screenshots/3.png" alt="MyRepublic Search Republic" heigth="500" width="200"> <img src="/frontend/images/screenshots/4.png" alt="MyRepublic Search Republic2" heigth="500" width="200"> <img src="/frontend/images/screenshots/5.png" alt="MyRepublic Notification" heigth="500" width="200"> <img src="/frontend/images/screenshots/6.png" alt="MyRepublic Add Invoices" heigth="500" width="200"> <img src="/frontend/images/screenshots/7.png" alt="MyRepublic Invoices" heigth="500" width="200"> <img src="/frontend/images/screenshots/8.png" alt="MyRepublic Balance" heigth="500" width="200">
 
 ### Execução
 
