@@ -1,49 +1,44 @@
-A server app built using [Shelf](https://pub.dev/packages/shelf),
-configured to enable running with [Docker](https://www.docker.com/).
+# MyRepublic Backend
 
-This sample code handles HTTP GET requests to `/` and `/echo/<message>`
+O backend do MyRepublic foi desenvolvido em Dart usando o shelf_modular. Nele, todas as regras de negócios do aplicativo MyRepublic, incluindo login e cadastro de usuários, são executadas. Além disso, foi implementado o JWT do zero para controle de sessão do usuário. A documentação é feita via Swagger, além utilizar o Prisma.
 
-# Running the sample
+## Execução
 
-## Running with the Dart SDK
+Para executar o backend do MyRepublic, siga estes passos:
 
-You can run the example with the [Dart SDK](https://dart.dev/get-dart)
-like this:
+1. Rode uma imagem do PostgreSQL no Docker com senha Postgres e usuário Postgres exposto na porta 5432.
 
-```
-$ dart run bin/server.dart
-Server listening on port 8080
-```
+2. Configure a URI do banco de dados adicionando-a como valor para o parâmetro `DATABASE_URL` no arquivo `.env`. O banco de dados deve ter o nome "myrepublic", como no exemplo:
+    ```
+    DATABASE_URL=postgresql://postgres:postgres@localhost:5432/myrepublic
+    ```
 
-And then from a second terminal:
-```
-$ curl http://0.0.0.0:8080
-Hello, World!
-$ curl http://0.0.0.0:8080/echo/I_love_Dart
-I_love_Dart
-```
+3. Configure o parâmetro `JWT_KEY` no arquivo `.env`, que se trata da chave privada do aplicativo.
+    ```
+    JWT_KEY=chaveprivada
+    ```
 
-## Running with Docker
+4. Instale o Prisma via npm.
+    ```
+    npm -g i prisma 
+    ```
 
-If you have [Docker Desktop](https://www.docker.com/get-started) installed, you
-can build and run with the `docker` command:
+5. Suba as tabelas do banco de dados com o Prisma:
+     ```
+    npx prisma db push
+    ```
 
-```
-$ docker build . -t myserver
-$ docker run -it -p 8080:8080 myserver
-Server listening on port 8080
-```
+6. Baixe as dependências Dart.
+     ```
+    dart pub get
+    ```
 
-And then from a second terminal:
-```
-$ curl http://0.0.0.0:8080
-Hello, World!
-$ curl http://0.0.0.0:8080/echo/I_love_Dart
-I_love_Dart
-```
+7. Rode o servidor. O servidor é exposto na porta 3001.
+    ```
+    dart run bin/server.dart
+    Server listening on port 3001
+    ```
 
-You should see the logging printed in the first terminal:
-```
-2021-05-06T15:47:04.620417  0:00:00.000158 GET     [200] /
-2021-05-06T15:47:08.392928  0:00:00.001216 GET     [200] /echo/I_love_Dart
-```
+## Acessando a documentação das rotas
+
+A documentação pode ser acessada em `localhost:3001/documentation/`.
