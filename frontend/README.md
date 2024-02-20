@@ -2,13 +2,13 @@
 
 O MyRepublic é uma aplicação frontend em Flutter projetada para facilitar aos usuários a gestão de despesas compartilhadas em um ambiente de convivência, como uma "república". Os usuários podem criar uma "república" dentro do aplicativo e adicionar contas para suas despesas nesse espaço. O aplicativo calcula as despesas totais, divide entre os usuários e fornece representações gráficas e porcentagens de gastos e valores.
 
-![MyRepublic Login](/frontend/images/screenshots/1.png)
-![MyRepublic Sign Up](/frontend/images/screenshots/2.png)
-![MyRepublic Search Republic](/frontend/images/screenshots/3.png)
-![MyRepublic Search Republic2 ](/frontend/images/screenshots/4.png)
-![MyRepublic Notification](/frontend/images/screenshots/5.png)
-![MyRepublic Invoices](/frontend/images/screenshots/6.png)
-![MyRepublic Balance](/frontend/images/screenshots/7.png)
+![MyRepublic Login](/frontend/images/screenshots/1.png =1100x540)
+![MyRepublic Sign Up](/frontend/images/screenshots/2.png =1100x540)
+![MyRepublic Search Republic](/frontend/images/screenshots/3.png =1100x540)
+![MyRepublic Search Republic2 ](/frontend/images/screenshots/4.png =1100x540)
+![MyRepublic Notification](/frontend/images/screenshots/5.png =1100x540)
+![MyRepublic Invoices](/frontend/images/screenshots/6.png =1100x540)
+![MyRepublic Balance](/frontend/images/screenshots/7.png =1100x540)
 
 ## Execução
 
