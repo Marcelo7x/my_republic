@@ -23,7 +23,7 @@ class PostgresDatabase implements RemoteDatabase, Disposable {
       uri.pathSegments.first,
       username: uri.userInfo.split(':').first,
       password: uri.userInfo.split(':').last,
-      useSSL: uri.host == 'postgres' ? false : true,
+      useSSL: uri.host == 'postgres' ? true : false,
     );
     await connection.open();
     completer.complete(connection);
