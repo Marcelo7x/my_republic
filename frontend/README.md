@@ -2,13 +2,13 @@
 
 O MyRepublic é uma aplicação frontend em Flutter projetada para facilitar aos usuários a gestão de despesas compartilhadas em um ambiente de convivência, como uma "república". Os usuários podem criar uma "república" dentro do aplicativo e adicionar contas para suas despesas nesse espaço. O aplicativo calcula as despesas totais, divide entre os usuários e fornece representações gráficas e porcentagens de gastos e valores.
 
-<img src="/frontend/images/screenshots/1.png" alt="MyRepublic Login" width="1100" height="540">
-<img src="/frontend/images/screenshots/2.png" alt="MyRepublic Sign Up" width="1100" height="540">
-<img src="/frontend/images/screenshots/3.png" alt="MyRepublic Search Republic" width="1100" height="540">
-<img src="/frontend/images/screenshots/4.png" alt="MyRepublic Search Republic2" width="1100" height="540">
-<img src="/frontend/images/screenshots/5.png" alt="MyRepublic Notification" width="1100" height="540">
-<img src="/frontend/images/screenshots/6.png" alt="MyRepublic Invoices" width="1100" height="540">
-<img src="/frontend/images/screenshots/7.png" alt="MyRepublic Balance" width="1100" height="540">
+<img src="/frontend/images/screenshots/1.png" alt="MyRepublic Login" heigth="1100" width="540">
+<img src="/frontend/images/screenshots/2.png" alt="MyRepublic Sign Up" heigth="1100" width="540">
+<img src="/frontend/images/screenshots/3.png" alt="MyRepublic Search Republic" heigth="1100" width="540">
+<img src="/frontend/images/screenshots/4.png" alt="MyRepublic Search Republic2" heigth="1100" width="540">
+<img src="/frontend/images/screenshots/5.png" alt="MyRepublic Notification" heigth="1100" width="540">
+<img src="/frontend/images/screenshots/6.png" alt="MyRepublic Invoices" heigth="1100" width="540">
+<img src="/frontend/images/screenshots/7.png" alt="MyRepublic Balance" heigth="1100" width="540">
 
 ## Execução
 
