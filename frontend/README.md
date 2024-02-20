@@ -1,16 +1,24 @@
-# frontend
+# MyRepublic
 
-A new Flutter project.
+O MyRepublic é uma aplicação frontend em Flutter projetada para facilitar aos usuários a gestão de despesas compartilhadas em um ambiente de convivência, como uma "república". Os usuários podem criar uma "república" dentro do aplicativo e adicionar contas para suas despesas nesse espaço. O aplicativo calcula as despesas totais, divide entre os usuários e fornece representações gráficas e porcentagens de gastos e valores.
 
-## Getting Started
+![MyRepublic Login](/frontend/images/screenshots/1.png)
+![MyRepublic Sign Up](/frontend/images/screenshots/2.png)
+![MyRepublic Search Republic](/frontend/images/screenshots/3.png)
+![MyRepublic Search Republic2 ](/frontend/images/screenshots/4.png)
+![MyRepublic Notification](/frontend/images/screenshots/5.png)
+![MyRepublic Invoices](/frontend/images/screenshots/6.png)
+![MyRepublic Balance](/frontend/images/screenshots/7.png)
 
-This project is a starting point for a Flutter application.
+## Execução
 
-A few resources to get you started if this is your first Flutter project:
+Para executar a aplicação MyRepublic, siga estes passos:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Configure a URL do backend adicionando-a como valor para o parâmetro `API_URL` no arquivo `.env`
+    ```
+    API_URL=https://sua-url-do-backend.com/api
+    ```
+2. Baixe as dependências do projeto Dart.
+    ```
+    dart pug get
+    ```
